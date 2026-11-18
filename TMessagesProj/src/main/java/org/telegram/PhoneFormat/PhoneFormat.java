@@ -185,6 +185,9 @@ public class PhoneFormat {
 
     @NonNull
     public String format(String orig) {
+        if (org.telegram.messenger.MogramSettings.isStreamerMode() && org.telegram.messenger.MogramSettings.isOwnPhone(orig)) { // Mogram
+            return org.telegram.messenger.MogramSettings.maskPhone(orig);
+        }
         if (!initialzed) {
             return orig;
         }

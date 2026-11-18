@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="AppName">Mogram</string>
+    <string name="MogramGhost">Ghost mode</string>
+    <string name="MogramGhostInfo">Messages are not marked as read, you always appear offline and your typing is not shown. Unread counters may reappear after the app syncs.</string>
+    <string name="MogramStreamer">Streamer mode</string>
+    <string name="MogramStreamerInfo">Hides your own phone number everywhere in the app, handy for screen recording and streams.</string>
     <string name="AppNameBeta">Mogram Beta</string>
     <string name="LanguageName">English</string>
     <string name="English">English</string>
