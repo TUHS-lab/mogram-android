@@ -145,6 +145,8 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
     private int streamerDetailRow; // Mogram
     private int keepRow; // Mogram
     private int keepDetailRow; // Mogram
+    private int quickRow; // Mogram
+    private int quickDetailRow; // Mogram
     private int newChatsSectionRow;
     private int advancedSectionRow;
     @Keep
@@ -174,6 +176,37 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
     private int secretWebpageRow;
     private int secretDetailRow;
     private int rowCount;
+
+    // Mogram: окно со списком быстрых команд
+    private void showQuickCommandsDialog() {
+        android.content.Context context = getParentActivity();
+        if (context == null) {
+            return;
+        }
+        final android.widget.EditText input = new android.widget.EditText(context);
+        input.setText(MogramSettings.getQuickCommandsText());
+        input.setHint("/hi = Hello!");
+        input.setMinLines(4);
+        input.setGravity(android.view.Gravity.TOP | android.view.Gravity.START);
+        input.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        input.setTextColor(Theme.getColor(Theme.key_dialogTextBlack));
+        input.setHintTextColor(Theme.getColor(Theme.key_dialogTextHint));
+        android.widget.FrameLayout container = new android.widget.FrameLayout(context);
+        container.setPadding(AndroidUtilities.dp(24), AndroidUtilities.dp(8), AndroidUtilities.dp(24), 0);
+        container.addView(input, new android.widget.FrameLayout.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(getString("MogramQuick", R.string.MogramQuick));
+        builder.setMessage(getString("MogramQuickInfo", R.string.MogramQuickInfo));
+        builder.setView(container);
+        builder.setPositiveButton(getString("Save", R.string.Save), (dialog, which) -> {
+            MogramSettings.setQuickCommandsText(input.getText().toString());
+            if (listAdapter != null) {
+                listAdapter.notifyDataSetChanged();
+            }
+        });
+        builder.setNegativeButton(getString("Cancel", R.string.Cancel), null);
+        showDialog(builder.create());
+    }
 
     private final ArrayList<BotBiometry.Bot> biometryBots = new ArrayList<>();
 
@@ -576,6 +609,8 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                 } else {
                     cell.setChecked(newSuggest = true);
                 }
+            } else if (position == quickRow) { // Mogram
+                showQuickCommandsDialog();
             } else if (position == keepRow) { // Mogram
                 final TextCheckCell cell = (TextCheckCell) view;
                 MogramSettings.setKeepDeleted(!MogramSettings.keepDeleted());
@@ -804,6 +839,8 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
         streamerDetailRow = rowCount++; // Mogram
         keepRow = rowCount++; // Mogram
         keepDetailRow = rowCount++; // Mogram
+        quickRow = rowCount++; // Mogram
+        quickDetailRow = rowCount++; // Mogram
         advancedSectionRow = rowCount++;
         deleteAccountRow = rowCount++;
         deleteAccountDetailRow = rowCount++;
@@ -1077,7 +1114,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                     position == noncontactsRow ||
                     position == deleteAccountRow && !getContactsController().getLoadingDeleteInfo() ||
                     position == newChatsRow && !getContactsController().getLoadingGlobalSettings() ||
-                    position == ghostRow || position == streamerRow || position == keepRow ||
+                    position == ghostRow || position == streamerRow || position == keepRow || position == quickRow ||
                     position == emailLoginRow || position == paymentsClearRow || position == secretMapRow ||
                     position == contactsSyncRow || position == passportRow || position == contactsDeleteRow ||
                     position == contactsSuggestRow || position == autoDeleteMesages || position == botsBiometryRow;
@@ -1276,7 +1313,9 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                 case 1:
                     TextInfoPrivacyCell privacyCell = (TextInfoPrivacyCell) holder.itemView;
                     boolean last = position == getItemCount() - 1;
-                    if (position == keepDetailRow) { // Mogram
+                    if (position == quickDetailRow) { // Mogram
+                        privacyCell.setText(getString("MogramQuickInfo", R.string.MogramQuickInfo));
+                    } else if (position == keepDetailRow) { // Mogram
                         privacyCell.setText(getString("MogramKeepInfo", R.string.MogramKeepInfo));
                     } else if (position == streamerDetailRow) { // Mogram
                         privacyCell.setText(getString("MogramStreamerInfo", R.string.MogramStreamerInfo));
@@ -1349,7 +1388,9 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                     loadingLen = 16;
                     value = null;
                     textCell2.setPrioritizeTitleOverValue(false);
-                    if (position == autoDeleteMesages) {
+                    if (position == quickRow) { // Mogram
+                        textCell2.setTextAndValueAndIcon(getString("MogramQuick", R.string.MogramQuick), String.valueOf(MogramSettings.quickCommandsCount()), true, R.drawable.msg2_autodelete, true);
+                    } else if (position == autoDeleteMesages) {
                         int ttl = getUserConfig().getGlobalTTl();
                         if (ttl == -1) {
                             showLoading = true;
@@ -1448,7 +1489,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                     position == deleteAccountRow || position == webSessionsRow || position == groupsRow || position == paymentsClearRow ||
                     position == secretMapRow || position == contactsDeleteRow || position == botsBiometryRow) {
                 return 0;
-            } else if (position == privacyShadowRow || position == ghostDetailRow || position == streamerDetailRow || position == keepDetailRow || position == deleteAccountDetailRow || position == groupsDetailRow || position == sessionsDetailRow || position == secretDetailRow || position == botsDetailRow || position == contactsDetailRow || position == newChatsSectionRow) {
+            } else if (position == privacyShadowRow || position == ghostDetailRow || position == streamerDetailRow || position == keepDetailRow || position == quickDetailRow || position == deleteAccountDetailRow || position == groupsDetailRow || position == sessionsDetailRow || position == secretDetailRow || position == botsDetailRow || position == contactsDetailRow || position == newChatsSectionRow) {
                 return 1;
             } else if (position == securitySectionRow || position == advancedSectionRow || position == privacySectionRow || position == secretSectionRow || position == botsSectionRow || position == contactsSectionRow || position == newChatsHeaderRow) {
                 return 2;
@@ -1456,7 +1497,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                 return 3;
             } else if (position == botsAndWebsitesShadowRow) {
                 return 4;
-            } else if (position == autoDeleteMesages || position == sessionsRow || position == emailLoginRow || position == passwordRow || position == passkeysRow || position == passcodeRow || position == blockedRow) {
+            } else if (position == quickRow || position == autoDeleteMesages || position == sessionsRow || position == emailLoginRow || position == passwordRow || position == passkeysRow || position == passcodeRow || position == blockedRow) {
                 return 5;
             }
             return 0;

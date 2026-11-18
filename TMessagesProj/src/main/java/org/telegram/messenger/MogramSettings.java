@@ -128,6 +128,50 @@ public class MogramSettings {
         }
     }
 
+    // Быстрые команды: строки вида "/имя = текст", команда целиком заменяется текстом при отправке.
+    private static final String QUICK = "mogram_quick_commands";
+
+    public static String getQuickCommandsText() {
+        return prefs().getString(QUICK, "");
+    }
+
+    public static void setQuickCommandsText(String value) {
+        prefs().edit().putString(QUICK, value == null ? "" : value).apply();
+    }
+
+    public static int quickCommandsCount() {
+        int count = 0;
+        for (String line : getQuickCommandsText().split("\n")) {
+            if (line.trim().startsWith("/") && line.indexOf('=') > 0) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    // Возвращает текст команды, если сообщение целиком совпало с командой, иначе null.
+    public static String expandQuickCommand(String message) {
+        if (message == null) {
+            return null;
+        }
+        String wanted = message.trim();
+        if (!wanted.startsWith("/") || wanted.length() < 2 || wanted.indexOf('\n') >= 0) {
+            return null;
+        }
+        for (String line : getQuickCommandsText().split("\n")) {
+            int eq = line.indexOf('=');
+            if (eq <= 0) {
+                continue;
+            }
+            String name = line.substring(0, eq).trim();
+            String text = line.substring(eq + 1).trim();
+            if (!text.isEmpty() && name.equalsIgnoreCase(wanted)) {
+                return text;
+            }
+        }
+        return null;
+    }
+
     // Режим стримера: свой номер телефона скрыт во всём интерфейсе.
     public static boolean isStreamerMode() {
         return prefs().getBoolean(STREAMER, false);

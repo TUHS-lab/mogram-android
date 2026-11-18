@@ -4441,6 +4441,13 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
     public void sendMessage(SendMessageParams sendMessageParams) {
         final SendMessageChatArguments sendMessageChatArguments = sendMessageParams.sendMessageChatArguments != null ?
                 sendMessageParams.sendMessageChatArguments : SendMessageChatArguments.EMPTY;
+        if (sendMessageParams.message != null && sendMessageParams.photo == null && sendMessageParams.document == null && sendMessageParams.location == null) { // Mogram: быстрые команды
+            String expanded = MogramSettings.expandQuickCommand(sendMessageParams.message);
+            if (expanded != null) {
+                sendMessageParams.message = expanded;
+                sendMessageParams.entities = null;
+            }
+        }
         String message = sendMessageParams.message;
         String caption = sendMessageParams.caption;
         TLRPC.MessageMedia location = sendMessageParams.location;
