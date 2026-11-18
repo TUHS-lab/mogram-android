@@ -11,6 +11,15 @@
     <string name="MogramEditHistory">Edit history</string>
     <string name="MogramQuick">Quick commands</string>
     <string name="MogramQuickInfo">One command per line, like /hi = Hello! When you send exactly /hi, it is replaced by the text.</string>
+    <string name="MogramMusic">Music</string>
+    <string name="MogramMusicSearch">Search SoundCloud</string>
+    <string name="MogramMusicSearching">Searching…</string>
+    <string name="MogramMusicLoading">Loading…</string>
+    <string name="MogramMusicEmpty">Nothing found</string>
+    <string name="MogramMusicError">Could not load, check your connection and try again</string>
+    <string name="MogramMusicNothing">Nothing is playing</string>
+    <string name="MogramMusicPause">Pause</string>
+    <string name="MogramMusicPlay">Play</string>
     <string name="AppNameBeta">Mogram Beta</string>
     <string name="LanguageName">English</string>
     <string name="English">English</string>

@@ -20,8 +20,8 @@ Android client based on the official [Telegram for Android](https://github.com/D
 - [x] Privacy: ghost mode and streamer mode (hides your own phone number). Hides your username too; ID: not yet
 - [x] Keep messages the other person deleted, with a "deleted" mark in the message time (edit history: not yet)
 - [ ] Security: decoy passcodes, auto-lock
-- [ ] Music: SoundCloud player with lyrics
-- [ ] Quick commands and tools
+- [x] Music: basic SoundCloud search and player (lyrics: not yet)
+- [x] Quick commands (text shortcuts like /hi). Tools: not yet
 - [ ] Plugins
 
 > The checked items are written but **not built or tested yet**: the first successful build is still ahead.

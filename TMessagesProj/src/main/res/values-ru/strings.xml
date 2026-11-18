@@ -11,6 +11,15 @@
     <string name="MogramEditHistory">История правок</string>
     <string name="MogramQuick">Быстрые команды</string>
     <string name="MogramQuickInfo">По одной команде в строке, например /hi = Привет! Если отправить ровно /hi, он заменится текстом.</string>
+    <string name="MogramMusic">Музыка</string>
+    <string name="MogramMusicSearch">Поиск в SoundCloud</string>
+    <string name="MogramMusicSearching">Ищу…</string>
+    <string name="MogramMusicLoading">Загрузка…</string>
+    <string name="MogramMusicEmpty">Ничего не найдено</string>
+    <string name="MogramMusicError">Не удалось загрузить, проверьте сеть и повторите</string>
+    <string name="MogramMusicNothing">Ничего не играет</string>
+    <string name="MogramMusicPause">Пауза</string>
+    <string name="MogramMusicPlay">Играть</string>
     <string name="AppNameBeta">Mogram Beta</string>
     <string name="LanguageName">Русский</string>
     <string name="English">Английский</string>

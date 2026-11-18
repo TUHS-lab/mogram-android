@@ -146,6 +146,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
     private int keepRow; // Mogram
     private int keepDetailRow; // Mogram
     private int quickRow; // Mogram
+    private int mogramMusicRow; // Mogram
     private int quickDetailRow; // Mogram
     private int newChatsSectionRow;
     private int advancedSectionRow;
@@ -609,6 +610,8 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                 } else {
                     cell.setChecked(newSuggest = true);
                 }
+            } else if (position == mogramMusicRow) { // Mogram
+                presentFragment(new MogramMusicActivity());
             } else if (position == quickRow) { // Mogram
                 showQuickCommandsDialog();
             } else if (position == keepRow) { // Mogram
@@ -839,6 +842,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
         streamerDetailRow = rowCount++; // Mogram
         keepRow = rowCount++; // Mogram
         keepDetailRow = rowCount++; // Mogram
+        mogramMusicRow = rowCount++; // Mogram
         quickRow = rowCount++; // Mogram
         quickDetailRow = rowCount++; // Mogram
         advancedSectionRow = rowCount++;
@@ -1114,7 +1118,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                     position == noncontactsRow ||
                     position == deleteAccountRow && !getContactsController().getLoadingDeleteInfo() ||
                     position == newChatsRow && !getContactsController().getLoadingGlobalSettings() ||
-                    position == ghostRow || position == streamerRow || position == keepRow || position == quickRow ||
+                    position == ghostRow || position == streamerRow || position == keepRow || position == quickRow || position == mogramMusicRow ||
                     position == emailLoginRow || position == paymentsClearRow || position == secretMapRow ||
                     position == contactsSyncRow || position == passportRow || position == contactsDeleteRow ||
                     position == contactsSuggestRow || position == autoDeleteMesages || position == botsBiometryRow;
@@ -1388,7 +1392,9 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                     loadingLen = 16;
                     value = null;
                     textCell2.setPrioritizeTitleOverValue(false);
-                    if (position == quickRow) { // Mogram
+                    if (position == mogramMusicRow) { // Mogram
+                        textCell2.setTextAndValueAndIcon(getString("MogramMusic", R.string.MogramMusic), "SoundCloud", true, R.drawable.msg2_autodelete, true);
+                    } else if (position == quickRow) { // Mogram
                         textCell2.setTextAndValueAndIcon(getString("MogramQuick", R.string.MogramQuick), String.valueOf(MogramSettings.quickCommandsCount()), true, R.drawable.msg2_autodelete, true);
                     } else if (position == autoDeleteMesages) {
                         int ttl = getUserConfig().getGlobalTTl();
@@ -1497,7 +1503,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                 return 3;
             } else if (position == botsAndWebsitesShadowRow) {
                 return 4;
-            } else if (position == quickRow || position == autoDeleteMesages || position == sessionsRow || position == emailLoginRow || position == passwordRow || position == passkeysRow || position == passcodeRow || position == blockedRow) {
+            } else if (position == mogramMusicRow || position == quickRow || position == autoDeleteMesages || position == sessionsRow || position == emailLoginRow || position == passwordRow || position == passkeysRow || position == passcodeRow || position == blockedRow) {
                 return 5;
             }
             return 0;
