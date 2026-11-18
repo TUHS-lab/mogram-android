@@ -5,6 +5,8 @@
     <string name="MogramGhostInfo">Сообщения не отмечаются прочитанными, вы всегда не в сети, а набор текста не виден. Счётчики непрочитанных могут вернуться после синхронизации.</string>
     <string name="MogramStreamer">Режим стримера</string>
     <string name="MogramStreamerInfo">Скрывает ваш номер телефона во всём приложении, удобно для записи экрана и трансляций.</string>
+    <string name="MogramKeep">Сохранять удалённые сообщения</string>
+    <string name="MogramKeepInfo">Если собеседник удалил сообщение у всех, оно остаётся в вашем чате. Работает для сообщений, пришедших, пока вы в приложении.</string>
     <string name="AppNameBeta">Mogram Beta</string>
     <string name="LanguageName">Русский</string>
     <string name="English">Английский</string>

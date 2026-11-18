@@ -143,6 +143,8 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
     private int ghostDetailRow; // Mogram
     private int streamerRow; // Mogram
     private int streamerDetailRow; // Mogram
+    private int keepRow; // Mogram
+    private int keepDetailRow; // Mogram
     private int newChatsSectionRow;
     private int advancedSectionRow;
     @Keep
@@ -574,6 +576,10 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                 } else {
                     cell.setChecked(newSuggest = true);
                 }
+            } else if (position == keepRow) { // Mogram
+                final TextCheckCell cell = (TextCheckCell) view;
+                MogramSettings.setKeepDeleted(!MogramSettings.keepDeleted());
+                cell.setChecked(MogramSettings.keepDeleted());
             } else if (position == streamerRow) { // Mogram
                 final TextCheckCell cell = (TextCheckCell) view;
                 MogramSettings.setStreamerMode(!MogramSettings.isStreamerMode());
@@ -796,6 +802,8 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
         ghostDetailRow = rowCount++; // Mogram
         streamerRow = rowCount++; // Mogram
         streamerDetailRow = rowCount++; // Mogram
+        keepRow = rowCount++; // Mogram
+        keepDetailRow = rowCount++; // Mogram
         advancedSectionRow = rowCount++;
         deleteAccountRow = rowCount++;
         deleteAccountDetailRow = rowCount++;
@@ -1069,7 +1077,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                     position == noncontactsRow ||
                     position == deleteAccountRow && !getContactsController().getLoadingDeleteInfo() ||
                     position == newChatsRow && !getContactsController().getLoadingGlobalSettings() ||
-                    position == ghostRow || position == streamerRow ||
+                    position == ghostRow || position == streamerRow || position == keepRow ||
                     position == emailLoginRow || position == paymentsClearRow || position == secretMapRow ||
                     position == contactsSyncRow || position == passportRow || position == contactsDeleteRow ||
                     position == contactsSuggestRow || position == autoDeleteMesages || position == botsBiometryRow;
@@ -1268,7 +1276,9 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                 case 1:
                     TextInfoPrivacyCell privacyCell = (TextInfoPrivacyCell) holder.itemView;
                     boolean last = position == getItemCount() - 1;
-                    if (position == streamerDetailRow) { // Mogram
+                    if (position == keepDetailRow) { // Mogram
+                        privacyCell.setText(getString("MogramKeepInfo", R.string.MogramKeepInfo));
+                    } else if (position == streamerDetailRow) { // Mogram
                         privacyCell.setText(getString("MogramStreamerInfo", R.string.MogramStreamerInfo));
                     } else if (position == ghostDetailRow) { // Mogram
                         privacyCell.setText(getString("MogramGhostInfo", R.string.MogramGhostInfo));
@@ -1321,6 +1331,8 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                         textCheckCell.setTextAndCheck(getString("SyncContacts", R.string.SyncContacts), newSync, true);
                     } else if (position == contactsSuggestRow) {
                         textCheckCell.setTextAndCheck(getString("SuggestContacts", R.string.SuggestContacts), newSuggest, false);
+                    } else if (position == keepRow) { // Mogram
+                        textCheckCell.setTextAndCheck(getString("MogramKeep", R.string.MogramKeep), MogramSettings.keepDeleted(), false);
                     } else if (position == streamerRow) { // Mogram
                         textCheckCell.setTextAndCheck(getString("MogramStreamer", R.string.MogramStreamer), MogramSettings.isStreamerMode(), false);
                     } else if (position == ghostRow) { // Mogram
@@ -1436,11 +1448,11 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                     position == deleteAccountRow || position == webSessionsRow || position == groupsRow || position == paymentsClearRow ||
                     position == secretMapRow || position == contactsDeleteRow || position == botsBiometryRow) {
                 return 0;
-            } else if (position == privacyShadowRow || position == ghostDetailRow || position == streamerDetailRow || position == deleteAccountDetailRow || position == groupsDetailRow || position == sessionsDetailRow || position == secretDetailRow || position == botsDetailRow || position == contactsDetailRow || position == newChatsSectionRow) {
+            } else if (position == privacyShadowRow || position == ghostDetailRow || position == streamerDetailRow || position == keepDetailRow || position == deleteAccountDetailRow || position == groupsDetailRow || position == sessionsDetailRow || position == secretDetailRow || position == botsDetailRow || position == contactsDetailRow || position == newChatsSectionRow) {
                 return 1;
             } else if (position == securitySectionRow || position == advancedSectionRow || position == privacySectionRow || position == secretSectionRow || position == botsSectionRow || position == contactsSectionRow || position == newChatsHeaderRow) {
                 return 2;
-            } else if (position == secretWebpageRow || position == contactsSyncRow || position == contactsSuggestRow || position == newChatsRow || position == ghostRow || position == streamerRow) {
+            } else if (position == secretWebpageRow || position == contactsSyncRow || position == contactsSuggestRow || position == newChatsRow || position == ghostRow || position == streamerRow || position == keepRow) {
                 return 3;
             } else if (position == botsAndWebsitesShadowRow) {
                 return 4;

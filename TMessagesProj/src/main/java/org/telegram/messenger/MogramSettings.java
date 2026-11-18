@@ -7,6 +7,7 @@ public class MogramSettings {
 
     private static final String GHOST = "mogram_ghost_mode";
     private static final String STREAMER = "mogram_streamer_mode";
+    private static final String KEEP_DELETED = "mogram_keep_deleted";
 
     private static SharedPreferences prefs() {
         return MessagesController.getGlobalMainSettings();
@@ -19,6 +20,15 @@ public class MogramSettings {
 
     public static void setGhostMode(boolean value) {
         prefs().edit().putBoolean(GHOST, value).apply();
+    }
+
+    // Не удалять у себя сообщения, которые собеседник удалил у всех.
+    public static boolean keepDeleted() {
+        return prefs().getBoolean(KEEP_DELETED, false);
+    }
+
+    public static void setKeepDeleted(boolean value) {
+        prefs().edit().putBoolean(KEEP_DELETED, value).apply();
     }
 
     // Режим стримера: свой номер телефона скрыт во всём интерфейсе.
