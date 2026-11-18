@@ -9122,7 +9122,23 @@ public class Theme {
         return getColor(key, isDefault, false);
     }
 
+    // Mogram: интерфейс в серых оттенках: синие и фиолетовые цвета темы превращаются в серые той же яркости.
+    private static int mogramGray(int color) {
+        final int r = (color >> 16) & 0xFF;
+        final int g = (color >> 8) & 0xFF;
+        final int b = color & 0xFF;
+        if (b - r > 24 && b >= g) {
+            final int gray = Math.min(255, (int) ((0.299f * r + 0.587f * g + 0.114f * b) * 0.9f + 0.5f));
+            return (color & 0xFF000000) | (gray << 16) | (gray << 8) | gray;
+        }
+        return color;
+    }
+
     public static int getColor(int key, boolean[] isDefault, boolean ignoreAnimation) {
+        return mogramGray(getColorRaw(key, isDefault, ignoreAnimation));
+    }
+
+    private static int getColorRaw(int key, boolean[] isDefault, boolean ignoreAnimation) {
         if (SharedConfig.compactMode) {
             // compact mode swaps some message colors for its own keys, see getCompactColor
             final Integer compactColor = getCompactColor(key, null);

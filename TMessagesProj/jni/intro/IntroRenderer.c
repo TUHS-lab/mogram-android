@@ -530,7 +530,7 @@ void setup_shaders() {
                     "void main(){"
                     "    gl_FragColor = texture2D(u_TextureUnit, v_TextureCoordinates);"
                     "    float p = u_Alpha*gl_FragColor.w;"
-                    "    gl_FragColor = vec4(10./255.,132./255.,255./255.,p);"
+                    "    gl_FragColor = vec4(99./255.,99./255.,102./255.,p);"
                     "}";
 
     texture_program_light_blue = get_texture_program(build_program(vshader, (GLint) strlen(vshader), fshader, (GLint) strlen(fshader)));
