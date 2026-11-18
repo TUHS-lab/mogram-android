@@ -1,0 +1,112 @@
+name: Android
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release tag to attach the APK to (empty = artifact only)'
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    env:
+      MOGRAM_API_ID: ${{ secrets.MOGRAM_API_ID }}
+      MOGRAM_API_HASH: ${{ secrets.MOGRAM_API_HASH }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check secrets.
+        run: |
+          if [ -z "$MOGRAM_API_ID" ] || [ -z "$MOGRAM_API_HASH" ]; then
+            echo "::error::Add MOGRAM_API_ID and MOGRAM_API_HASH to the repository secrets (see README)."
+            exit 1
+          fi
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Android SDK.
+        uses: android-actions/setup-android@v3
+        with:
+          packages: >-
+            platform-tools
+            platforms;android-36
+            build-tools;36.0.0
+            ndk;27.2.12479018
+            cmake;3.22.1
+
+      - name: Insert API credentials.
+        run: |
+          f=TMessagesProj/src/main/java/org/telegram/messenger/BuildVars.java
+          sed -i "s|public static int APP_ID = 0;.*|public static int APP_ID = ${MOGRAM_API_ID};|" "$f"
+          sed -i "s|public static String APP_HASH = \"\";.*|public static String APP_HASH = \"${MOGRAM_API_HASH}\";|" "$f"
+          grep -c "APP_ID = ${MOGRAM_API_ID};" "$f"
+
+      - name: Signing key.
+        env:
+          KS_BASE64: ${{ secrets.MOGRAM_KEYSTORE_BASE64 }}
+          KS_PASSWORD: ${{ secrets.MOGRAM_KEYSTORE_PASSWORD }}
+          KS_ALIAS: ${{ secrets.MOGRAM_KEY_ALIAS }}
+          KS_KEY_PASSWORD: ${{ secrets.MOGRAM_KEY_PASSWORD }}
+        run: |
+          mkdir -p TMessagesProj/config
+          if [ -n "$KS_BASE64" ]; then
+            echo "$KS_BASE64" | base64 -d > TMessagesProj/config/release.keystore
+            alias="$KS_ALIAS"; pass="$KS_PASSWORD"; keypass="${KS_KEY_PASSWORD:-$KS_PASSWORD}"
+          else
+            echo "::warning::No keystore secret: using a temporary key, updates will not install over this build."
+            alias=mogram; pass=mogramtemp; keypass=mogramtemp
+            rm -f TMessagesProj/config/release.keystore
+            keytool -genkeypair -keystore TMessagesProj/config/release.keystore \
+              -alias "$alias" -storepass "$pass" -keypass "$keypass" \
+              -keyalg RSA -keysize 4096 -validity 10000 -dname "CN=Mogram"
+          fi
+          {
+            echo "RELEASE_STORE_PASSWORD=$pass"
+            echo "RELEASE_KEY_ALIAS=$alias"
+            echo "RELEASE_KEY_PASSWORD=$keypass"
+          } >> "$GITHUB_ENV"
+          sed -i '/^RELEASE_\(KEY_PASSWORD\|KEY_ALIAS\|STORE_PASSWORD\)=/d' gradle.properties
+          {
+            echo "RELEASE_STORE_PASSWORD=$pass"
+            echo "RELEASE_KEY_ALIAS=$alias"
+            echo "RELEASE_KEY_PASSWORD=$keypass"
+          } >> gradle.properties
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Build.
+        run: ./gradlew --no-daemon :TMessagesProj_AppStandalone:assembleAfatStandalone --stacktrace
+
+      - name: Collect APKs.
+        run: |
+          mkdir -p dist
+          find TMessagesProj_AppStandalone/build/outputs/apk -name '*.apk' -exec cp {} dist/ \;
+          ls -la dist
+          for f in dist/*.apk; do mv "$f" "dist/mogram-android-$(basename "$f" | sed 's/^app-//')"; done || true
+          ls -la dist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mogram-android-apk
+          path: dist/*.apk
+          retention-days: 14
+
+      - name: Release.
+        if: inputs.release_tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "${{ inputs.release_tag }}" >/dev/null 2>&1 \
+            || gh release create "${{ inputs.release_tag }}" --title "Mogram Android ${{ inputs.release_tag }}" --notes "Early build, see README."
+          gh release upload "${{ inputs.release_tag }}" dist/*.apk --clobber
