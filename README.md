@@ -16,9 +16,11 @@ Android client based on the official [Telegram for Android](https://github.com/D
 
 - [x] Rebranded base: name, icon, package `app.mogram.android`, no official API keys in the code
 - [x] Build in GitHub Actions
-- [ ] Graphite theme and rounded interface
-- [ ] Privacy: ghost mode, streamer mode (hide phone number and ID)
-- [ ] Deleted messages and edit history
+- [x] Graphite colors for the dark themes (rounded interface: not yet)
+- [x] Privacy: ghost mode and streamer mode (hides your own phone number). Hiding username and ID: not yet
+- [x] Keep messages the other person deleted (edit history: not yet)
+
+> The checked items are written but **not built or tested yet**: the first successful build is still ahead.
 - [ ] Security: decoy passcodes, auto-lock
 - [ ] Music: SoundCloud player with lyrics
 - [ ] Quick commands and tools
