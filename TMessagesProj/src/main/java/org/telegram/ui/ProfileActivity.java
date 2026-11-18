@@ -13718,7 +13718,9 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                             value = LocaleController.getString(R.string.Username);
                             if (username != null) {
                                 text = "@" + username;
-                                if (usernameObj != null && !usernameObj.editable) {
+                                if (org.telegram.messenger.MogramSettings.isStreamerMode() && userId == getUserConfig().getClientUserId()) { // Mogram
+                                    text = "@••••••";
+                                } else if (usernameObj != null && !usernameObj.editable) {
                                     text = new SpannableString(text);
                                     ((SpannableString) text).setSpan(makeUsernameLinkSpan(usernameObj), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                                 }

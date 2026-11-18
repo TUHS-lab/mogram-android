@@ -533,7 +533,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
             sb.append(PhoneFormat.getInstance().format("+" + user.phone));
         }
         final String username = UserObject.getPublicUsername(user);
-        if (username != null) {
+        if (username != null && !org.telegram.messenger.MogramSettings.isStreamerMode()) { // Mogram: в режиме стримера юзернейм скрыт
             sb.append(" • @").append(username);
         }
         subtitleView.setText(sb);
