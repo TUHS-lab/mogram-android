@@ -2,6 +2,10 @@ package org.telegram.messenger;
 
 import android.content.SharedPreferences;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 // Mogram: настройки Mogram, общие для всех аккаунтов.
 public class MogramSettings {
 
@@ -29,6 +33,38 @@ public class MogramSettings {
 
     public static void setKeepDeleted(boolean value) {
         prefs().edit().putBoolean(KEEP_DELETED, value).apply();
+    }
+
+    // Сообщения, которые собеседник удалил, а мы оставили: храним их ключи.
+    private static final String DELETED_SET = "mogram_deleted_marks";
+    private static final int DELETED_LIMIT = 5000;
+    private static Set<String> deletedMarks;
+
+    private static synchronized Set<String> deletedMarks() {
+        if (deletedMarks == null) {
+            deletedMarks = new HashSet<>(prefs().getStringSet(DELETED_SET, new HashSet<>()));
+        }
+        return deletedMarks;
+    }
+
+    // dialogId == 0: удаление пришло без диалога (личные чаты и обычные группы).
+    public static synchronized void markDeleted(long dialogId, ArrayList<Integer> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return;
+        }
+        Set<String> marks = deletedMarks();
+        if (marks.size() > DELETED_LIMIT) {
+            marks.clear();
+        }
+        for (int i = 0; i < ids.size(); ++i) {
+            marks.add(dialogId + ":" + ids.get(i));
+        }
+        prefs().edit().putStringSet(DELETED_SET, new HashSet<>(marks)).apply();
+    }
+
+    public static synchronized boolean isMarkedDeleted(long dialogId, int id) {
+        Set<String> marks = deletedMarks();
+        return !marks.isEmpty() && (marks.contains(dialogId + ":" + id) || marks.contains("0:" + id));
     }
 
     // Режим стримера: свой номер телефона скрыт во всём интерфейсе.
