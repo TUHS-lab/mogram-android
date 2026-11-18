@@ -172,6 +172,35 @@ public class MogramSettings {
         return null;
     }
 
+    // Ложный пароль: при вводе тихо выходит из всех аккаунтов на этом устройстве.
+    private static final String DECOY = "mogram_decoy_hash";
+
+    private static String decoyHash(String code) {
+        byte[] bytes = ("mogram-decoy:" + code).getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        return Utilities.bytesToHex(Utilities.computeSHA256(bytes, 0, bytes.length));
+    }
+
+    public static boolean hasDecoy() {
+        return !prefs().getString(DECOY, "").isEmpty();
+    }
+
+    public static void setDecoy(String code) {
+        prefs().edit().putString(DECOY, code == null || code.isEmpty() ? "" : decoyHash(code)).apply();
+    }
+
+    public static boolean isDecoyPasscode(String code) {
+        String saved = prefs().getString(DECOY, "");
+        return !saved.isEmpty() && code != null && saved.equals(decoyHash(code));
+    }
+
+    public static void runDecoy() {
+        for (int a = 0; a < UserConfig.MAX_ACCOUNT_COUNT; ++a) {
+            if (UserConfig.getInstance(a).isClientActivated()) {
+                MessagesController.getInstance(a).performLogout(1);
+            }
+        }
+    }
+
     // Режим стримера: свой номер телефона скрыт во всём интерфейсе.
     public static boolean isStreamerMode() {
         return prefs().getBoolean(STREAMER, false);

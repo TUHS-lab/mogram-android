@@ -22,6 +22,14 @@
     <string name="MogramMusicPlay">Play</string>
     <string name="MogramMusicLyrics">Lyrics</string>
     <string name="MogramMusicNoLyrics">No lyrics found for this track</string>
+    <string name="MogramDecoy">Decoy passcode</string>
+    <string name="MogramDecoyInfo">A second passcode. When someone enters it instead of the real one, the app quietly signs out of all accounts on this device. Use a different code from your real passcode.</string>
+    <string name="MogramDecoyHint">Decoy passcode</string>
+    <string name="MogramDecoyNeedPasscode">Set a passcode first (Privacy and Security → Passcode Lock)</string>
+    <string name="MogramDecoySame">The decoy passcode must differ from the real one</string>
+    <string name="MogramDecoyRemove">Remove</string>
+    <string name="MogramOn">On</string>
+    <string name="MogramOff">Off</string>
     <string name="AppNameBeta">Mogram Beta</string>
     <string name="LanguageName">English</string>
     <string name="English">English</string>

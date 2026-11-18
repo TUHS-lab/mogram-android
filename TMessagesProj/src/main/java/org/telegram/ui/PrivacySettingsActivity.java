@@ -146,6 +146,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
     private int keepRow; // Mogram
     private int keepDetailRow; // Mogram
     private int quickRow; // Mogram
+    private int decoyRow; // Mogram
     private int mogramMusicRow; // Mogram
     private int quickDetailRow; // Mogram
     private int newChatsSectionRow;
@@ -177,6 +178,55 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
     private int secretWebpageRow;
     private int secretDetailRow;
     private int rowCount;
+
+    // Mogram: ложный пароль
+    private void showDecoyDialog() {
+        final android.content.Context context = getParentActivity();
+        if (context == null) {
+            return;
+        }
+        if (SharedConfig.passcodeHash == null || SharedConfig.passcodeHash.length() == 0) {
+            android.widget.Toast.makeText(context, getString("MogramDecoyNeedPasscode", R.string.MogramDecoyNeedPasscode), android.widget.Toast.LENGTH_LONG).show();
+            return;
+        }
+        final android.widget.EditText input = new android.widget.EditText(context);
+        input.setHint(getString("MogramDecoyHint", R.string.MogramDecoyHint));
+        input.setSingleLine(true);
+        input.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        input.setTextColor(Theme.getColor(Theme.key_dialogTextBlack));
+        input.setHintTextColor(Theme.getColor(Theme.key_dialogTextHint));
+        android.widget.FrameLayout container = new android.widget.FrameLayout(context);
+        container.setPadding(AndroidUtilities.dp(24), AndroidUtilities.dp(8), AndroidUtilities.dp(24), 0);
+        container.addView(input, new android.widget.FrameLayout.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(getString("MogramDecoy", R.string.MogramDecoy));
+        builder.setMessage(getString("MogramDecoyInfo", R.string.MogramDecoyInfo));
+        builder.setView(container);
+        builder.setPositiveButton(getString("Save", R.string.Save), (dialog, which) -> {
+            String code = input.getText().toString();
+            if (code.isEmpty()) {
+                return;
+            }
+            if (SharedConfig.checkPasscode(code)) {
+                android.widget.Toast.makeText(context, getString("MogramDecoySame", R.string.MogramDecoySame), android.widget.Toast.LENGTH_LONG).show();
+                return;
+            }
+            MogramSettings.setDecoy(code);
+            if (listAdapter != null) {
+                listAdapter.notifyDataSetChanged();
+            }
+        });
+        if (MogramSettings.hasDecoy()) {
+            builder.setNeutralButton(getString("MogramDecoyRemove", R.string.MogramDecoyRemove), (dialog, which) -> {
+                MogramSettings.setDecoy(null);
+                if (listAdapter != null) {
+                    listAdapter.notifyDataSetChanged();
+                }
+            });
+        }
+        builder.setNegativeButton(getString("Cancel", R.string.Cancel), null);
+        showDialog(builder.create());
+    }
 
     // Mogram: окно со списком быстрых команд
     private void showQuickCommandsDialog() {
@@ -610,6 +660,8 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                 } else {
                     cell.setChecked(newSuggest = true);
                 }
+            } else if (position == decoyRow) { // Mogram
+                showDecoyDialog();
             } else if (position == mogramMusicRow) { // Mogram
                 presentFragment(new MogramMusicActivity());
             } else if (position == quickRow) { // Mogram
@@ -843,6 +895,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
         keepRow = rowCount++; // Mogram
         keepDetailRow = rowCount++; // Mogram
         mogramMusicRow = rowCount++; // Mogram
+        decoyRow = rowCount++; // Mogram
         quickRow = rowCount++; // Mogram
         quickDetailRow = rowCount++; // Mogram
         advancedSectionRow = rowCount++;
@@ -1118,7 +1171,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                     position == noncontactsRow ||
                     position == deleteAccountRow && !getContactsController().getLoadingDeleteInfo() ||
                     position == newChatsRow && !getContactsController().getLoadingGlobalSettings() ||
-                    position == ghostRow || position == streamerRow || position == keepRow || position == quickRow || position == mogramMusicRow ||
+                    position == ghostRow || position == streamerRow || position == keepRow || position == quickRow || position == mogramMusicRow || position == decoyRow ||
                     position == emailLoginRow || position == paymentsClearRow || position == secretMapRow ||
                     position == contactsSyncRow || position == passportRow || position == contactsDeleteRow ||
                     position == contactsSuggestRow || position == autoDeleteMesages || position == botsBiometryRow;
@@ -1392,7 +1445,9 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                     loadingLen = 16;
                     value = null;
                     textCell2.setPrioritizeTitleOverValue(false);
-                    if (position == mogramMusicRow) { // Mogram
+                    if (position == decoyRow) { // Mogram
+                        textCell2.setTextAndValueAndIcon(getString("MogramDecoy", R.string.MogramDecoy), getString(MogramSettings.hasDecoy() ? R.string.MogramOn : R.string.MogramOff), true, R.drawable.msg2_autodelete, true);
+                    } else if (position == mogramMusicRow) { // Mogram
                         textCell2.setTextAndValueAndIcon(getString("MogramMusic", R.string.MogramMusic), "SoundCloud", true, R.drawable.msg2_autodelete, true);
                     } else if (position == quickRow) { // Mogram
                         textCell2.setTextAndValueAndIcon(getString("MogramQuick", R.string.MogramQuick), String.valueOf(MogramSettings.quickCommandsCount()), true, R.drawable.msg2_autodelete, true);
@@ -1503,7 +1558,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                 return 3;
             } else if (position == botsAndWebsitesShadowRow) {
                 return 4;
-            } else if (position == mogramMusicRow || position == quickRow || position == autoDeleteMesages || position == sessionsRow || position == emailLoginRow || position == passwordRow || position == passkeysRow || position == passcodeRow || position == blockedRow) {
+            } else if (position == decoyRow || position == mogramMusicRow || position == quickRow || position == autoDeleteMesages || position == sessionsRow || position == emailLoginRow || position == passwordRow || position == passkeysRow || position == passcodeRow || position == blockedRow) {
                 return 5;
             }
             return 0;

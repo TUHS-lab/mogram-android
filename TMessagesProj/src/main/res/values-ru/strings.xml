@@ -22,6 +22,14 @@
     <string name="MogramMusicPlay">Играть</string>
     <string name="MogramMusicLyrics">Текст</string>
     <string name="MogramMusicNoLyrics">Текст этого трека не найден</string>
+    <string name="MogramDecoy">Ложный пароль</string>
+    <string name="MogramDecoyInfo">Второй код. Если кто-то введёт его вместо настоящего, приложение тихо выйдет из всех аккаунтов на этом устройстве. Код должен отличаться от настоящего.</string>
+    <string name="MogramDecoyHint">Ложный пароль</string>
+    <string name="MogramDecoyNeedPasscode">Сначала включите код-пароль (Конфиденциальность → Код-пароль)</string>
+    <string name="MogramDecoySame">Ложный пароль должен отличаться от настоящего</string>
+    <string name="MogramDecoyRemove">Удалить</string>
+    <string name="MogramOn">Вкл.</string>
+    <string name="MogramOff">Выкл.</string>
     <string name="AppNameBeta">Mogram Beta</string>
     <string name="LanguageName">Русский</string>
     <string name="English">Английский</string>
