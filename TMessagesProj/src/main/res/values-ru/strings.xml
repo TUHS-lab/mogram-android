@@ -20,6 +20,8 @@
     <string name="MogramMusicNothing">Ничего не играет</string>
     <string name="MogramMusicPause">Пауза</string>
     <string name="MogramMusicPlay">Играть</string>
+    <string name="MogramMusicLyrics">Текст</string>
+    <string name="MogramMusicNoLyrics">Текст этого трека не найден</string>
     <string name="AppNameBeta">Mogram Beta</string>
     <string name="LanguageName">Русский</string>
     <string name="English">Английский</string>

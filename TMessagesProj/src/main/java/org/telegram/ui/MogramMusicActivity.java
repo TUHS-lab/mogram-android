@@ -43,6 +43,7 @@ public class MogramMusicActivity extends BaseFragment {
         String title;
         String artist;
         String transcodingUrl;
+        int durationSeconds;
 
         @Override
         public String toString() {
@@ -58,6 +59,8 @@ public class MogramMusicActivity extends BaseFragment {
     private TextView statusView;
     private TextView nowPlayingView;
     private TextView pauseButton;
+    private TextView lyricsButton;
+    private Track current;
     private ArrayAdapter<Track> adapter;
     private final ArrayList<Track> tracks = new ArrayList<>();
     private MediaPlayer player;
@@ -143,6 +146,13 @@ public class MogramMusicActivity extends BaseFragment {
         pauseButton.setPadding(AndroidUtilities.dp(12), AndroidUtilities.dp(8), AndroidUtilities.dp(4), AndroidUtilities.dp(8));
         pauseButton.setOnClickListener(v -> togglePause());
         bar.addView(pauseButton, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        lyricsButton = new TextView(context);
+        lyricsButton.setText(context.getString(R.string.MogramMusicLyrics));
+        lyricsButton.setTypeface(Typeface.DEFAULT_BOLD);
+        lyricsButton.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlueText));
+        lyricsButton.setPadding(AndroidUtilities.dp(12), AndroidUtilities.dp(8), AndroidUtilities.dp(4), AndroidUtilities.dp(8));
+        lyricsButton.setOnClickListener(v -> showLyrics());
+        bar.addView(lyricsButton, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         root.addView(bar, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         return fragmentView;
     }
@@ -163,6 +173,39 @@ public class MogramMusicActivity extends BaseFragment {
             }
             player = null;
         }
+    }
+
+    // Тексты песен: открытый сервис lrclib.net, без ключей.
+    private void showLyrics() {
+        final Track track = current;
+        if (track == null || getParentActivity() == null) {
+            return;
+        }
+        setStatus(getParentActivity().getString(R.string.MogramMusicSearching));
+        Utilities.globalQueue.postRunnable(() -> {
+            String text = null;
+            try {
+                String address = "https://lrclib.net/api/get?artist_name=" + URLEncoder.encode(track.artist, "UTF-8")
+                        + "&track_name=" + URLEncoder.encode(track.title, "UTF-8")
+                        + (track.durationSeconds > 0 ? "&duration=" + track.durationSeconds : "");
+                JSONObject object = new JSONObject(httpGet(address));
+                text = object.optString("plainLyrics", "");
+            } catch (Exception e) {
+                // нет текста или нет сети
+            }
+            final String result = text;
+            AndroidUtilities.runOnUIThread(() -> {
+                if (getParentActivity() == null) {
+                    return;
+                }
+                statusView.setText("");
+                org.telegram.ui.ActionBar.AlertDialog.Builder builder = new org.telegram.ui.ActionBar.AlertDialog.Builder(getParentActivity());
+                builder.setTitle(track.title);
+                builder.setMessage(result == null || result.isEmpty() ? getParentActivity().getString(R.string.MogramMusicNoLyrics) : result);
+                builder.setPositiveButton(getParentActivity().getString(R.string.OK), null);
+                showDialog(builder.create());
+            });
+        });
     }
 
     private void togglePause() {
@@ -307,6 +350,7 @@ public class MogramMusicActivity extends BaseFragment {
             track.title = item.optString("title");
             JSONObject user = item.optJSONObject("user");
             track.artist = user == null ? "" : user.optString("username");
+            track.durationSeconds = item.optInt("duration") / 1000;
             track.transcodingUrl = progressive;
             result.add(track);
         }
@@ -314,6 +358,7 @@ public class MogramMusicActivity extends BaseFragment {
     }
 
     private void play(Track track) {
+        current = track;
         final int generation = ++playGeneration;
         releasePlayer();
         nowPlayingView.setText(track.toString());

@@ -20,6 +20,8 @@
     <string name="MogramMusicNothing">Nothing is playing</string>
     <string name="MogramMusicPause">Pause</string>
     <string name="MogramMusicPlay">Play</string>
+    <string name="MogramMusicLyrics">Lyrics</string>
+    <string name="MogramMusicNoLyrics">No lyrics found for this track</string>
     <string name="AppNameBeta">Mogram Beta</string>
     <string name="LanguageName">English</string>
     <string name="English">English</string>
