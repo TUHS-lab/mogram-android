@@ -67,6 +67,67 @@ public class MogramSettings {
         return !marks.isEmpty() && (marks.contains(dialogId + ":" + id) || marks.contains("0:" + id));
     }
 
+    // История правок: прежний текст сообщения при каждой правке.
+    private static final int EDIT_VERSIONS_LIMIT = 20;
+    private static final int EDIT_TEXT_LIMIT = 4000;
+
+    private static SharedPreferences editPrefs() {
+        return ApplicationLoader.applicationContext.getSharedPreferences("mogram_edits", android.content.Context.MODE_PRIVATE);
+    }
+
+    public static synchronized void addEdit(long dialogId, int id, String oldText, int date) {
+        if (oldText == null || oldText.isEmpty()) {
+            return;
+        }
+        try {
+            String key = dialogId + ":" + id;
+            org.json.JSONArray array = new org.json.JSONArray(editPrefs().getString(key, "[]"));
+            if (array.length() > 0 && oldText.equals(array.getJSONObject(array.length() - 1).optString("t"))) {
+                return;
+            }
+            org.json.JSONObject item = new org.json.JSONObject();
+            item.put("t", oldText.length() > EDIT_TEXT_LIMIT ? oldText.substring(0, EDIT_TEXT_LIMIT) : oldText);
+            item.put("d", date);
+            array.put(item);
+            org.json.JSONArray trimmed = new org.json.JSONArray();
+            for (int i = Math.max(0, array.length() - EDIT_VERSIONS_LIMIT); i < array.length(); ++i) {
+                trimmed.put(array.get(i));
+            }
+            editPrefs().edit().putString(key, trimmed.toString()).apply();
+        } catch (Exception e) {
+            FileLog.e(e);
+        }
+    }
+
+    public static synchronized boolean hasEdits(long dialogId, int id) {
+        return editPrefs().contains(dialogId + ":" + id);
+    }
+
+    public static synchronized String formatEdits(long dialogId, int id) {
+        try {
+            org.json.JSONArray array = new org.json.JSONArray(editPrefs().getString(dialogId + ":" + id, "[]"));
+            StringBuilder result = new StringBuilder();
+            for (int i = array.length() - 1; i >= 0; --i) {
+                org.json.JSONObject item = array.getJSONObject(i);
+                int date = item.optInt("d");
+                if (result.length() > 0) {
+                    result.append("\n\n");
+                }
+                if (date > 0) {
+                    result.append(LocaleController.getInstance().getFormatterDayMonth().format(new java.util.Date(date * 1000L)))
+                            .append(", ")
+                            .append(LocaleController.getInstance().getFormatterDay().format(new java.util.Date(date * 1000L)))
+                            .append("\n");
+                }
+                result.append(item.optString("t"));
+            }
+            return result.toString();
+        } catch (Exception e) {
+            FileLog.e(e);
+            return "";
+        }
+    }
+
     // Режим стримера: свой номер телефона скрыт во всём интерфейсе.
     public static boolean isStreamerMode() {
         return prefs().getBoolean(STREAMER, false);

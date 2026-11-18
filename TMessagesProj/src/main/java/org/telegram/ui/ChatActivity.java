@@ -177,6 +177,7 @@ import org.telegram.messenger.MediaController;
 import org.telegram.messenger.MediaDataController;
 import org.telegram.messenger.SendMessageChatArguments;
 import org.telegram.messenger.MessageObject;
+import org.telegram.messenger.MogramSettings;
 import org.telegram.messenger.MessagePreviewParams;
 import org.telegram.messenger.MessageSuggestionParams;
 import org.telegram.messenger.MessagesController;
@@ -1297,6 +1298,7 @@ public class ChatActivity extends BaseFragment implements
     public final static int OPTION_WELCOME_REVERT = 116;
     public final static int OPTION_SEND_MONEY = 117;
     public final static int OPTION_STOP_LIVE_LOCATION = 118;
+    public final static int OPTION_MOGRAM_EDITS = 200; // Mogram
 
     private final static int[] allowedNotificationsDuringChatListAnimations = new int[]{
             NotificationCenter.messagesRead,
@@ -24199,6 +24201,15 @@ public class ChatActivity extends BaseFragment implements
                 return;
             }
             int loadIndex = did == dialog_id ? 0 : 1;
+            for (int i = 0; i < messageObjects.size(); ++i) { // Mogram: запоминаем прежний текст отредактированных сообщений
+                MessageObject changed = messageObjects.get(i);
+                MessageObject previous = changed == null ? null : messagesDict[loadIndex].get(changed.getId());
+                if (previous != null && previous != changed && previous.messageOwner != null && changed.messageOwner != null
+                        && previous.messageOwner.message != null && !previous.messageOwner.message.equals(changed.messageOwner.message)
+                        && (changed.messageOwner.flags & TLRPC.MESSAGE_FLAG_EDITED) != 0) {
+                    MogramSettings.addEdit(did, changed.getId(), previous.messageOwner.message, previous.messageOwner.edit_date != 0 ? previous.messageOwner.edit_date : previous.messageOwner.date);
+                }
+            }
             doOnIdle(() -> {
                 replaceMessageObjects(messageObjects, loadIndex, false);
             });
@@ -34352,6 +34363,14 @@ public class ChatActivity extends BaseFragment implements
                 DialogsActivity fragment = new DialogsActivity(args);
                 fragment.setDelegate(this);
                 presentFragment(fragment);
+                break;
+            }
+            case OPTION_MOGRAM_EDITS: { // Mogram
+                AlertDialog.Builder editsBuilder = new AlertDialog.Builder(getParentActivity(), themeDelegate);
+                editsBuilder.setTitle(getString(R.string.MogramEditHistory));
+                editsBuilder.setMessage(MogramSettings.formatEdits(selectedObject.getDialogId(), selectedObject.getId()));
+                editsBuilder.setPositiveButton(getString(R.string.OK), null);
+                showDialog(editsBuilder.create());
                 break;
             }
             case OPTION_COPY: {
@@ -46687,6 +46706,11 @@ public class ChatActivity extends BaseFragment implements
                     options.add(OPTION_COPY);
                     icons.add(R.drawable.msg_copy);
                 }
+                if (MogramSettings.hasEdits(selectedObject.getDialogId(), selectedObject.getId())) { // Mogram: история правок
+                    items.add(LocaleController.getString(R.string.MogramEditHistory));
+                    options.add(OPTION_MOGRAM_EDITS);
+                    icons.add(R.drawable.msg_edit);
+                }
                 if (!isThreadChat() && chatMode != MODE_SCHEDULED && currentChat != null && primaryMessage != null && (currentChat.has_link || primaryMessage.hasReplies()) && currentChat.megagroup && primaryMessage.canViewThread()) {
                     if (primaryMessage.hasReplies()) {
                         items.add(LocaleController.formatPluralString("ViewReplies", primaryMessage.getRepliesCount()));
@@ -47004,6 +47028,11 @@ public class ChatActivity extends BaseFragment implements
                     items.add(LocaleController.getString(R.string.Copy));
                     options.add(OPTION_COPY);
                     icons.add(R.drawable.msg_copy);
+                }
+                if (MogramSettings.hasEdits(selectedObject.getDialogId(), selectedObject.getId())) { // Mogram: история правок
+                    items.add(LocaleController.getString(R.string.MogramEditHistory));
+                    options.add(OPTION_MOGRAM_EDITS);
+                    icons.add(R.drawable.msg_edit);
                 }
                 if (!isThreadChat() && chatMode != MODE_SCHEDULED && currentChat != null && primaryMessage != null && (currentChat.has_link || primaryMessage.hasReplies()) && currentChat.megagroup && primaryMessage.canViewThread()) {
                     if (primaryMessage.hasReplies()) {

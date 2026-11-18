@@ -8,6 +8,7 @@
     <string name="MogramKeep">Сохранять удалённые сообщения</string>
     <string name="MogramKeepInfo">Если собеседник удалил сообщение у всех, оно остаётся в вашем чате. Работает для сообщений, пришедших, пока вы в приложении.</string>
     <string name="MogramDeleted">удалено</string>
+    <string name="MogramEditHistory">История правок</string>
     <string name="AppNameBeta">Mogram Beta</string>
     <string name="LanguageName">Русский</string>
     <string name="English">Английский</string>

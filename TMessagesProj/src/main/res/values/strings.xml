@@ -8,6 +8,7 @@
     <string name="MogramKeep">Keep deleted messages</string>
     <string name="MogramKeepInfo">If the other person deletes a message for everyone, it stays in your chat. Works for messages that arrive while the app is signed in.</string>
     <string name="MogramDeleted">deleted</string>
+    <string name="MogramEditHistory">Edit history</string>
     <string name="AppNameBeta">Mogram Beta</string>
     <string name="LanguageName">English</string>
     <string name="English">English</string>
