@@ -4443,8 +4443,8 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
         if (params.message == null) {
             return false;
         }
-        final String text = params.message.trim().toLowerCase(java.util.Locale.ROOT);
-        if (!text.startsWith(".")) {
+        final String text = MogramLogic.chatCommandName(params.message);
+        if (text == null) {
             return false;
         }
         final long dialogId = params.peer;
