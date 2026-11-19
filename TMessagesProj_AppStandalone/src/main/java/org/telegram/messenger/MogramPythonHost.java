@@ -86,6 +86,27 @@ public class MogramPythonHost implements MogramPlugins.Host, NotificationCenter.
     }
 
     @Override
+    public String menuItems(String type) {
+        try {
+            return module.callAttr("menu_items", type).toString();
+        } catch (Throwable e) {
+            FileLog.e(e);
+            return "[]";
+        }
+    }
+
+    @Override
+    public void menuClick(int index, String ctxJson) {
+        Utilities.globalQueue.postRunnable(() -> {
+            try {
+                module.callAttr("menu_click", index, ctxJson);
+            } catch (Throwable e) {
+                FileLog.e(e);
+            }
+        });
+    }
+
+    @Override
     public void reload() {
         Utilities.globalQueue.postRunnable(() -> {
             try {

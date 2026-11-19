@@ -37,7 +37,7 @@
     <string name="MogramCard">Картинка-карточка</string>
     <string name="MogramPlugins">Плагины</string>
     <string name="MogramPluginsInstall">Установить файл .plugin</string>
-    <string name="MogramPluginsHint">Плагины на Python в формате .plugin. Работают команды (.имя) и события входящих сообщений; меню и настройки пока не поддерживаются.</string>
+    <string name="MogramPluginsHint">Плагины на Python в формате .plugin. Работают команды (.имя), события входящих сообщений и пункты меню сообщения; настройки и остальные меню пока не поддерживаются.</string>
     <string name="MogramPluginsUnavailable">В этой сборке движка плагинов нет.</string>
     <string name="MogramPluginsNotPlugin">Выберите файл с расширением .plugin</string>
     <string name="MogramPluginsInstalled">Плагин установлен</string>

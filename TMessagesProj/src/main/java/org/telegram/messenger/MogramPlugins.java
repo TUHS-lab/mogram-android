@@ -16,6 +16,11 @@ public class MogramPlugins {
         boolean install(File file);
 
         void reload();
+
+        // JSON-список пунктов меню плагинов: [{i, text, icon}]
+        String menuItems(String type);
+
+        void menuClick(int index, String ctxJson);
     }
 
     public static volatile Host host;

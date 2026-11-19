@@ -177,6 +177,7 @@ import org.telegram.messenger.MediaController;
 import org.telegram.messenger.MediaDataController;
 import org.telegram.messenger.SendMessageChatArguments;
 import org.telegram.messenger.MessageObject;
+import org.telegram.messenger.MogramPlugins;
 import org.telegram.messenger.MogramSettings;
 import org.telegram.messenger.MessagePreviewParams;
 import org.telegram.messenger.MessageSuggestionParams;
@@ -1299,6 +1300,7 @@ public class ChatActivity extends BaseFragment implements
     public final static int OPTION_SEND_MONEY = 117;
     public final static int OPTION_STOP_LIVE_LOCATION = 118;
     public final static int OPTION_MOGRAM_EDITS = 200; // Mogram
+    public final static int OPTION_MOGRAM_PLUGIN = 1000; // Mogram: 1000 + номер пункта плагина
 
     private final static int[] allowedNotificationsDuringChatListAnimations = new int[]{
             NotificationCenter.messagesRead,
@@ -34363,6 +34365,21 @@ public class ChatActivity extends BaseFragment implements
             return;
         }
         boolean preserveDim = false;
+        if (option >= OPTION_MOGRAM_PLUGIN && MogramPlugins.host != null) { // Mogram: нажатие на пункт плагина
+            try {
+                org.json.JSONObject pluginCtx = new org.json.JSONObject();
+                pluginCtx.put("id", selectedObject.getId());
+                pluginCtx.put("peer", selectedObject.getDialogId());
+                pluginCtx.put("text", selectedObject.messageText == null ? "" : selectedObject.messageText.toString());
+                pluginCtx.put("selected", selectedObject.messageText == null ? "" : selectedObject.messageText.toString());
+                pluginCtx.put("out", selectedObject.isOutOwner());
+                pluginCtx.put("date", selectedObject.messageOwner == null ? 0 : selectedObject.messageOwner.date);
+                MogramPlugins.host.menuClick(option - OPTION_MOGRAM_PLUGIN, pluginCtx.toString());
+            } catch (Exception e) {
+                FileLog.e(e);
+            }
+            return;
+        }
         switch (option) {
             case OPTION_RETRY: {
                 final MessageObject object = selectedObject;
@@ -46771,6 +46788,18 @@ public class ChatActivity extends BaseFragment implements
                     options.add(OPTION_MOGRAM_EDITS);
                     icons.add(R.drawable.msg_edit);
                 }
+                if (MogramPlugins.host != null) { // Mogram: пункты меню плагинов
+                    try {
+                        org.json.JSONArray pluginItems = new org.json.JSONArray(MogramPlugins.host.menuItems("message_context_menu"));
+                        for (int pi = 0; pi < pluginItems.length(); ++pi) {
+                            org.json.JSONObject pluginItem = pluginItems.getJSONObject(pi);
+                            items.add(pluginItem.optString("text"));
+                            options.add(OPTION_MOGRAM_PLUGIN + pluginItem.getInt("i"));
+                            icons.add(R.drawable.msg_info);
+                        }
+                    } catch (Exception ignore) {
+                    }
+                }
                 if (!isThreadChat() && chatMode != MODE_SCHEDULED && currentChat != null && primaryMessage != null && (currentChat.has_link || primaryMessage.hasReplies()) && currentChat.megagroup && primaryMessage.canViewThread()) {
                     if (primaryMessage.hasReplies()) {
                         items.add(LocaleController.formatPluralString("ViewReplies", primaryMessage.getRepliesCount()));
@@ -47093,6 +47122,18 @@ public class ChatActivity extends BaseFragment implements
                     items.add(LocaleController.getString(R.string.MogramEditHistory));
                     options.add(OPTION_MOGRAM_EDITS);
                     icons.add(R.drawable.msg_edit);
+                }
+                if (MogramPlugins.host != null) { // Mogram: пункты меню плагинов
+                    try {
+                        org.json.JSONArray pluginItems = new org.json.JSONArray(MogramPlugins.host.menuItems("message_context_menu"));
+                        for (int pi = 0; pi < pluginItems.length(); ++pi) {
+                            org.json.JSONObject pluginItem = pluginItems.getJSONObject(pi);
+                            items.add(pluginItem.optString("text"));
+                            options.add(OPTION_MOGRAM_PLUGIN + pluginItem.getInt("i"));
+                            icons.add(R.drawable.msg_info);
+                        }
+                    } catch (Exception ignore) {
+                    }
                 }
                 if (!isThreadChat() && chatMode != MODE_SCHEDULED && currentChat != null && primaryMessage != null && (currentChat.has_link || primaryMessage.hasReplies()) && currentChat.megagroup && primaryMessage.canViewThread()) {
                     if (primaryMessage.hasReplies()) {

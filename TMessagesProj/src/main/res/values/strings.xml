@@ -37,7 +37,7 @@
     <string name="MogramCard">Card image</string>
     <string name="MogramPlugins">Plugins</string>
     <string name="MogramPluginsInstall">Install a .plugin file</string>
-    <string name="MogramPluginsHint">Python plugins in the .plugin format. Commands (.name) and incoming message events work; menus and settings are not supported yet.</string>
+    <string name="MogramPluginsHint">Python plugins in the .plugin format. Commands (.name), incoming message events and message menu items work; settings and other menus are not supported yet.</string>
     <string name="MogramPluginsUnavailable">The plugin engine is not available in this build.</string>
     <string name="MogramPluginsNotPlugin">Choose a file with the .plugin extension</string>
     <string name="MogramPluginsInstalled">Plugin installed</string>

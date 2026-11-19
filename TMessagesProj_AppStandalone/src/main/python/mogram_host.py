@@ -14,6 +14,7 @@ _files = {}       # id -> имя файла
 _errors = {}      # имя файла -> текст ошибки
 _commands = {}    # имя команды -> (плагин, метод)
 _plugins_dir = ""
+_menu_flat = []   # плоский список (плагин, пункт) для текущего показа меню
 
 
 class _Ctx:
@@ -92,6 +93,26 @@ def describe():
     for name, error in _errors.items():
         items.append({"id": "", "file": name, "name": name, "description": "ошибка: " + error.strip().splitlines()[-1], "version": ""})
     return json.dumps(items, ensure_ascii=False)
+
+
+def menu_items(kind):
+    """JSON-список пунктов меню плагинов для места kind (message_context_menu и т. д.)."""
+    del _menu_flat[:]
+    result = []
+    for plugin in _plugins.values():
+        for item in list(getattr(plugin, "_menu_items", {}).values()):
+            if item.menu_type == kind and item.on_click:
+                result.append({"i": len(_menu_flat), "text": str(item.text), "icon": item.icon or ""})
+                _menu_flat.append((plugin, item))
+    return json.dumps(result, ensure_ascii=False)
+
+
+def menu_click(index, ctx_json):
+    try:
+        plugin, item = _menu_flat[int(index)]
+        item.on_click(json.loads(ctx_json))
+    except Exception:
+        api.show_toast("Ошибка плагина: " + traceback.format_exc(limit=2).strip().splitlines()[-1])
 
 
 def run_command(text, peer, reply_to):
