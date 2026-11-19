@@ -11,8 +11,8 @@ import java.util.HashMap;
 
 public class ThemeColors {
 
-    public static final int TELEGRAM_COLOR = 0xFF0A84FF;        // Mogram: акцент как в десктопе
-    public static final int TELEGRAM_COLOR_TEXT = 0xFF0A84FF;   // Mogram
+    public static final int TELEGRAM_COLOR = 0xFF8E8E93;        // Mogram: серый акцент
+    public static final int TELEGRAM_COLOR_TEXT = 0xFF8E8E93;   // Mogram
     public static final int DEFAULT_BLACK_TEXT = 0xFF1A1D21;   // -15065823
 
     private static SparseArray<String> colorKeysMap;

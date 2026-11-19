@@ -35,6 +35,7 @@
     <string name="MogramCommands">Команды в чате</string>
     <string name="MogramCommandsInfo">Пишите команду вместо сообщения: .id покажет номера чата и сообщения, .mute и .unmute управляют уведомлениями. В ответ на сообщение: .pin, .unpin и .del (своё сообщение).</string>
     <string name="MogramCard">Картинка-карточка</string>
+    <string name="TelegramVersion">Mogram для Android, неофициальный форк Telegram. %1$s</string>
     <string name="AppNameBeta">Mogram Beta</string>
     <string name="LanguageName">Русский</string>
     <string name="English">Английский</string>
@@ -244,17 +245,17 @@
     <string name="LoginOrSingInWithGoogle">или</string>
     <!--Intro view-->
     <string name="Page1Title">Telegram</string>
-    <string name="Page2Title">Быстрый</string>
-    <string name="Page3Title">Бесплатный</string>
-    <string name="Page4Title">Безопасный</string>
-    <string name="Page5Title">Мощный</string>
-    <string name="Page6Title">Облачный</string>
-    <string name="Page1Message">Самый **быстрый** мессенджер в мире.\n**Бесплатный** и **безопасный**.</string>
-    <string name="Page2Message">**Telegram** доставляет сообщения быстрее\nлюбого другого приложения.</string>
-    <string name="Page3Message">**Telegram** предоставляет бесплатное безлимитное облачное хранилище для чатов и медиа.\n</string>
-    <string name="Page4Message">**Telegram** защищает Вашу переписку от злоумышленников.</string>
-    <string name="Page5Message">**Telegram** не ограничивает размер\n Ваших медиафайлов и чатов.</string>
-    <string name="Page6Message">В **Telegram** можно переписываться с любого количества устройств.</string>
+    <string name="Page2Title">Приватный</string>
+    <string name="Page3Title">Помнит</string>
+    <string name="Page4Title">Серый</string>
+    <string name="Page5Title">Музыка</string>
+    <string name="Page6Title">Открытый</string>
+    <string name="Page1Message">Неофициальный **форк** Telegram для Android.\nСерый, приватный, с новыми функциями.</string>
+    <string name="Page2Message">**Режим призрака**, режим стримера и\n**ложный пароль** под вашим контролем.</string>
+    <string name="Page3Message">Сохраняет **удалённые сообщения** и\n**историю правок** в ваших чатах.</string>
+    <string name="Page4Message">Спокойная **графитовая** палитра и\nскруглённый плавный интерфейс.</string>
+    <string name="Page5Message">Встроенный плеер **SoundCloud** с\n**текстами песен** рядом с чатами.</string>
+    <string name="Page6Message">Открытый код. Основан на **Telegram** для Android,\nс Telegram не связан.</string>
     <string name="StartMessaging">Начать общение</string>
     <!--date formatters-->
     <string name="formatterBoostExpired">dd MMM yyyy</string>

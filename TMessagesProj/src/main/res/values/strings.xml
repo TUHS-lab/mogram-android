@@ -2668,7 +2668,7 @@
     <string name="DirectShareInfo">Show recent chats in Android share menu</string>
     <string name="Emoji">Emoji</string>
     <string name="LargeEmoji">Large Emoji</string>
-    <string name="TelegramVersion">Telegram for Android %1$s</string>
+    <string name="TelegramVersion">Mogram for Android, unofficial fork of Telegram. %1$s</string>
     <string name="DebugMenu">Debug Menu</string>
     <string name="DebugMenuLongPress">Long press again for debug menu</string>
     <string name="DebugSendLogs">Send Logs</string>
@@ -4248,17 +4248,17 @@
     <string name="ViewMessage">Open Message</string>
     <!--Intro view-->
     <string name="Page1Title">Mogram</string>
-    <string name="Page2Title">Fast</string>
-    <string name="Page3Title">Free</string>
-    <string name="Page4Title">Secure</string>
-    <string name="Page5Title">Powerful</string>
-    <string name="Page6Title">Cloud-Based</string>
-    <string name="Page1Message">The world\'s **fastest** messaging app.\nIt is **free** and **secure**.</string>
-    <string name="Page2Message">**Telegram** delivers messages faster than\nany other application.</string>
-    <string name="Page3Message">**Telegram** provides free unlimited cloud storage for chats and media.</string>
-    <string name="Page4Message">**Telegram** keeps your messages safe\nfrom hacker attacks.</string>
-    <string name="Page5Message">**Telegram** has no limits on\nthe size of your media and chats.</string>
-    <string name="Page6Message">**Telegram** lets you access your messages\nfrom multiple devices.</string>
+    <string name="Page2Title">Private</string>
+    <string name="Page3Title">Remembers</string>
+    <string name="Page4Title">Gray</string>
+    <string name="Page5Title">Music</string>
+    <string name="Page6Title">Open</string>
+    <string name="Page1Message">Unofficial **fork** of Telegram for Android.\nGray, private, with extra features.</string>
+    <string name="Page2Message">**Ghost mode**, streamer mode and a\n**decoy passcode** keep you in control.</string>
+    <string name="Page3Message">Keeps **deleted messages** and the\n**history of edits** of your chats.</string>
+    <string name="Page4Message">One calm **graphite** palette and\nrounded, smooth interface.</string>
+    <string name="Page5Message">Built-in **SoundCloud** player with\n**lyrics**, right next to your chats.</string>
+    <string name="Page6Message">Open source. Based on **Telegram** for Android,\nnot affiliated with Telegram.</string>
     <string name="StartMessaging">Start Messaging</string>
     <!-- VoIP -->
     <string name="AccountSettings">Account Settings</string>
