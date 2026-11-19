@@ -21,7 +21,7 @@ Android client based on the official [Telegram for Android](https://github.com/D
 - [x] Keep messages the other person deleted, with a "deleted" mark in the message time (edit history: not yet)
 - [x] Security: decoy passcode (silently signs out of all accounts). Lock right away when you leave the app
 - [x] Music: SoundCloud search, player and lyrics
-- [x] Chat commands (.id .pin .unpin .del .mute .unmute) and text shortcuts like /hi. Tools: not yet
+- [x] Chat commands (.id .pin .unpin .del .mute .unmute) and text shortcuts like /hi. Tools: message card image (selected messages that are on screen)
 - [ ] Plugins
 
 > The checked items are written but **not built or tested yet**: the first successful build is still ahead.

@@ -1675,6 +1675,63 @@ public class ChatActivity extends BaseFragment implements
         }
     };
 
+    private final static int mogram_card = 9991; // Mogram
+
+    // Mogram: выделенные сообщения, которые сейчас на экране, собираются в карточку-картинку и отправляются через "Поделиться".
+    private void mogramShareCard() {
+        if (getParentActivity() == null || chatListView == null) {
+            return;
+        }
+        final ArrayList<View> cells = new ArrayList<>();
+        for (int i = 0; i < chatListView.getChildCount(); ++i) {
+            View child = chatListView.getChildAt(i);
+            if (child instanceof ChatMessageCell) {
+                MessageObject m = ((ChatMessageCell) child).getMessageObject();
+                if (m != null && (selectedMessagesIds[0].indexOfKey(m.getId()) >= 0 || selectedMessagesIds[1].indexOfKey(m.getId()) >= 0)) {
+                    cells.add(child);
+                }
+            }
+        }
+        if (cells.isEmpty()) {
+            return;
+        }
+        java.util.Collections.sort(cells, (a, b) -> Integer.compare(a.getTop(), b.getTop()));
+        final int pad = dp(16);
+        final int gap = dp(4);
+        final int width = chatListView.getWidth() + pad * 2;
+        int height = pad * 2;
+        for (View cell : cells) {
+            height += cell.getHeight() + gap;
+        }
+        try {
+            android.graphics.Bitmap bitmap = android.graphics.Bitmap.createBitmap(width, height, android.graphics.Bitmap.Config.ARGB_8888);
+            android.graphics.Canvas canvas = new android.graphics.Canvas(bitmap);
+            canvas.drawColor(0xFF1C1C1C);
+            int y = pad;
+            for (View cell : cells) {
+                canvas.save();
+                canvas.translate(pad, y);
+                cell.draw(canvas);
+                canvas.restore();
+                y += cell.getHeight() + gap;
+            }
+            java.io.File dir = new java.io.File(ApplicationLoader.applicationContext.getFilesDir(), "cache/mogram_cards");
+            dir.mkdirs();
+            java.io.File file = new java.io.File(dir, "card_" + System.currentTimeMillis() + ".png");
+            java.io.FileOutputStream out = new java.io.FileOutputStream(file);
+            bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, out);
+            out.close();
+            bitmap.recycle();
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("image/png");
+            intent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(getParentActivity(), ApplicationLoader.getApplicationId() + ".provider", file));
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            getParentActivity().startActivity(Intent.createChooser(intent, getString(R.string.MogramCard)));
+        } catch (Throwable e) {
+            FileLog.e(e);
+        }
+    }
+
     private final static int copy = 10;
     private final static int forward = 11;
     private final static int delete = 12;
@@ -3748,6 +3805,8 @@ public class ChatActivity extends BaseFragment implements
                         getMessagesController().getTopicsController().toggleViewForumAsMessages(-dialog_id, false);
                         TopicsFragment.prepareToSwitchAnimation(ChatActivity.this);
                     }
+                } else if (id == mogram_card) { // Mogram
+                    mogramShareCard();
                 } else if (id == copy) {
                     SpannableStringBuilder str = new SpannableStringBuilder();
                     long previousUid = 0;
@@ -10822,6 +10881,7 @@ public class ChatActivity extends BaseFragment implements
                 actionModeViews.add(actionMode.addItemWithWidth(forward, R.drawable.msg_forward, dp(48), LocaleController.getString(R.string.Forward)));
             }
             actionModeViews.add(actionMode.addItemWithWidth(share, R.drawable.msg_shareout, dp(48), LocaleController.getString(R.string.ShareFile)));
+            actionModeViews.add(actionMode.addItemWithWidth(mogram_card, R.drawable.msg_media, dp(48), LocaleController.getString(R.string.MogramCard))); // Mogram
             actionModeViews.add(actionMode.addItemWithWidth(delete, R.drawable.msg_delete, dp(48), LocaleController.getString(R.string.Delete)));
         } else {
             actionModeViews.add(actionMode.addItemWithWidth(edit, R.drawable.msg_edit, dp(48), LocaleController.getString(R.string.Edit)));
