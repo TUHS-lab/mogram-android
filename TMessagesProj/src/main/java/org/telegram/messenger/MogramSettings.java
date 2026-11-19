@@ -12,6 +12,7 @@ public class MogramSettings {
     private static final String GHOST = "mogram_ghost_mode";
     private static final String STREAMER = "mogram_streamer_mode";
     private static final String KEEP_DELETED = "mogram_keep_deleted";
+    private static final String COMMANDS = "mogram_chat_commands";
 
     private static SharedPreferences prefs() {
         return MessagesController.getGlobalMainSettings();
@@ -199,6 +200,15 @@ public class MogramSettings {
                 MessagesController.getInstance(a).performLogout(1);
             }
         }
+    }
+
+    // Команды в чате (.id .del .pin .unpin .mute .unmute): выполняются вместо отправки сообщения.
+    public static boolean commandsEnabled() {
+        return prefs().getBoolean(COMMANDS, false);
+    }
+
+    public static void setCommandsEnabled(boolean value) {
+        prefs().edit().putBoolean(COMMANDS, value).apply();
     }
 
     // Режим стримера: свой номер телефона скрыт во всём интерфейсе.

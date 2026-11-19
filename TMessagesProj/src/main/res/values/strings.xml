@@ -32,6 +32,8 @@
     <string name="MogramOff">Off</string>
     <string name="MogramLock">Lock right away</string>
     <string name="MogramLockInfo">Locks the app as soon as you leave it. Needs a passcode.</string>
+    <string name="MogramCommands">Chat commands</string>
+    <string name="MogramCommandsInfo">Type a command instead of a message: .id shows chat and message ids, .mute and .unmute control notifications. In reply to a message: .pin, .unpin, and .del (your own message).</string>
     <string name="AppNameBeta">Mogram Beta</string>
     <string name="LanguageName">English</string>
     <string name="English">English</string>

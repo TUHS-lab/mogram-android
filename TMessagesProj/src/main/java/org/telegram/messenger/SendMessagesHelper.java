@@ -4438,9 +4438,66 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
         });
     }
 
+    // Mogram: команды в чате. Возвращает true, если сообщение было командой и отправлять его не нужно.
+    private boolean mogramCommand(SendMessageParams params) {
+        if (params.message == null) {
+            return false;
+        }
+        final String text = params.message.trim().toLowerCase(java.util.Locale.ROOT);
+        if (!text.startsWith(".")) {
+            return false;
+        }
+        final long dialogId = params.peer;
+        final MessageObject reply = params.replyToMsg;
+        switch (text) {
+            case ".id": {
+                StringBuilder sb = new StringBuilder();
+                sb.append("chat id: ").append(dialogId);
+                if (reply != null) {
+                    sb.append("\nmessage id: ").append(reply.getId());
+                    sb.append("\nfrom id: ").append(reply.getFromChatId());
+                }
+                final String result = sb.toString();
+                AndroidUtilities.runOnUIThread(() -> {
+                    AndroidUtilities.addToClipboard(result);
+                    android.widget.Toast.makeText(ApplicationLoader.applicationContext, result, android.widget.Toast.LENGTH_LONG).show();
+                });
+                return true;
+            }
+            case ".mute":
+            case ".unmute":
+                getNotificationsController().muteDialog(dialogId, 0, text.equals(".mute"));
+                return true;
+            case ".pin":
+            case ".unpin": {
+                if (reply == null) {
+                    return false;
+                }
+                TLRPC.Chat chat = dialogId < 0 ? getMessagesController().getChat(-dialogId) : null;
+                TLRPC.User user = dialogId > 0 ? getMessagesController().getUser(dialogId) : null;
+                getMessagesController().pinMessage(chat, user, reply.getId(), text.equals(".unpin"), false, true);
+                return true;
+            }
+            case ".del": {
+                if (reply == null || !reply.isOutOwner()) {
+                    return false;
+                }
+                ArrayList<Integer> ids = new ArrayList<>();
+                ids.add(reply.getId());
+                getMessagesController().deleteMessages(ids, null, null, dialogId, 0, true, 0);
+                return true;
+            }
+            default:
+                return false;
+        }
+    }
+
     public void sendMessage(SendMessageParams sendMessageParams) {
         final SendMessageChatArguments sendMessageChatArguments = sendMessageParams.sendMessageChatArguments != null ?
                 sendMessageParams.sendMessageChatArguments : SendMessageChatArguments.EMPTY;
+        if (MogramSettings.commandsEnabled() && sendMessageParams.message != null && sendMessageParams.photo == null && sendMessageParams.document == null && sendMessageParams.location == null && mogramCommand(sendMessageParams)) {
+            return;
+        }
         if (sendMessageParams.message != null && sendMessageParams.photo == null && sendMessageParams.document == null && sendMessageParams.location == null) { // Mogram: быстрые команды
             String expanded = MogramSettings.expandQuickCommand(sendMessageParams.message);
             if (expanded != null) {
