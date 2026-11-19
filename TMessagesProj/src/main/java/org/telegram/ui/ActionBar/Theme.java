@@ -4178,6 +4178,14 @@ public class Theme {
                 }
             }
 
+            if (preferences.getString("theme", null) == null) { // Mogram: по умолчанию тёмная графитовая тема, как в десктопе
+                final ThemeInfo mogramNight = themesDict.get("Night");
+                if (mogramNight != null) {
+                    applyingTheme = mogramNight;
+                    currentNightTheme = mogramNight;
+                }
+            }
+
             if (currentNightTheme != null && !themeConfig.contains("lastDarkTheme")) {
                 SharedPreferences.Editor editor = themeConfig.edit();
                 editor.putString("lastDarkTheme", currentNightTheme.getKey());
@@ -4337,7 +4345,7 @@ public class Theme {
                 oldEditorNew.commit();
             }
 
-            selectedAutoNightType = preferences.getInt("selectedAutoNightType", Build.VERSION.SDK_INT >= 29 ? AUTO_NIGHT_TYPE_SYSTEM : AUTO_NIGHT_TYPE_NONE);
+            selectedAutoNightType = preferences.getInt("selectedAutoNightType", AUTO_NIGHT_TYPE_NONE); // Mogram: тема не зависит от системной по умолчанию
             autoNightScheduleByLocation = preferences.getBoolean("autoNightScheduleByLocation", false);
             autoNightBrighnessThreshold = preferences.getFloat("autoNightBrighnessThreshold", 0.25f);
             autoNightDayStartTime = preferences.getInt("autoNightDayStartTime", 22 * 60);
