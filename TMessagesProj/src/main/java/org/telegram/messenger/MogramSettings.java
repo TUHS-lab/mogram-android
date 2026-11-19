@@ -13,6 +13,7 @@ public class MogramSettings {
     private static final String STREAMER = "mogram_streamer_mode";
     private static final String KEEP_DELETED = "mogram_keep_deleted";
     private static final String COMMANDS = "mogram_chat_commands";
+    private static final String ROUND_FOCUS = "mogram_round_focus";
 
     private static SharedPreferences prefs() {
         return MessagesController.getGlobalMainSettings();
@@ -58,14 +59,14 @@ public class MogramSettings {
             marks.clear();
         }
         for (int i = 0; i < ids.size(); ++i) {
-            marks.add(dialogId + ":" + ids.get(i));
+            marks.add(MogramLogic.deletedKey(dialogId, ids.get(i)));
         }
         prefs().edit().putStringSet(DELETED_SET, new HashSet<>(marks)).apply();
     }
 
     public static synchronized boolean isMarkedDeleted(long dialogId, int id) {
         Set<String> marks = deletedMarks();
-        return !marks.isEmpty() && (marks.contains(dialogId + ":" + id) || marks.contains("0:" + id));
+        return !marks.isEmpty() && (marks.contains(MogramLogic.deletedKey(dialogId, id)) || marks.contains(MogramLogic.deletedKey(0, id)));
     }
 
     // История правок: прежний текст сообщения при каждой правке.
@@ -141,36 +142,12 @@ public class MogramSettings {
     }
 
     public static int quickCommandsCount() {
-        int count = 0;
-        for (String line : getQuickCommandsText().split("\n")) {
-            if (line.trim().startsWith("/") && line.indexOf('=') > 0) {
-                count++;
-            }
-        }
-        return count;
+        return MogramLogic.quickCommandsCount(getQuickCommandsText());
     }
 
     // Возвращает текст команды, если сообщение целиком совпало с командой, иначе null.
     public static String expandQuickCommand(String message) {
-        if (message == null) {
-            return null;
-        }
-        String wanted = message.trim();
-        if (!wanted.startsWith("/") || wanted.length() < 2 || wanted.indexOf('\n') >= 0) {
-            return null;
-        }
-        for (String line : getQuickCommandsText().split("\n")) {
-            int eq = line.indexOf('=');
-            if (eq <= 0) {
-                continue;
-            }
-            String name = line.substring(0, eq).trim();
-            String text = line.substring(eq + 1).trim();
-            if (!text.isEmpty() && name.equalsIgnoreCase(wanted)) {
-                return text;
-            }
-        }
-        return null;
+        return MogramLogic.expandQuickCommand(getQuickCommandsText(), message);
     }
 
     // Ложный пароль: при вводе тихо выходит из всех аккаунтов на этом устройстве.
@@ -202,6 +179,15 @@ public class MogramSettings {
         }
     }
 
+    // Пока играет кружок, остальной экран чата размыт (Android 12 и новее).
+    public static boolean roundFocus() {
+        return prefs().getBoolean(ROUND_FOCUS, false);
+    }
+
+    public static void setRoundFocus(boolean value) {
+        prefs().edit().putBoolean(ROUND_FOCUS, value).apply();
+    }
+
     // Команды в чате (.id .del .pin .unpin .mute .unmute): выполняются вместо отправки сообщения.
     public static boolean commandsEnabled() {
         return prefs().getBoolean(COMMANDS, false);
@@ -221,17 +207,7 @@ public class MogramSettings {
     }
 
     private static String digits(String value) {
-        if (value == null) {
-            return "";
-        }
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < value.length(); ++i) {
-            char c = value.charAt(i);
-            if (c >= '0' && c <= '9') {
-                result.append(c);
-            }
-        }
-        return result.toString();
+        return MogramLogic.digits(value);
     }
 
     // Принадлежит ли номер одному из аккаунтов, в которые выполнен вход.
@@ -251,11 +227,6 @@ public class MogramSettings {
     }
 
     public static String maskPhone(String phone) {
-        int count = Math.max(digits(phone).length(), 6);
-        StringBuilder result = new StringBuilder("+");
-        for (int i = 0; i < count; ++i) {
-            result.append('•');
-        }
-        return result.toString();
+        return MogramLogic.maskPhone(phone);
     }
 }

@@ -248,7 +248,12 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
         frameContainerView.addView(frameLayout2, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.LEFT | Gravity.TOP, 0, 78, 0, 0));
 
         TextureView textureView = new TextureView(context);
+        textureView.setVisibility(View.GONE); // Mogram: анимированная сцена с кругами отключена
         frameLayout2.addView(textureView, LayoutHelper.createFrame(ICON_WIDTH_DP, ICON_HEIGHT_DP, Gravity.CENTER));
+        android.widget.ImageView mogramPlane = new android.widget.ImageView(context);
+        mogramPlane.setImageResource(R.drawable.mogram_plane);
+        mogramPlane.setScaleType(android.widget.ImageView.ScaleType.FIT_CENTER);
+        frameLayout2.addView(mogramPlane, LayoutHelper.createFrame(ICON_WIDTH_DP, ICON_HEIGHT_DP, Gravity.CENTER));
         textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
             public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {

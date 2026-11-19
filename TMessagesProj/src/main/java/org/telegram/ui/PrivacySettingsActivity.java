@@ -149,6 +149,8 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
     private int decoyRow; // Mogram
     private int lockRow; // Mogram
     private int commandsRow; // Mogram
+    private int roundFocusRow; // Mogram
+    private int roundFocusDetailRow; // Mogram
     private int commandsDetailRow; // Mogram
     private int lockDetailRow; // Mogram
     private int mogramMusicRow; // Mogram
@@ -665,6 +667,10 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                 } else {
                     cell.setChecked(newSuggest = true);
                 }
+            } else if (position == roundFocusRow) { // Mogram
+                final TextCheckCell cell = (TextCheckCell) view;
+                MogramSettings.setRoundFocus(!MogramSettings.roundFocus());
+                cell.setChecked(MogramSettings.roundFocus());
             } else if (position == commandsRow) { // Mogram
                 final TextCheckCell cell = (TextCheckCell) view;
                 MogramSettings.setCommandsEnabled(!MogramSettings.commandsEnabled());
@@ -917,6 +923,8 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
         pluginsRow = rowCount++; // Mogram
         mogramMusicRow = rowCount++; // Mogram
         decoyRow = rowCount++; // Mogram
+        roundFocusRow = rowCount++; // Mogram
+        roundFocusDetailRow = rowCount++; // Mogram
         commandsRow = rowCount++; // Mogram
         commandsDetailRow = rowCount++; // Mogram
         lockRow = rowCount++; // Mogram
@@ -1196,7 +1204,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                     position == noncontactsRow ||
                     position == deleteAccountRow && !getContactsController().getLoadingDeleteInfo() ||
                     position == newChatsRow && !getContactsController().getLoadingGlobalSettings() ||
-                    position == ghostRow || position == streamerRow || position == keepRow || position == lockRow || position == commandsRow || position == quickRow || position == mogramMusicRow || position == pluginsRow || position == decoyRow ||
+                    position == ghostRow || position == streamerRow || position == keepRow || position == lockRow || position == commandsRow || position == roundFocusRow || position == quickRow || position == mogramMusicRow || position == pluginsRow || position == decoyRow ||
                     position == emailLoginRow || position == paymentsClearRow || position == secretMapRow ||
                     position == contactsSyncRow || position == passportRow || position == contactsDeleteRow ||
                     position == contactsSuggestRow || position == autoDeleteMesages || position == botsBiometryRow;
@@ -1395,7 +1403,9 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                 case 1:
                     TextInfoPrivacyCell privacyCell = (TextInfoPrivacyCell) holder.itemView;
                     boolean last = position == getItemCount() - 1;
-                    if (position == commandsDetailRow) { // Mogram
+                    if (position == roundFocusDetailRow) { // Mogram
+                        privacyCell.setText(getString("MogramRoundFocusInfo", R.string.MogramRoundFocusInfo));
+                    } else if (position == commandsDetailRow) { // Mogram
                         privacyCell.setText(getString("MogramCommandsInfo", R.string.MogramCommandsInfo));
                     } else if (position == lockDetailRow) { // Mogram
                         privacyCell.setText(getString("MogramLockInfo", R.string.MogramLockInfo));
@@ -1456,6 +1466,8 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                         textCheckCell.setTextAndCheck(getString("SyncContacts", R.string.SyncContacts), newSync, true);
                     } else if (position == contactsSuggestRow) {
                         textCheckCell.setTextAndCheck(getString("SuggestContacts", R.string.SuggestContacts), newSuggest, false);
+                    } else if (position == roundFocusRow) { // Mogram
+                        textCheckCell.setTextAndCheck(getString("MogramRoundFocus", R.string.MogramRoundFocus), MogramSettings.roundFocus(), false);
                     } else if (position == commandsRow) { // Mogram
                         textCheckCell.setTextAndCheck(getString("MogramCommands", R.string.MogramCommands), MogramSettings.commandsEnabled(), false);
                     } else if (position == lockRow) { // Mogram
@@ -1585,11 +1597,11 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                     position == deleteAccountRow || position == webSessionsRow || position == groupsRow || position == paymentsClearRow ||
                     position == secretMapRow || position == contactsDeleteRow || position == botsBiometryRow) {
                 return 0;
-            } else if (position == privacyShadowRow || position == ghostDetailRow || position == streamerDetailRow || position == keepDetailRow || position == quickDetailRow || position == lockDetailRow || position == commandsDetailRow || position == deleteAccountDetailRow || position == groupsDetailRow || position == sessionsDetailRow || position == secretDetailRow || position == botsDetailRow || position == contactsDetailRow || position == newChatsSectionRow) {
+            } else if (position == privacyShadowRow || position == ghostDetailRow || position == streamerDetailRow || position == keepDetailRow || position == quickDetailRow || position == lockDetailRow || position == commandsDetailRow || position == roundFocusDetailRow || position == deleteAccountDetailRow || position == groupsDetailRow || position == sessionsDetailRow || position == secretDetailRow || position == botsDetailRow || position == contactsDetailRow || position == newChatsSectionRow) {
                 return 1;
             } else if (position == securitySectionRow || position == advancedSectionRow || position == privacySectionRow || position == secretSectionRow || position == botsSectionRow || position == contactsSectionRow || position == newChatsHeaderRow) {
                 return 2;
-            } else if (position == secretWebpageRow || position == contactsSyncRow || position == contactsSuggestRow || position == newChatsRow || position == ghostRow || position == streamerRow || position == keepRow || position == lockRow || position == commandsRow) {
+            } else if (position == secretWebpageRow || position == contactsSyncRow || position == contactsSuggestRow || position == newChatsRow || position == ghostRow || position == streamerRow || position == keepRow || position == lockRow || position == commandsRow || position == roundFocusRow) {
                 return 3;
             } else if (position == botsAndWebsitesShadowRow) {
                 return 4;
