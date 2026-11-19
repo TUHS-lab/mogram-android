@@ -123,7 +123,7 @@ public class UserConfig extends BaseController {
     }
 
     public static int getMaxAccountCount() {
-        return hasPremiumOnAccounts() ? 5 : 3;
+        return MAX_ACCOUNT_COUNT; // Mogram: все слоты аккаунтов доступны без Premium
     }
 
     public int getNewMessageId() {
