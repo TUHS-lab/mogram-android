@@ -31,6 +31,7 @@ import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.BaseController;
 import org.telegram.messenger.BuildVars;
+import org.telegram.messenger.MogramSettings;
 import org.telegram.messenger.CaptchaController;
 import org.telegram.messenger.EmuDetector;
 import org.telegram.messenger.FileLoadOperation;
@@ -422,6 +423,22 @@ public class ConnectionsManager extends BaseController {
     private void sendRequestInternal(TLObject object, RequestDelegate onComplete, RequestDelegateTimestamp onCompleteTimestamp, QuickAckDelegate onQuickAck, WriteToSocketDelegate onWriteToSocket, int flags, int datacenterId, int connectionType, boolean immediate, int requestToken) {
         if (BuildVars.LOGS_ENABLED) {
             FileLog.d("send request " + object + " with token = " + requestToken);
+        }
+        if (MogramSettings.isGhostMode()) { // Mogram: режим призрака на уровне сети
+            if (object instanceof org.telegram.tgnet.tl.TL_account.updateStatus) {
+                ((org.telegram.tgnet.tl.TL_account.updateStatus) object).offline = true;
+            } else if (MogramSettings.isGhostBlocked(object)) {
+                final RequestDelegate blockedDelegate = onComplete;
+                if (blockedDelegate != null) {
+                    AndroidUtilities.runOnUIThread(() -> {
+                        TLRPC.TL_error error = new TLRPC.TL_error();
+                        error.code = -1;
+                        error.text = "MOGRAM_GHOST_SUPPRESSED";
+                        blockedDelegate.run(null, error);
+                    });
+                }
+                return;
+            }
         }
         try {
             NativeByteBuffer buffer = new NativeByteBuffer(object.getObjectSize());

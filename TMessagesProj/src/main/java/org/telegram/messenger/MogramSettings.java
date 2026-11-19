@@ -197,6 +197,17 @@ public class MogramSettings {
         prefs().edit().putBoolean(COMMANDS, value).apply();
     }
 
+    // Режим призрака на уровне сети: запросы, которые выдают прочтение, просмотр историй или набор текста,
+    // не уходят на сервер; запрос "в сети" превращается в "не в сети".
+    public static boolean isGhostBlocked(org.telegram.tgnet.TLObject object) {
+        return object instanceof org.telegram.tgnet.TLRPC.TL_messages_readHistory
+                || object instanceof org.telegram.tgnet.TLRPC.TL_channels_readHistory
+                || object instanceof org.telegram.tgnet.TLRPC.TL_messages_readMessageContents
+                || object instanceof org.telegram.tgnet.TLRPC.TL_messages_setTyping
+                || object instanceof org.telegram.tgnet.tl.TL_stories.TL_stories_readStories
+                || object instanceof org.telegram.tgnet.tl.TL_stories.TL_stories_incrementStoryViews;
+    }
+
     // Режим стримера: свой номер телефона скрыт во всём интерфейсе.
     public static boolean isStreamerMode() {
         return prefs().getBoolean(STREAMER, false);
