@@ -82,6 +82,33 @@ public class MogramLogicTest {
         eq("key", "-100123:45", MogramLogic.deletedKey(-100123L, 45));
         eq("key личный", "0:7", MogramLogic.deletedKey(0, 7));
 
+
+        // registrationEstimate и registrationText
+        eq("reg опорная точка", 1382662080L, MogramLogic.registrationEstimate(217509L)[0]);
+        eq("reg опорная точка граница", 0L, MogramLogic.registrationEstimate(217509L)[1]);
+        eq("reg раньше первой", -1L, MogramLogic.registrationEstimate(1L)[1]);
+        eq("reg раньше первой время", 1382662080L, MogramLogic.registrationEstimate(1L)[0]);
+        eq("reg позже последней", 1L, MogramLogic.registrationEstimate(9_000_000_000L)[1]);
+        eq("reg позже последней время", 1764543600L, MogramLogic.registrationEstimate(9_000_000_000L)[0]);
+        final long mid = MogramLogic.registrationEstimate(1_000_000_000L)[0];
+        eq("reg интерполяция между точками", true, mid > 1574693313L && mid < 1576957200L);
+        long previous = 0;
+        boolean monotonic = true;
+        for (long id = 217509L; id < 8_587_904_527L; id += 7_321_123L) {
+            final long t = MogramLogic.registrationEstimate(id)[0];
+            if (t < previous) {
+                monotonic = false;
+            }
+            previous = t;
+        }
+        eq("reg не убывает с ростом номера", true, monotonic);
+        eq("reg текст опорной точки", "≈ 2013-10", MogramLogic.registrationText(217509L));
+        eq("reg текст до первой", "≤ 2013-10", MogramLogic.registrationText(100L));
+        eq("reg текст после последней", "≥ 2025-11", MogramLogic.registrationText(9_999_999_999L));
+        eq("reg текст нуль", "", MogramLogic.registrationText(0));
+        eq("reg текст отрицательный", "", MogramLogic.registrationText(-5));
+        eq("reg текст формат", true, MogramLogic.registrationText(2_000_000_000L).matches("≈ 20[0-9][0-9]-[0-9][0-9]"));
+
         System.out.println("Проверок: " + checks + ", ошибок: " + failed);
         if (failed > 0) {
             System.exit(1);
