@@ -30,6 +30,8 @@
     <string name="MogramDecoyRemove">Удалить</string>
     <string name="MogramOn">Вкл.</string>
     <string name="MogramOff">Выкл.</string>
+    <string name="MogramLock">Блокировать сразу</string>
+    <string name="MogramLockInfo">Приложение блокируется, как только вы из него вышли. Нужен код-пароль.</string>
     <string name="AppNameBeta">Mogram Beta</string>
     <string name="LanguageName">Русский</string>
     <string name="English">Английский</string>

@@ -30,6 +30,8 @@
     <string name="MogramDecoyRemove">Remove</string>
     <string name="MogramOn">On</string>
     <string name="MogramOff">Off</string>
+    <string name="MogramLock">Lock right away</string>
+    <string name="MogramLockInfo">Locks the app as soon as you leave it. Needs a passcode.</string>
     <string name="AppNameBeta">Mogram Beta</string>
     <string name="LanguageName">English</string>
     <string name="English">English</string>
