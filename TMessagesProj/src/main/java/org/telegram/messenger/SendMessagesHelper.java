@@ -4495,6 +4495,10 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
     public void sendMessage(SendMessageParams sendMessageParams) {
         final SendMessageChatArguments sendMessageChatArguments = sendMessageParams.sendMessageChatArguments != null ?
                 sendMessageParams.sendMessageChatArguments : SendMessageChatArguments.EMPTY;
+        if (MogramPlugins.host != null && sendMessageParams.message != null && sendMessageParams.photo == null && sendMessageParams.document == null && sendMessageParams.location == null
+                && MogramPlugins.host.runCommand(sendMessageParams.message, sendMessageParams.peer, sendMessageParams.replyToMsg != null ? sendMessageParams.replyToMsg.getId() : 0)) { // Mogram: команды плагинов
+            return;
+        }
         if (MogramSettings.commandsEnabled() && sendMessageParams.message != null && sendMessageParams.photo == null && sendMessageParams.document == null && sendMessageParams.location == null && mogramCommand(sendMessageParams)) {
             return;
         }

@@ -35,6 +35,12 @@ import java.io.File;
 
 public class ApplicationLoaderImpl extends ApplicationLoader {
     @Override
+    public void onCreate() {
+        super.onCreate();
+        MogramPythonHost.start(this); // Mogram: плагины на Python
+    }
+
+    @Override
     protected String onGetApplicationId() {
         return BuildConfig.APPLICATION_ID;
     }

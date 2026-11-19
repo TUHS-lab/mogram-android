@@ -152,6 +152,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
     private int commandsDetailRow; // Mogram
     private int lockDetailRow; // Mogram
     private int mogramMusicRow; // Mogram
+    private int pluginsRow; // Mogram
     private int quickDetailRow; // Mogram
     private int newChatsSectionRow;
     private int advancedSectionRow;
@@ -679,6 +680,8 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                 }
             } else if (position == decoyRow) { // Mogram
                 showDecoyDialog();
+            } else if (position == pluginsRow) { // Mogram
+                presentFragment(new MogramPluginsActivity());
             } else if (position == mogramMusicRow) { // Mogram
                 presentFragment(new MogramMusicActivity());
             } else if (position == quickRow) { // Mogram
@@ -911,6 +914,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
         streamerDetailRow = rowCount++; // Mogram
         keepRow = rowCount++; // Mogram
         keepDetailRow = rowCount++; // Mogram
+        pluginsRow = rowCount++; // Mogram
         mogramMusicRow = rowCount++; // Mogram
         decoyRow = rowCount++; // Mogram
         commandsRow = rowCount++; // Mogram
@@ -1192,7 +1196,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                     position == noncontactsRow ||
                     position == deleteAccountRow && !getContactsController().getLoadingDeleteInfo() ||
                     position == newChatsRow && !getContactsController().getLoadingGlobalSettings() ||
-                    position == ghostRow || position == streamerRow || position == keepRow || position == lockRow || position == commandsRow || position == quickRow || position == mogramMusicRow || position == decoyRow ||
+                    position == ghostRow || position == streamerRow || position == keepRow || position == lockRow || position == commandsRow || position == quickRow || position == mogramMusicRow || position == pluginsRow || position == decoyRow ||
                     position == emailLoginRow || position == paymentsClearRow || position == secretMapRow ||
                     position == contactsSyncRow || position == passportRow || position == contactsDeleteRow ||
                     position == contactsSuggestRow || position == autoDeleteMesages || position == botsBiometryRow;
@@ -1474,7 +1478,9 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                     loadingLen = 16;
                     value = null;
                     textCell2.setPrioritizeTitleOverValue(false);
-                    if (position == decoyRow) { // Mogram
+                    if (position == pluginsRow) { // Mogram
+                        textCell2.setTextAndValueAndIcon(getString("MogramPlugins", R.string.MogramPlugins), ".plugin", true, R.drawable.msg2_autodelete, true);
+                    } else if (position == decoyRow) { // Mogram
                         textCell2.setTextAndValueAndIcon(getString("MogramDecoy", R.string.MogramDecoy), getString(MogramSettings.hasDecoy() ? R.string.MogramOn : R.string.MogramOff), true, R.drawable.msg2_autodelete, true);
                     } else if (position == mogramMusicRow) { // Mogram
                         textCell2.setTextAndValueAndIcon(getString("MogramMusic", R.string.MogramMusic), "SoundCloud", true, R.drawable.msg2_autodelete, true);
@@ -1587,7 +1593,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                 return 3;
             } else if (position == botsAndWebsitesShadowRow) {
                 return 4;
-            } else if (position == decoyRow || position == mogramMusicRow || position == quickRow || position == autoDeleteMesages || position == sessionsRow || position == emailLoginRow || position == passwordRow || position == passkeysRow || position == passcodeRow || position == blockedRow) {
+            } else if (position == pluginsRow || position == decoyRow || position == mogramMusicRow || position == quickRow || position == autoDeleteMesages || position == sessionsRow || position == emailLoginRow || position == passwordRow || position == passkeysRow || position == passcodeRow || position == blockedRow) {
                 return 5;
             }
             return 0;

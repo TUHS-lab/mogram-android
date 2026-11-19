@@ -35,6 +35,13 @@
     <string name="MogramCommands">Chat commands</string>
     <string name="MogramCommandsInfo">Type a command instead of a message: .id shows chat and message ids, .mute and .unmute control notifications. In reply to a message: .pin, .unpin, and .del (your own message).</string>
     <string name="MogramCard">Card image</string>
+    <string name="MogramPlugins">Plugins</string>
+    <string name="MogramPluginsInstall">Install a .plugin file</string>
+    <string name="MogramPluginsHint">Python plugins in the .plugin format. Commands (.name) and incoming message events work; menus and settings are not supported yet.</string>
+    <string name="MogramPluginsUnavailable">The plugin engine is not available in this build.</string>
+    <string name="MogramPluginsNotPlugin">Choose a file with the .plugin extension</string>
+    <string name="MogramPluginsInstalled">Plugin installed</string>
+    <string name="MogramPluginsFailed">Could not install the plugin</string>
     <string name="AppNameBeta">Mogram Beta</string>
     <string name="LanguageName">English</string>
     <string name="English">English</string>
