@@ -1732,6 +1732,63 @@ public class ChatActivity extends BaseFragment implements
         }
     }
 
+    private boolean mogramFocused;
+    private boolean mogramScrollHooked;
+
+    // Mogram: пока играет кружок, всё остальное в чате размыто (Android 12 и новее). Сам кружок рисуется
+    // отдельным видом поверх списка, пилюли времени остаются у ячейки, которую мы не размываем.
+    private void mogramApplyRoundFocus(MessageObject playing) {
+        if (android.os.Build.VERSION.SDK_INT < 31 || !MogramSettings.roundFocus() || chatListView == null || playing == null) {
+            return;
+        }
+        final android.graphics.RenderEffect blur = android.graphics.RenderEffect.createBlurEffect(dp(12), dp(12), android.graphics.Shader.TileMode.CLAMP);
+        for (int i = 0; i < chatListView.getChildCount(); ++i) {
+            final View child = chatListView.getChildAt(i);
+            boolean isPlaying = false;
+            if (child instanceof ChatMessageCell) {
+                final MessageObject object = ((ChatMessageCell) child).getMessageObject();
+                isPlaying = object != null && object.getId() == playing.getId();
+            }
+            child.setRenderEffect(isPlaying ? null : blur);
+        }
+        if (actionBar != null) {
+            actionBar.setRenderEffect(blur);
+        }
+        if (chatActivityEnterView != null) {
+            chatActivityEnterView.setRenderEffect(blur);
+        }
+        mogramFocused = true;
+        if (!mogramScrollHooked) {
+            mogramScrollHooked = true;
+            chatListView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    if (mogramFocused && dy != 0) {
+                        mogramClearRoundFocus(); // прокрутка убирает размытие
+                    }
+                }
+            });
+        }
+    }
+
+    private void mogramClearRoundFocus() {
+        if (!mogramFocused || android.os.Build.VERSION.SDK_INT < 31) {
+            return;
+        }
+        mogramFocused = false;
+        if (chatListView != null) {
+            for (int i = 0; i < chatListView.getChildCount(); ++i) {
+                chatListView.getChildAt(i).setRenderEffect(null);
+            }
+        }
+        if (actionBar != null) {
+            actionBar.setRenderEffect(null);
+        }
+        if (chatActivityEnterView != null) {
+            chatActivityEnterView.setRenderEffect(null);
+        }
+    }
+
     private final static int copy = 10;
     private final static int forward = 11;
     private final static int delete = 12;
@@ -23730,6 +23787,9 @@ public class ChatActivity extends BaseFragment implements
             if (messageObject.eventId != 0) {
                 return;
             }
+            if (messageObject.isRoundVideo()) { // Mogram
+                mogramApplyRoundFocus(messageObject);
+            }
             sendSecretMessageRead(messageObject, true);
 
             if ((messageObject.isRoundVideo() || messageObject.isVideo()) && fragmentView != null && fragmentView.getParent() != null) {
@@ -23860,6 +23920,7 @@ public class ChatActivity extends BaseFragment implements
                 }
             }
         } else if (id == NotificationCenter.messagePlayingDidReset || id == NotificationCenter.messagePlayingPlayStateChanged) {
+            mogramClearRoundFocus(); // Mogram: конец или пауза кружка
             if (id == NotificationCenter.messagePlayingDidReset) {
                 AndroidUtilities.runOnUIThread(destroyTextureViewRunnable);
             }

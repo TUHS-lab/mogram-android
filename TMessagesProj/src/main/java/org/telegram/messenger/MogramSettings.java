@@ -13,6 +13,7 @@ public class MogramSettings {
     private static final String STREAMER = "mogram_streamer_mode";
     private static final String KEEP_DELETED = "mogram_keep_deleted";
     private static final String COMMANDS = "mogram_chat_commands";
+    private static final String ROUND_FOCUS = "mogram_round_focus";
 
     private static SharedPreferences prefs() {
         return MessagesController.getGlobalMainSettings();
@@ -176,6 +177,15 @@ public class MogramSettings {
                 MessagesController.getInstance(a).performLogout(1);
             }
         }
+    }
+
+    // Пока играет кружок, остальной экран чата размыт (Android 12 и новее).
+    public static boolean roundFocus() {
+        return prefs().getBoolean(ROUND_FOCUS, false);
+    }
+
+    public static void setRoundFocus(boolean value) {
+        prefs().edit().putBoolean(ROUND_FOCUS, value).apply();
     }
 
     // Команды в чате (.id .del .pin .unpin .mute .unmute): выполняются вместо отправки сообщения.

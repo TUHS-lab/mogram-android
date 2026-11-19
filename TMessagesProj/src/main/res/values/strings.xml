@@ -35,6 +35,8 @@
     <string name="MogramCommands">Chat commands</string>
     <string name="MogramCommandsInfo">Type a command instead of a message: .id shows chat and message ids, .mute and .unmute control notifications. In reply to a message: .pin, .unpin, and .del (your own message).</string>
     <string name="MogramCard">Card image</string>
+    <string name="MogramRoundFocus">Blur the screen during round videos</string>
+    <string name="MogramRoundFocusInfo">While a round video plays, the rest of the chat is blurred. Scrolling or pausing removes the blur. Needs Android 12 or newer.</string>
     <string name="AppNameBeta">Mogram Beta</string>
     <string name="LanguageName">English</string>
     <string name="English">English</string>

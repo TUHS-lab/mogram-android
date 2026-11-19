@@ -36,6 +36,8 @@
     <string name="MogramCommandsInfo">Пишите команду вместо сообщения: .id покажет номера чата и сообщения, .mute и .unmute управляют уведомлениями. В ответ на сообщение: .pin, .unpin и .del (своё сообщение).</string>
     <string name="MogramCard">Картинка-карточка</string>
     <string name="TelegramVersion">Mogram для Android, неофициальный форк Telegram. %1$s</string>
+    <string name="MogramRoundFocus">Размывать экран при просмотре кружка</string>
+    <string name="MogramRoundFocusInfo">Пока играет кружок, остальной чат размыт. Прокрутка или пауза убирают размытие. Нужен Android 12 или новее.</string>
     <string name="AppNameBeta">Mogram Beta</string>
     <string name="LanguageName">Русский</string>
     <string name="English">Английский</string>
