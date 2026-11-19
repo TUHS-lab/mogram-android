@@ -24,3 +24,16 @@ jobs:
             TMessagesProj/src/main/java/org/telegram/messenger/MogramLogic.java \
             tests/MogramLogicTest.java
           java -Dfile.encoding=UTF-8 -cp out MogramLogicTest
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check resources.
+        run: python tests/check_resources.py
+      - name: Plugin engine tests.
+        run: |
+          if [ -f TMessagesProj_AppStandalone/src/main/python/mogram_host.py ]; then
+            python tests/test_plugins.py
+          else
+            echo "Плагинов в этой ветке нет, пропуск"
+          fi
+
