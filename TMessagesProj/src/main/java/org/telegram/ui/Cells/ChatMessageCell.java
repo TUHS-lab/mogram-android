@@ -15679,9 +15679,11 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
             currentTimeString = TextUtils.concat("⭐️", AndroidUtilities.formatWholeNumber((int) starsPrice, 0), "  ", currentTimeString);
             currentTimeString = StarsIntroActivity.replaceStars(currentTimeString, 0.8f, null, 0, dp(-.33f), 0.94f);
         }
-        if (MogramSettings.isMarkedDeleted(currentMessageObject.getDialogId(), currentMessageObject.getId())) { // Mogram: пометка "удалено"
+        final boolean mogramDeleted = MogramSettings.isMarkedDeleted(currentMessageObject.getDialogId(), currentMessageObject.getId());
+        if (mogramDeleted) { // Mogram: пометка "удалено" и полупрозрачность
             currentTimeString = TextUtils.concat(getString(R.string.MogramDeleted), ", ", currentTimeString);
         }
+        setAlpha(mogramDeleted ? 0.6f : 1f);
         if (currentMessageObject.messageOwner != null && currentMessageObject.messageOwner.schedule_repeat_period != 0) {
             final int period = currentMessageObject.messageOwner.schedule_repeat_period;
             if (period == 365 * 86400) {
