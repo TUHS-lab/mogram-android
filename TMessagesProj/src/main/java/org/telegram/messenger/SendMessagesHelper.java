@@ -4453,9 +4453,15 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
             case ".id": {
                 StringBuilder sb = new StringBuilder();
                 sb.append("chat id: ").append(dialogId);
+                if (dialogId > 0) {
+                    sb.append("\nregistered: ").append(MogramLogic.registrationText(dialogId));
+                }
                 if (reply != null) {
                     sb.append("\nmessage id: ").append(reply.getId());
                     sb.append("\nfrom id: ").append(reply.getFromChatId());
+                    if (reply.getFromChatId() > 0) {
+                        sb.append("\nfrom registered: ").append(MogramLogic.registrationText(reply.getFromChatId()));
+                    }
                 }
                 final String result = sb.toString();
                 AndroidUtilities.runOnUIThread(() -> {
