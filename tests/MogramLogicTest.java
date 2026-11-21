@@ -1,4 +1,5 @@
 import org.telegram.messenger.MogramLogic;
+import org.telegram.messenger.MogramScam;
 
 // Тесты чистой логики Mogram без JUnit: запуск `java MogramLogicTest`, при ошибке код выхода 1.
 public class MogramLogicTest {
