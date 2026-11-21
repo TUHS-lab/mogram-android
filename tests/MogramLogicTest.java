@@ -71,6 +71,18 @@ public class MogramLogicTest {
         eq("cmd unmute", ".unmute", MogramLogic.chatCommandName(".unmute"));
         eq("cmd unpin", ".unpin", MogramLogic.chatCommandName(".unpin"));
         eq("cmd del", ".del", MogramLogic.chatCommandName(".del"));
+        eq("cmd ghost", ".ghost", MogramLogic.chatCommandName(".ghost"));
+        // idListContains / idListToggle
+        eq("list пусто", false, MogramLogic.idListContains("", 5));
+        eq("list null", false, MogramLogic.idListContains(null, 5));
+        eq("list есть", true, MogramLogic.idListContains("1,5,-7", 5));
+        eq("list отрицательное", true, MogramLogic.idListContains("1,5,-7", -7));
+        eq("list не подстрока", false, MogramLogic.idListContains("15", 5));
+        eq("toggle добавить", "1,5", MogramLogic.idListToggle("1", 5));
+        eq("toggle в пустой", "5", MogramLogic.idListToggle("", 5));
+        eq("toggle убрать", "1,-7", MogramLogic.idListToggle("1,5,-7", 5));
+        eq("toggle убрать последний", "", MogramLogic.idListToggle("5", 5));
+        eq("toggle дважды", "1", MogramLogic.idListToggle(MogramLogic.idListToggle("1", 5), 5));
         eq("cmd неизвестная", null, MogramLogic.chatCommandName(".unknown"));
         eq("cmd с аргументом", null, MogramLogic.chatCommandName(".del 5"));
         eq("cmd обычный текст", null, MogramLogic.chatCommandName("привет"));

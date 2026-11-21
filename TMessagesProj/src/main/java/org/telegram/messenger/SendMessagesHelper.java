@@ -4470,6 +4470,12 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
                 });
                 return true;
             }
+            case ".ghost": {
+                final boolean exempt = MogramSettings.toggleGhostExempt(dialogId);
+                AndroidUtilities.runOnUIThread(() -> android.widget.Toast.makeText(ApplicationLoader.applicationContext,
+                        exempt ? "Ghost mode: off in this chat" : "Ghost mode: on in this chat", android.widget.Toast.LENGTH_SHORT).show());
+                return true;
+            }
             case ".mute":
             case ".unmute":
                 getNotificationsController().muteDialog(dialogId, 0, text.equals(".mute"));

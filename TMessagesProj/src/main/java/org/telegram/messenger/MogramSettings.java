@@ -10,6 +10,7 @@ import java.util.Set;
 public class MogramSettings {
 
     private static final String GHOST = "mogram_ghost_mode";
+    private static final String GHOST_EXCEPT = "mogram_ghost_except";
     private static final String STREAMER = "mogram_streamer_mode";
     private static final String KEEP_DELETED = "mogram_keep_deleted";
     private static final String COMMANDS = "mogram_chat_commands";
@@ -197,9 +198,37 @@ public class MogramSettings {
         prefs().edit().putBoolean(COMMANDS, value).apply();
     }
 
+    // Чаты-исключения: в них режим призрака не действует (прочтение и набор уходят как обычно).
+    public static boolean isGhostExempt(long dialogId) {
+        return MogramLogic.idListContains(prefs().getString(GHOST_EXCEPT, ""), dialogId);
+    }
+
+    // Переключает исключение, возвращает true, если чат теперь в исключениях.
+    public static boolean toggleGhostExempt(long dialogId) {
+        final String updated = MogramLogic.idListToggle(prefs().getString(GHOST_EXCEPT, ""), dialogId);
+        prefs().edit().putString(GHOST_EXCEPT, updated).apply();
+        return MogramLogic.idListContains(updated, dialogId);
+    }
+
+    private static long ghostDialogId(org.telegram.tgnet.TLObject object) {
+        if (object instanceof org.telegram.tgnet.TLRPC.TL_messages_readHistory) {
+            return DialogObject.getPeerDialogId(((org.telegram.tgnet.TLRPC.TL_messages_readHistory) object).peer);
+        } else if (object instanceof org.telegram.tgnet.TLRPC.TL_channels_readHistory) {
+            final org.telegram.tgnet.TLRPC.InputChannel channel = ((org.telegram.tgnet.TLRPC.TL_channels_readHistory) object).channel;
+            return channel != null ? -channel.channel_id : 0;
+        } else if (object instanceof org.telegram.tgnet.TLRPC.TL_messages_setTyping) {
+            return DialogObject.getPeerDialogId(((org.telegram.tgnet.TLRPC.TL_messages_setTyping) object).peer);
+        }
+        return 0;
+    }
+
     // Режим призрака на уровне сети: запросы, которые выдают прочтение, просмотр историй или набор текста,
     // не уходят на сервер; запрос "в сети" превращается в "не в сети".
     public static boolean isGhostBlocked(org.telegram.tgnet.TLObject object) {
+        final long dialogId = ghostDialogId(object);
+        if (dialogId != 0 && isGhostExempt(dialogId)) {
+            return false;
+        }
         return object instanceof org.telegram.tgnet.TLRPC.TL_messages_readHistory
                 || object instanceof org.telegram.tgnet.TLRPC.TL_channels_readHistory
                 || object instanceof org.telegram.tgnet.TLRPC.TL_messages_readMessageContents

@@ -99,10 +99,53 @@ public final class MogramLogic {
             case ".pin":
             case ".unpin":
             case ".del":
+            case ".ghost":
                 return text;
             default:
                 return null;
         }
+    }
+
+    // Список чисел в одной строке через запятую: есть ли в нём число.
+    public static boolean idListContains(String list, long id) {
+        if (list == null || list.isEmpty()) {
+            return false;
+        }
+        for (String part : list.split(",")) {
+            if (part.trim().equals(Long.toString(id))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Добавить число в список, а если оно уже есть, убрать. Порядок остальных сохраняется.
+    public static String idListToggle(String list, long id) {
+        final StringBuilder sb = new StringBuilder();
+        boolean found = false;
+        if (list != null && !list.isEmpty()) {
+            for (String part : list.split(",")) {
+                final String item = part.trim();
+                if (item.isEmpty()) {
+                    continue;
+                }
+                if (item.equals(Long.toString(id))) {
+                    found = true;
+                    continue;
+                }
+                if (sb.length() > 0) {
+                    sb.append(',');
+                }
+                sb.append(item);
+            }
+        }
+        if (!found) {
+            if (sb.length() > 0) {
+                sb.append(',');
+            }
+            sb.append(id);
+        }
+        return sb.toString();
     }
 
     // Ключ пометки "удалено": диалог и номер сообщения.
