@@ -10,6 +10,7 @@ import java.util.Set;
 public class MogramSettings {
 
     private static final String GHOST = "mogram_ghost_mode";
+    private static final String PROFILE_ID = "mogram_profile_id";
     private static final String GHOST_EXCEPT = "mogram_ghost_except";
     private static final String STREAMER = "mogram_streamer_mode";
     private static final String KEEP_DELETED = "mogram_keep_deleted";
@@ -235,6 +236,15 @@ public class MogramSettings {
                 || object instanceof org.telegram.tgnet.TLRPC.TL_messages_setTyping
                 || object instanceof org.telegram.tgnet.tl.TL_stories.TL_stories_readStories
                 || object instanceof org.telegram.tgnet.tl.TL_stories.TL_stories_incrementStoryViews;
+    }
+
+    // Показывать ID и примерную дату регистрации в профиле. Включено по умолчанию.
+    public static boolean showProfileId() {
+        return prefs().getBoolean(PROFILE_ID, true);
+    }
+
+    public static void setShowProfileId(boolean value) {
+        prefs().edit().putBoolean(PROFILE_ID, value).apply();
     }
 
     // Режим стримера: свой номер телефона скрыт во всём интерфейсе.

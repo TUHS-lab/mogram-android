@@ -43,6 +43,7 @@
     <string name="MogramPluginsInstalled">Плагин установлен</string>
     <string name="MogramPluginsFailed">Не удалось установить плагин</string>
     <string name="TelegramVersion">Mogram для Android, неофициальный форк Telegram. %1$s</string>
+    <string name="MogramProfileId">Показывать ID и дату регистрации в профилях</string>
     <string name="MogramRoundFocus">Размывать экран при просмотре кружка</string>
     <string name="MogramRoundFocusInfo">Пока играет кружок, остальной чат размыт. Прокрутка или пауза убирают размытие. Нужен Android 12 или новее.</string>
     <string name="AppNameBeta">Mogram Beta</string>
