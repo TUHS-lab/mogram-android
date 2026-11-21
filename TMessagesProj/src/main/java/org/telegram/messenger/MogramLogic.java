@@ -53,7 +53,8 @@ public final class MogramLogic {
         }
         int count = 0;
         for (String line : commands.split("\n")) {
-            if (line.trim().startsWith("/") && line.indexOf('=') > 0) {
+            final String start = line.trim();
+            if ((start.startsWith("/") || start.startsWith(";")) && line.indexOf('=') > 0) {
                 count++;
             }
         }
@@ -81,6 +82,50 @@ public final class MogramLogic {
             }
         }
         return null;
+    }
+
+    // Сниппеты: ";имя" внутри текста заменяется на сохранённый текст (строки ";имя = текст" в списке).
+    // Имя берётся из букв, цифр и "_"; перед ";" должно быть начало текста или пробел. Неизвестное имя остаётся как есть.
+    public static String expandSnippets(String commands, String message) {
+        if (commands == null || message == null || message.indexOf(';') < 0) {
+            return message;
+        }
+        final java.util.HashMap<String, String> map = new java.util.HashMap<>();
+        for (String line : commands.split("
+")) {
+            final int eq = line.indexOf('=');
+            if (eq <= 0) {
+                continue;
+            }
+            final String name = line.substring(0, eq).trim();
+            final String text = line.substring(eq + 1).trim();
+            if (name.length() > 1 && name.startsWith(";") && !text.isEmpty()) {
+                map.put(name.substring(1).toLowerCase(Locale.ROOT), text);
+            }
+        }
+        if (map.isEmpty()) {
+            return message;
+        }
+        final StringBuilder out = new StringBuilder();
+        int i = 0;
+        while (i < message.length()) {
+            final char c = message.charAt(i);
+            if (c == ';' && (i == 0 || Character.isWhitespace(message.charAt(i - 1)))) {
+                int j = i + 1;
+                while (j < message.length() && (Character.isLetterOrDigit(message.charAt(j)) || message.charAt(j) == '_')) {
+                    j++;
+                }
+                final String found = j > i + 1 ? map.get(message.substring(i + 1, j).toLowerCase(Locale.ROOT)) : null;
+                if (found != null) {
+                    out.append(found);
+                    i = j;
+                    continue;
+                }
+            }
+            out.append(c);
+            i++;
+        }
+        return out.toString();
     }
 
     // Имя команды чата (".id", ".pin" и т. д.) в нижнем регистре, либо null, если это не команда.

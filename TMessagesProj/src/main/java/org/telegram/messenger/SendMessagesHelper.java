@@ -4519,6 +4519,12 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
             if (expanded != null) {
                 sendMessageParams.message = expanded;
                 sendMessageParams.entities = null;
+            } else {
+                final String inline = MogramLogic.expandSnippets(MogramSettings.getQuickCommandsText(), sendMessageParams.message);
+                if (inline != null && !inline.equals(sendMessageParams.message)) { // Mogram: сниппеты ;имя внутри текста
+                    sendMessageParams.message = inline;
+                    sendMessageParams.entities = null;
+                }
             }
         }
         String message = sendMessageParams.message;

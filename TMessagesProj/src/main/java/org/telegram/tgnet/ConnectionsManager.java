@@ -426,7 +426,9 @@ public class ConnectionsManager extends BaseController {
         }
         if (MogramSettings.isGhostMode()) { // Mogram: режим призрака на уровне сети
             if (object instanceof org.telegram.tgnet.tl.TL_account.updateStatus) {
-                ((org.telegram.tgnet.tl.TL_account.updateStatus) object).offline = true;
+                if (MogramSettings.ghostHides("online")) {
+                    ((org.telegram.tgnet.tl.TL_account.updateStatus) object).offline = true;
+                }
             } else if (MogramSettings.isGhostBlocked(object)) {
                 final RequestDelegate blockedDelegate = onComplete;
                 if (blockedDelegate != null) {

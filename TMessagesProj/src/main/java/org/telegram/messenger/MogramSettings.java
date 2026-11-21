@@ -223,6 +223,15 @@ public class MogramSettings {
         return 0;
     }
 
+    // Раздельные переключатели призрака (действуют, когда режим включён). По умолчанию всё скрыто.
+    public static boolean ghostHides(String what) {
+        return prefs().getBoolean("mogram_ghost_" + what, true);
+    }
+
+    public static void setGhostHides(String what, boolean value) {
+        prefs().edit().putBoolean("mogram_ghost_" + what, value).apply();
+    }
+
     // Режим призрака на уровне сети: запросы, которые выдают прочтение, просмотр историй или набор текста,
     // не уходят на сервер; запрос "в сети" превращается в "не в сети".
     public static boolean isGhostBlocked(org.telegram.tgnet.TLObject object) {
@@ -230,12 +239,15 @@ public class MogramSettings {
         if (dialogId != 0 && isGhostExempt(dialogId)) {
             return false;
         }
-        return object instanceof org.telegram.tgnet.TLRPC.TL_messages_readHistory
+        if (object instanceof org.telegram.tgnet.TLRPC.TL_messages_readHistory
                 || object instanceof org.telegram.tgnet.TLRPC.TL_channels_readHistory
-                || object instanceof org.telegram.tgnet.TLRPC.TL_messages_readMessageContents
-                || object instanceof org.telegram.tgnet.TLRPC.TL_messages_setTyping
-                || object instanceof org.telegram.tgnet.tl.TL_stories.TL_stories_readStories
-                || object instanceof org.telegram.tgnet.tl.TL_stories.TL_stories_incrementStoryViews;
+                || object instanceof org.telegram.tgnet.TLRPC.TL_messages_readMessageContents) {
+            return ghostHides("read");
+        } else if (object instanceof org.telegram.tgnet.TLRPC.TL_messages_setTyping) {
+            return ghostHides("typing");
+        }
+        return (object instanceof org.telegram.tgnet.tl.TL_stories.TL_stories_readStories
+                || object instanceof org.telegram.tgnet.tl.TL_stories.TL_stories_incrementStoryViews) && ghostHides("stories");
     }
 
     // Показывать ID и примерную дату регистрации в профиле. Включено по умолчанию.

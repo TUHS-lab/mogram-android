@@ -72,6 +72,19 @@ public class MogramLogicTest {
         eq("cmd unpin", ".unpin", MogramLogic.chatCommandName(".unpin"));
         eq("cmd del", ".del", MogramLogic.chatCommandName(".del"));
         eq("cmd ghost", ".ghost", MogramLogic.chatCommandName(".ghost"));
+        // сниппеты ;имя
+        final String snip = "/hi = Привет
+;sig = С уважением, Тест
+;a_1 = один";
+        eq("snip count", 3, MogramLogic.quickCommandsCount(snip));
+        eq("snip в тексте", "Спасибо. С уважением, Тест", MogramLogic.expandSnippets(snip, "Спасибо. ;sig"));
+        eq("snip в начале", "один и два", MogramLogic.expandSnippets(snip, ";a_1 и два"));
+        eq("snip регистр", "один", MogramLogic.expandSnippets(snip, ";A_1"));
+        eq("snip неизвестное", "до ;nope", MogramLogic.expandSnippets(snip, "до ;nope"));
+        eq("snip без пробела перед", "а;sig", MogramLogic.expandSnippets(snip, "а;sig"));
+        eq("snip пустой список", "x ;sig", MogramLogic.expandSnippets("", "x ;sig"));
+        eq("snip null", null, MogramLogic.expandSnippets(snip, null));
+        eq("snip два", "один один", MogramLogic.expandSnippets(snip, ";a_1 ;a_1"));
         // idListContains / idListToggle
         eq("list пусто", false, MogramLogic.idListContains("", 5));
         eq("list null", false, MogramLogic.idListContains(null, 5));
