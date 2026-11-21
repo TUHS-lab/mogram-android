@@ -12433,14 +12433,10 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         } else if (isArchive()) {
             newVisibility = !getStoriesController().getHiddenList().isEmpty();
         } else {
-            newVisibility = !onlySelfStories && getStoriesController().hasStories();
-            onlySelfStories = getStoriesController().hasOnlySelfStories();
+            newVisibility = !MogramSettings.hideStories() && !onlySelfStories && getStoriesController().hasStories(); // Mogram
+            onlySelfStories = !MogramSettings.hideStories() && getStoriesController().hasOnlySelfStories(); // Mogram
         }
 
-        if (MogramSettings.hideStories()) { // Mogram: полоса историй скрыта
-            newVisibility = false;
-            onlySelfStories = false;
-        }
         hasOnlySlefStories = onlySelfStories;
 
         boolean oldStoriesCellVisibility = dialogStoriesCellVisible;
