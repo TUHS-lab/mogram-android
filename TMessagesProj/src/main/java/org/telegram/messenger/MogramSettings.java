@@ -232,6 +232,44 @@ public class MogramSettings {
         prefs().edit().putBoolean("mogram_scam_guard", value).apply();
     }
 
+    // Скрыть полосу историй над списком чатов.
+    public static boolean hideStories() {
+        return prefs().getBoolean("mogram_hide_stories", false);
+    }
+
+    public static void setHideStories(boolean value) {
+        prefs().edit().putBoolean("mogram_hide_stories", value).apply();
+    }
+
+    // Личные заметка и тег о собеседнике (хранятся только у вас на устройстве).
+    public static String getNote(long userId) {
+        return prefs().getString("mogram_note_" + userId, "");
+    }
+
+    public static String getTag(long userId) {
+        return prefs().getString("mogram_tag_" + userId, "");
+    }
+
+    public static void setNote(long userId, String note) {
+        final SharedPreferences.Editor editor = prefs().edit();
+        if (note == null || note.isEmpty()) {
+            editor.remove("mogram_note_" + userId);
+        } else {
+            editor.putString("mogram_note_" + userId, note);
+        }
+        editor.apply();
+    }
+
+    public static void setTag(long userId, String tag) {
+        final SharedPreferences.Editor editor = prefs().edit();
+        if (tag == null || tag.isEmpty()) {
+            editor.remove("mogram_tag_" + userId);
+        } else {
+            editor.putString("mogram_tag_" + userId, tag);
+        }
+        editor.apply();
+    }
+
     // Текст под спойлерами виден сразу (только в сообщениях, у себя при вводе спойлер остаётся).
     public static boolean revealSpoilers() {
         return prefs().getBoolean("mogram_reveal_spoilers", false);

@@ -153,6 +153,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
     private int profileIdRow; // Mogram
     private int revealSpoilersRow; // Mogram
     private int scamGuardRow; // Mogram
+    private int hideStoriesRow; // Mogram
     private int ghostReadRow; // Mogram
     private int ghostTypingRow; // Mogram
     private int ghostStoriesRow; // Mogram
@@ -690,6 +691,10 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                 final TextCheckCell cell = (TextCheckCell) view;
                 MogramSettings.setGhostHides("online", !MogramSettings.ghostHides("online"));
                 cell.setChecked(MogramSettings.ghostHides("online"));
+            } else if (position == hideStoriesRow) { // Mogram
+                final TextCheckCell cell = (TextCheckCell) view;
+                MogramSettings.setHideStories(!MogramSettings.hideStories());
+                cell.setChecked(MogramSettings.hideStories());
             } else if (position == scamGuardRow) { // Mogram
                 final TextCheckCell cell = (TextCheckCell) view;
                 MogramSettings.setScamGuard(!MogramSettings.scamGuard());
@@ -966,6 +971,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
         profileIdRow = rowCount++; // Mogram
         revealSpoilersRow = rowCount++; // Mogram
         scamGuardRow = rowCount++; // Mogram
+        hideStoriesRow = rowCount++; // Mogram
         roundFocusDetailRow = rowCount++; // Mogram
         commandsRow = rowCount++; // Mogram
         commandsDetailRow = rowCount++; // Mogram
@@ -1246,7 +1252,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                     position == noncontactsRow ||
                     position == deleteAccountRow && !getContactsController().getLoadingDeleteInfo() ||
                     position == newChatsRow && !getContactsController().getLoadingGlobalSettings() ||
-                    position == ghostRow || position == streamerRow || position == keepRow || position == lockRow || position == commandsRow || position == roundFocusRow || position == profileIdRow || position == revealSpoilersRow || position == scamGuardRow || position == ghostReadRow || position == ghostTypingRow || position == ghostStoriesRow || position == ghostOnlineRow || position == quickRow || position == mogramMusicRow || position == pluginsRow || position == decoyRow ||
+                    position == ghostRow || position == streamerRow || position == keepRow || position == lockRow || position == commandsRow || position == roundFocusRow || position == profileIdRow || position == revealSpoilersRow || position == scamGuardRow || position == hideStoriesRow || position == ghostReadRow || position == ghostTypingRow || position == ghostStoriesRow || position == ghostOnlineRow || position == quickRow || position == mogramMusicRow || position == pluginsRow || position == decoyRow ||
                     position == emailLoginRow || position == paymentsClearRow || position == secretMapRow ||
                     position == contactsSyncRow || position == passportRow || position == contactsDeleteRow ||
                     position == contactsSuggestRow || position == autoDeleteMesages || position == botsBiometryRow;
@@ -1516,6 +1522,8 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                         textCheckCell.setTextAndCheck(getString("MogramGhostStories", R.string.MogramGhostStories), MogramSettings.ghostHides("stories"), false);
                     } else if (position == ghostOnlineRow) { // Mogram
                         textCheckCell.setTextAndCheck(getString("MogramGhostOnline", R.string.MogramGhostOnline), MogramSettings.ghostHides("online"), false);
+                    } else if (position == hideStoriesRow) { // Mogram
+                        textCheckCell.setTextAndCheck(getString("MogramHideStories", R.string.MogramHideStories), MogramSettings.hideStories(), false);
                     } else if (position == scamGuardRow) { // Mogram
                         textCheckCell.setTextAndCheck(getString("MogramScamGuard", R.string.MogramScamGuard), MogramSettings.scamGuard(), false);
                     } else if (position == revealSpoilersRow) { // Mogram
@@ -1657,7 +1665,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                 return 1;
             } else if (position == securitySectionRow || position == advancedSectionRow || position == privacySectionRow || position == secretSectionRow || position == botsSectionRow || position == contactsSectionRow || position == newChatsHeaderRow) {
                 return 2;
-            } else if (position == secretWebpageRow || position == contactsSyncRow || position == contactsSuggestRow || position == newChatsRow || position == ghostRow || position == streamerRow || position == keepRow || position == lockRow || position == commandsRow || position == roundFocusRow || position == profileIdRow || position == revealSpoilersRow || position == scamGuardRow || position == ghostReadRow || position == ghostTypingRow || position == ghostStoriesRow || position == ghostOnlineRow) {
+            } else if (position == secretWebpageRow || position == contactsSyncRow || position == contactsSuggestRow || position == newChatsRow || position == ghostRow || position == streamerRow || position == keepRow || position == lockRow || position == commandsRow || position == roundFocusRow || position == profileIdRow || position == revealSpoilersRow || position == scamGuardRow || position == hideStoriesRow || position == ghostReadRow || position == ghostTypingRow || position == ghostStoriesRow || position == ghostOnlineRow) {
                 return 3;
             } else if (position == botsAndWebsitesShadowRow) {
                 return 4;

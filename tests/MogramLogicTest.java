@@ -99,6 +99,16 @@ public class MogramLogicTest {
         eq("scam не покупатель", false, MogramScam.isBuyerBait("привет, как дела"));
         eq("scam тревога две", true, MogramScam.isAlarmText("Your account has been blocked. Pass verification: unlock your account"));
         eq("scam тревога одна", false, MogramScam.isAlarmText("пройдите верификацию в банке"));
+        // textCommand
+        eq("text note", ".note", MogramLogic.textCommand(".note купил юзернейм")[0]);
+        eq("text note значение", "купил юзернейм", MogramLogic.textCommand(".note купил юзернейм")[1]);
+        eq("text note пусто", "", MogramLogic.textCommand(".NOTE")[1]);
+        eq("text tag", ".tag", MogramLogic.textCommand("  .tag друг ")[0]);
+        eq("text tag значение", "друг", MogramLogic.textCommand("  .tag друг ")[1]);
+        eq("text очистка", "-", MogramLogic.textCommand(".note -")[1]);
+        eq("text не команда", null, MogramLogic.textCommand(".notebook x"));
+        eq("text обычный", null, MogramLogic.textCommand("привет .note"));
+        eq("text null", null, MogramLogic.textCommand(null));
         // idListContains / idListToggle
         eq("list пусто", false, MogramLogic.idListContains("", 5));
         eq("list null", false, MogramLogic.idListContains(null, 5));

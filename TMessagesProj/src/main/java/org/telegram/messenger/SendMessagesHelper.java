@@ -4443,6 +4443,36 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
         if (params.message == null) {
             return false;
         }
+        final String[] withText = MogramLogic.textCommand(params.message);
+        if (withText != null) {
+            final long target = params.peer;
+            if (target <= 0) {
+                return false;
+            }
+            final boolean isNote = withText[0].equals(".note");
+            final String value = withText[1];
+            final String shown;
+            if (value.isEmpty()) {
+                final String current = isNote ? MogramSettings.getNote(target) : MogramSettings.getTag(target);
+                shown = current.isEmpty() ? "empty" : current;
+            } else if (value.equals("-")) {
+                if (isNote) {
+                    MogramSettings.setNote(target, "");
+                } else {
+                    MogramSettings.setTag(target, "");
+                }
+                shown = "cleared";
+            } else {
+                if (isNote) {
+                    MogramSettings.setNote(target, value);
+                } else {
+                    MogramSettings.setTag(target, value);
+                }
+                shown = "saved: " + value;
+            }
+            AndroidUtilities.runOnUIThread(() -> android.widget.Toast.makeText(ApplicationLoader.applicationContext, (isNote ? "Note " : "Tag ") + shown, android.widget.Toast.LENGTH_SHORT).show());
+            return true;
+        }
         final String text = MogramLogic.chatCommandName(params.message);
         if (text == null) {
             return false;

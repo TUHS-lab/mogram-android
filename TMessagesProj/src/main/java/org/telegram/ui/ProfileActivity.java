@@ -13719,6 +13719,12 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                             if (org.telegram.messenger.MogramSettings.showProfileId()) { // Mogram: ID и примерная дата регистрации
                                 value = value + " · ID " + userId + " · " + org.telegram.messenger.MogramLogic.registrationText(userId);
                             }
+                            if (!org.telegram.messenger.MogramSettings.getTag(userId).isEmpty()) { // Mogram: личный тег и заметка
+                                value = value + " · " + org.telegram.messenger.MogramSettings.getTag(userId);
+                            }
+                            if (!org.telegram.messenger.MogramSettings.getNote(userId).isEmpty()) {
+                                value = value + " · " + org.telegram.messenger.MogramSettings.getNote(userId);
+                            }
                             if (username != null) {
                                 text = "@" + username;
                                 if (org.telegram.messenger.MogramSettings.isStreamerMode() && userId == getUserConfig().getClientUserId()) { // Mogram

@@ -127,6 +127,25 @@ public final class MogramLogic {
         return out.toString();
     }
 
+    // Команды с текстом (".note что угодно", ".tag метка"): {имя, текст}, текст может быть пустым. Иначе null.
+    // "-" вместо текста означает очистить.
+    public static String[] textCommand(String message) {
+        if (message == null) {
+            return null;
+        }
+        final String text = message.trim();
+        final String lower = text.toLowerCase(Locale.ROOT);
+        for (String name : new String[]{".note", ".tag"}) {
+            if (lower.equals(name)) {
+                return new String[]{name, ""};
+            }
+            if (lower.startsWith(name) && text.length() > name.length() && Character.isWhitespace(text.charAt(name.length()))) {
+                return new String[]{name, text.substring(name.length()).trim()};
+            }
+        }
+        return null;
+    }
+
     // Имя команды чата (".id", ".pin" и т. д.) в нижнем регистре, либо null, если это не команда.
     public static String chatCommandName(String message) {
         if (message == null) {
