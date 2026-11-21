@@ -23,9 +23,10 @@ Android client based on the official [Telegram for Android](https://github.com/D
 - [x] Music: SoundCloud search, player and lyrics
 - [x] Chat commands (.id with an estimated registration date, .pin .unpin .del .mute .unmute) and text shortcuts like /hi. Tools: message card image (selected messages that are on screen)
 - [x] Plugins: Python (Chaquopy), commands, events, message-menu items, install `.plugin` files
-- [x] Profile: ID and estimated registration date (switch in settings). Ghost mode exceptions per chat (`.ghost`)
+- [x] Profile: ID and estimated registration date (switch in settings). Ghost mode exceptions per chat (`.ghost`) and separate switches (read, typing, stories, online)
+- [x] Snippets (`;name` inside text), notes and tags (`.note`, `.tag`), local chat pins (`.lpin`), show spoilers right away, hide the stories bar, hide messages of blocked people in groups, warning before suspicious links
 
-> The checked items are written but **not built or tested yet**: the first successful build is still ahead.
+> The build passes in CI and the app starts on an emulator. Most features still need testing on a real account.
 
 ## Build it yourself
 
