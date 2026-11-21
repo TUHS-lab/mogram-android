@@ -223,6 +223,15 @@ public class MogramSettings {
         return 0;
     }
 
+    // Предупреждать перед подозрительными ссылками. По умолчанию включено.
+    public static boolean scamGuard() {
+        return prefs().getBoolean("mogram_scam_guard", true);
+    }
+
+    public static void setScamGuard(boolean value) {
+        prefs().edit().putBoolean("mogram_scam_guard", value).apply();
+    }
+
     // Текст под спойлерами виден сразу (только в сообщениях, у себя при вводе спойлер остаётся).
     public static boolean revealSpoilers() {
         return prefs().getBoolean("mogram_reveal_spoilers", false);

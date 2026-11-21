@@ -178,6 +178,7 @@ import org.telegram.messenger.MediaDataController;
 import org.telegram.messenger.SendMessageChatArguments;
 import org.telegram.messenger.MessageObject;
 import org.telegram.messenger.MogramPlugins;
+import org.telegram.messenger.MogramScam;
 import org.telegram.messenger.MogramSettings;
 import org.telegram.messenger.MessagePreviewParams;
 import org.telegram.messenger.MessageSuggestionParams;
@@ -41860,6 +41861,29 @@ public class ChatActivity extends BaseFragment implements
 
         @Override
         public void didPressUrl(ChatMessageCell cell, final CharacterStyle url, boolean longPress) {
+            // Mogram: защита от скама, спрашиваем перед подозрительной ссылкой
+            if (!longPress && MogramSettings.scamGuard() && url instanceof URLSpan && getParentActivity() != null) {
+                final MessageObject object = cell.getMessageObject();
+                String shown = "";
+                if (object != null && object.messageText instanceof android.text.Spanned) {
+                    final android.text.Spanned spanned = (android.text.Spanned) object.messageText;
+                    final int start = spanned.getSpanStart(url);
+                    final int end = spanned.getSpanEnd(url);
+                    if (start >= 0 && end > start) {
+                        shown = spanned.subSequence(start, end).toString();
+                    }
+                }
+                final String reason = MogramScam.linkReason(shown, ((URLSpan) url).getURL());
+                if (reason != null) {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), getResourceProvider());
+                    builder.setTitle(LocaleController.getString(R.string.MogramScamTitle));
+                    builder.setMessage(reason);
+                    builder.setPositiveButton(LocaleController.getString(R.string.MogramScamOpen), (dialog, which) -> didPressMessageUrl(url, false, object, cell));
+                    builder.setNegativeButton(LocaleController.getString(R.string.Cancel), null);
+                    showDialog(builder.create());
+                    return;
+                }
+            }
             didPressMessageUrl(url, longPress, cell.getMessageObject(), cell);
         }
 

@@ -83,6 +83,21 @@ public class MogramLogicTest {
         eq("snip пустой список", "x ;sig", MogramLogic.expandSnippets("", "x ;sig"));
         eq("snip null", null, MogramLogic.expandSnippets(snip, null));
         eq("snip два", "один один", MogramLogic.expandSnippets(snip, ";a_1 ;a_1"));
+        // скам
+        eq("scam host", "example.com", MogramScam.hostOf("https://www.Example.com/path"));
+        eq("scam host без схемы", "t.me", MogramScam.hostOf("t.me/abc"));
+        eq("scam подмена", true, MogramScam.linkReason("fragment.com", "https://fragment-login.ru/x") != null);
+        eq("scam настоящая", null, MogramScam.linkReason("fragment.com", "https://fragment.com/x"));
+        eq("scam подмена текста", true, MogramScam.linkReason("https://bank.com", "https://evil.example/") != null);
+        eq("scam обычный текст", null, MogramScam.linkReason("нажми сюда", "https://example.com"));
+        eq("scam поддомен", null, MogramScam.linkReason("example.com", "https://login.example.com/"));
+        eq("scam сервис в тексте", true, MogramScam.linkReason("Open Tonkeeper", "https://tonkeeper-login.xyz/") != null);
+        eq("scam гарант", true, MogramScam.isGarantMention("пишите @super_garant_bot"));
+        eq("scam нет гаранта", false, MogramScam.isGarantMention("привет как дела"));
+        eq("scam покупатель", true, MogramScam.isBuyerBait("Do you still sell your @cooluser username?"));
+        eq("scam не покупатель", false, MogramScam.isBuyerBait("привет, как дела"));
+        eq("scam тревога две", true, MogramScam.isAlarmText("Your account has been blocked. Pass verification: unlock your account"));
+        eq("scam тревога одна", false, MogramScam.isAlarmText("пройдите верификацию в банке"));
         // idListContains / idListToggle
         eq("list пусто", false, MogramLogic.idListContains("", 5));
         eq("list null", false, MogramLogic.idListContains(null, 5));

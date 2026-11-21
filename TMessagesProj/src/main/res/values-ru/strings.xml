@@ -48,6 +48,9 @@
     <string name="MogramGhostStories">Скрывать просмотры историй</string>
     <string name="MogramGhostOnline">Скрывать «в сети»</string>
     <string name="MogramRevealSpoilers">Показывать текст под спойлером сразу</string>
+    <string name="MogramScamGuard">Предупреждать о подозрительных ссылках</string>
+    <string name="MogramScamTitle">Подозрительная ссылка</string>
+    <string name="MogramScamOpen">Всё равно открыть</string>
     <string name="MogramProfileId">Показывать ID и дату регистрации в профилях</string>
     <string name="MogramRoundFocus">Размывать экран при просмотре кружка</string>
     <string name="MogramRoundFocusInfo">Пока играет кружок, остальной чат размыт. Прокрутка или пауза убирают размытие. Нужен Android 12 или новее.</string>
