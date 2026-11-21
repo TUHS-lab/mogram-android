@@ -73,9 +73,7 @@ public class MogramLogicTest {
         eq("cmd del", ".del", MogramLogic.chatCommandName(".del"));
         eq("cmd ghost", ".ghost", MogramLogic.chatCommandName(".ghost"));
         // сниппеты ;имя
-        final String snip = "/hi = Привет
-;sig = С уважением, Тест
-;a_1 = один";
+        final String snip = "/hi = Привет\n;sig = С уважением, Тест\n;a_1 = один";
         eq("snip count", 3, MogramLogic.quickCommandsCount(snip));
         eq("snip в тексте", "Спасибо. С уважением, Тест", MogramLogic.expandSnippets(snip, "Спасибо. ;sig"));
         eq("snip в начале", "один и два", MogramLogic.expandSnippets(snip, ";a_1 и два"));

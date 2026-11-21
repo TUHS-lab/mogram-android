@@ -91,8 +91,7 @@ public final class MogramLogic {
             return message;
         }
         final java.util.HashMap<String, String> map = new java.util.HashMap<>();
-        for (String line : commands.split("
-")) {
+        for (String line : commands.split("\n")) {
             final int eq = line.indexOf('=');
             if (eq <= 0) {
                 continue;
