@@ -4500,6 +4500,14 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
                 });
                 return true;
             }
+            case ".lpin": {
+                final boolean pinned = MogramSettings.toggleLocalPin(dialogId);
+                getMessagesController().sortDialogs(null);
+                getNotificationCenter().postNotificationName(NotificationCenter.dialogsNeedReload);
+                AndroidUtilities.runOnUIThread(() -> android.widget.Toast.makeText(ApplicationLoader.applicationContext,
+                        pinned ? "Pinned locally" : "Unpinned locally", android.widget.Toast.LENGTH_SHORT).show());
+                return true;
+            }
             case ".ghost": {
                 final boolean exempt = MogramSettings.toggleGhostExempt(dialogId);
                 AndroidUtilities.runOnUIThread(() -> android.widget.Toast.makeText(ApplicationLoader.applicationContext,

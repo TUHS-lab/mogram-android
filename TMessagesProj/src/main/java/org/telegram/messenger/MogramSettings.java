@@ -232,6 +232,38 @@ public class MogramSettings {
         prefs().edit().putBoolean("mogram_scam_guard", value).apply();
     }
 
+    // Локальные закрепы: чаты, которые поднимаются в списке только у вас, сервер о них не знает.
+    private static java.util.HashSet<Long> localPins;
+
+    private static java.util.HashSet<Long> localPinSet() {
+        if (localPins == null) {
+            final java.util.HashSet<Long> set = new java.util.HashSet<>();
+            final String list = prefs().getString("mogram_local_pins", "");
+            for (String part : list.split(",")) {
+                try {
+                    if (!part.trim().isEmpty()) {
+                        set.add(Long.parseLong(part.trim()));
+                    }
+                } catch (NumberFormatException ignore) {
+                }
+            }
+            localPins = set;
+        }
+        return localPins;
+    }
+
+    public static boolean isLocalPin(long dialogId) {
+        return localPinSet().contains(dialogId);
+    }
+
+    // Переключает локальный закреп, возвращает true, если чат теперь закреплён.
+    public static boolean toggleLocalPin(long dialogId) {
+        final String updated = MogramLogic.idListToggle(prefs().getString("mogram_local_pins", ""), dialogId);
+        prefs().edit().putString("mogram_local_pins", updated).apply();
+        localPins = null;
+        return MogramLogic.idListContains(updated, dialogId);
+    }
+
     // Скрыть полосу историй над списком чатов.
     public static boolean hideStories() {
         return prefs().getBoolean("mogram_hide_stories", false);

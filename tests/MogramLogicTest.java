@@ -73,6 +73,7 @@ public class MogramLogicTest {
         eq("cmd unpin", ".unpin", MogramLogic.chatCommandName(".unpin"));
         eq("cmd del", ".del", MogramLogic.chatCommandName(".del"));
         eq("cmd ghost", ".ghost", MogramLogic.chatCommandName(".ghost"));
+        eq("cmd lpin", ".lpin", MogramLogic.chatCommandName(".lpin"));
         // сниппеты ;имя
         final String snip = "/hi = Привет\n;sig = С уважением, Тест\n;a_1 = один";
         eq("snip count", 3, MogramLogic.quickCommandsCount(snip));

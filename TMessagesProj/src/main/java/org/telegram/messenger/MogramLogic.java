@@ -163,6 +163,7 @@ public final class MogramLogic {
             case ".unpin":
             case ".del":
             case ".ghost":
+            case ".lpin":
                 return text;
             default:
                 return null;

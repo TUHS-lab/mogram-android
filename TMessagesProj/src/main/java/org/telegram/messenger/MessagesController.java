@@ -1456,6 +1456,11 @@ public class MessagesController extends BaseController implements NotificationCe
                 return 0;
             }
         }
+        final boolean localPin1 = MogramSettings.isLocalPin(dialog1.id); // Mogram: локальные закрепы
+        final boolean localPin2 = MogramSettings.isLocalPin(dialog2.id);
+        if (localPin1 != localPin2) {
+            return localPin1 ? -1 : 1;
+        }
         MediaDataController mediaDataController = getMediaDataController();
         long date1 = DialogObject.getLastMessageOrDraftDate(dialog1, mediaDataController.getDraft(dialog1.id, 0));
         long date2 = DialogObject.getLastMessageOrDraftDate(dialog2, mediaDataController.getDraft(dialog2.id, 0));
