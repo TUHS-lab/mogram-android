@@ -8396,7 +8396,8 @@ public class MessageObject {
                 entity instanceof TLRPC.TL_messageEntityCustomEmoji ||
                 entity instanceof TLRPC.TL_messageEntityBlockquote ||
                 entity instanceof TLRPC.TL_messageEntityPre ||
-                entity instanceof TLRPC.TL_messageEntityDiffReplace
+                entity instanceof TLRPC.TL_messageEntityDiffReplace ||
+                (entity instanceof TLRPC.TL_messageEntitySpoiler && MogramSettings.revealSpoilers()) // Mogram: спойлеры видны
             ) {
                 continue;
             }

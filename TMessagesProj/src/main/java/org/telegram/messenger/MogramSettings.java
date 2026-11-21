@@ -223,6 +223,15 @@ public class MogramSettings {
         return 0;
     }
 
+    // Текст под спойлерами виден сразу (только в сообщениях, у себя при вводе спойлер остаётся).
+    public static boolean revealSpoilers() {
+        return prefs().getBoolean("mogram_reveal_spoilers", false);
+    }
+
+    public static void setRevealSpoilers(boolean value) {
+        prefs().edit().putBoolean("mogram_reveal_spoilers", value).apply();
+    }
+
     // Раздельные переключатели призрака (действуют, когда режим включён). По умолчанию всё скрыто.
     public static boolean ghostHides(String what) {
         return prefs().getBoolean("mogram_ghost_" + what, true);

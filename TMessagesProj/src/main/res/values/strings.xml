@@ -46,6 +46,7 @@
     <string name="MogramGhostTyping">Hide typing status</string>
     <string name="MogramGhostStories">Hide story views</string>
     <string name="MogramGhostOnline">Hide online status</string>
+    <string name="MogramRevealSpoilers">Show spoiler text right away</string>
     <string name="MogramProfileId">Show ID and registration date in profiles</string>
     <string name="MogramRoundFocus">Blur the screen during round videos</string>
     <string name="MogramRoundFocusInfo">While a round video plays, the rest of the chat is blurred. Scrolling or pausing removes the blur. Needs Android 12 or newer.</string>
