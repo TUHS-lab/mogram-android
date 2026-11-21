@@ -52,6 +52,7 @@
     <string name="MogramScamTitle">Подозрительная ссылка</string>
     <string name="MogramScamOpen">Всё равно открыть</string>
     <string name="MogramHideStories">Скрыть полосу историй</string>
+    <string name="MogramHideBlocked">Скрывать сообщения заблокированных в группах</string>
     <string name="MogramProfileId">Показывать ID и дату регистрации в профилях</string>
     <string name="MogramRoundFocus">Размывать экран при просмотре кружка</string>
     <string name="MogramRoundFocusInfo">Пока играет кружок, остальной чат размыт. Прокрутка или пауза убирают размытие. Нужен Android 12 или новее.</string>

@@ -264,6 +264,15 @@ public class MogramSettings {
         return MogramLogic.idListContains(updated, dialogId);
     }
 
+    // Сообщения заблокированных людей в группах не показываются (высота ячейки нулевая).
+    public static boolean hideBlocked() {
+        return prefs().getBoolean("mogram_hide_blocked", false);
+    }
+
+    public static void setHideBlocked(boolean value) {
+        prefs().edit().putBoolean("mogram_hide_blocked", value).apply();
+    }
+
     // Скрыть полосу историй над списком чатов.
     public static boolean hideStories() {
         return prefs().getBoolean("mogram_hide_stories", false);

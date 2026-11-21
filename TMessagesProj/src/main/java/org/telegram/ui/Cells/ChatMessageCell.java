@@ -12184,8 +12184,16 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
 
         setMeasuredDimension(
             isWidthAdaptive() ? getBoundsRight() - getBoundsLeft() : MeasureSpec.getSize(widthMeasureSpec),
-            resultHeight
+            mogramBlockedHidden() ? 0 : resultHeight // Mogram: сообщения заблокированных скрыты
         );
+    }
+
+    private boolean mogramBlockedHidden() {
+        if (currentMessageObject == null || !MogramSettings.hideBlocked() || currentMessageObject.isOutOwner() || currentMessageObject.getDialogId() >= 0) {
+            return false;
+        }
+        final long from = currentMessageObject.getFromChatId();
+        return from > 0 && MessagesController.getInstance(currentAccount).blockePeers.indexOfKey(from) >= 0;
     }
 
     private int additionalPaddingHeight;
