@@ -1811,10 +1811,11 @@ public class Theme {
                     themeAccent.myMessagesGradientAccentColor3 = 0;
                     themeAccent.patternIntensity = 0;
                     themeAccent.patternSlug = "";
-                    themeAccent.backgroundOverrideColor = 0xff000000;
-                    themeAccent.backgroundGradientOverrideColor1 = 0;
-                    themeAccent.backgroundGradientOverrideColor2 = 0;
-                    themeAccent.backgroundGradientOverrideColor3 = 0;
+                    // Mogram: градиент фона «Графит» как на десктопе (цвета из палитры OKLab)
+                    themeAccent.backgroundOverrideColor = 0xff5f636e;
+                    themeAccent.backgroundGradientOverrideColor1 = 0xff474a53;
+                    themeAccent.backgroundGradientOverrideColor2 = 0xff33353c;
+                    themeAccent.backgroundGradientOverrideColor3 = 0xff1e1f23;
                 }
                 themeAccentsMap.put(themeAccent.id, themeAccent);
                 themeAccents.add(themeAccent);

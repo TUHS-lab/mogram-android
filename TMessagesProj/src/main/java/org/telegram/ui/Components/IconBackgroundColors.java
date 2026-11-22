@@ -20,6 +20,6 @@ public enum IconBackgroundColors {
 
     private IconBackgroundColors(int top, int bottom) {
         this.top = top;
-        this.bottom = bottom;
+        this.bottom = top; // Mogram: плитки одного цвета, без градиента
     }
 }
