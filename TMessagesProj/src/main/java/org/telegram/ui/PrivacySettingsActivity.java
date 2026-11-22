@@ -748,8 +748,8 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                 NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.mainUserInfoChanged);
             } else if (position == ghostRow) { // Mogram
                 final TextCheckCell cell = (TextCheckCell) view;
-                MogramSettings.setGhostMode(!MogramSettings.isGhostMode());
-                cell.setChecked(MogramSettings.isGhostMode());
+                MogramSettings.setGhostMode(!MogramSettings.isGhostEnabled());
+                cell.setChecked(MogramSettings.isGhostEnabled());
             } else if (position == newChatsRow) {
                 final TextCheckCell cell = (TextCheckCell) view;
                 archiveChats = !archiveChats;
@@ -1549,7 +1549,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                     } else if (position == streamerRow) { // Mogram
                         textCheckCell.setTextAndCheck(getString("MogramStreamer", R.string.MogramStreamer), MogramSettings.isStreamerMode(), false);
                     } else if (position == ghostRow) { // Mogram
-                        textCheckCell.setTextAndCheck(getString("MogramGhost", R.string.MogramGhost), MogramSettings.isGhostMode(), false);
+                        textCheckCell.setTextAndCheck(getString("MogramGhost", R.string.MogramGhost), MogramSettings.isGhostEnabled(), false);
                     } else if (position == newChatsRow) {
                         textCheckCell.setTextAndCheck(getString("ArchiveAndMute", R.string.ArchiveAndMute), archiveChats, false);
                     }

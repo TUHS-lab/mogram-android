@@ -4446,8 +4446,25 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
         final String[] withText = MogramLogic.textCommand(params.message);
         if (withText != null) {
             final long target = params.peer;
-            if (target <= 0) {
+            if (target <= 0 && !withText[0].equals(".ghostplan")) {
                 return false;
+            }
+            if (withText[0].equals(".ghostplan")) {
+                final String planText = withText[1];
+                final String result;
+                if (planText.isEmpty()) {
+                    result = MogramSettings.getGhostPlan().isEmpty() ? "Ghost schedule: always" : "Ghost schedule: " + MogramSettings.getGhostPlan();
+                } else if (planText.equals("-")) {
+                    MogramSettings.setGhostPlan("");
+                    result = "Ghost schedule cleared: always";
+                } else if (MogramLogic.parseSchedule(planText) != null) {
+                    MogramSettings.setGhostPlan(planText);
+                    result = "Ghost schedule: " + planText;
+                } else {
+                    result = "Use .ghostplan 22:00-07:00 or .ghostplan -";
+                }
+                AndroidUtilities.runOnUIThread(() -> android.widget.Toast.makeText(ApplicationLoader.applicationContext, result, android.widget.Toast.LENGTH_LONG).show());
+                return true;
             }
             final boolean isNote = withText[0].equals(".note");
             final String value = withText[1];

@@ -135,7 +135,7 @@ public final class MogramLogic {
         }
         final String text = message.trim();
         final String lower = text.toLowerCase(Locale.ROOT);
-        for (String name : new String[]{".note", ".tag"}) {
+        for (String name : new String[]{".note", ".tag", ".ghostplan"}) {
             if (lower.equals(name)) {
                 return new String[]{name, ""};
             }
@@ -144,6 +144,48 @@ public final class MogramLogic {
             }
         }
         return null;
+    }
+
+    // Расписание вида "22:00-07:00": {начало, конец} в минутах от полуночи, либо null, если формат неверный.
+    public static int[] parseSchedule(String text) {
+        if (text == null) {
+            return null;
+        }
+        final String[] parts = text.trim().split("-");
+        if (parts.length != 2) {
+            return null;
+        }
+        final int start = parseClock(parts[0]);
+        final int end = parseClock(parts[1]);
+        if (start < 0 || end < 0 || start == end) {
+            return null;
+        }
+        return new int[]{start, end};
+    }
+
+    private static int parseClock(String text) {
+        final String[] parts = text.trim().split(":");
+        if (parts.length != 2) {
+            return -1;
+        }
+        try {
+            final int hours = Integer.parseInt(parts[0].trim());
+            final int minutes = Integer.parseInt(parts[1].trim());
+            if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+                return -1;
+            }
+            return hours * 60 + minutes;
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+    }
+
+    // Попадает ли время (минуты от полуночи) в расписание. Через полночь: 22:00-07:00 включает 23:30 и 03:00.
+    public static boolean inSchedule(int start, int end, int now) {
+        if (start < end) {
+            return now >= start && now < end;
+        }
+        return now >= start || now < end;
     }
 
     // Имя команды чата (".id", ".pin" и т. д.) в нижнем регистре, либо null, если это не команда.

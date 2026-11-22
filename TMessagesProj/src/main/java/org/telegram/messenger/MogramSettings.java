@@ -22,8 +22,30 @@ public class MogramSettings {
     }
 
     // Режим призрака: не отмечать прочитанным, не показывать "в сети", не слать "печатает".
-    public static boolean isGhostMode() {
+    // Включён ли режим в настройках (переключатель).
+    public static boolean isGhostEnabled() {
         return prefs().getBoolean(GHOST, false);
+    }
+
+    // Действует ли режим прямо сейчас: включён и, если задано расписание, время в его границах.
+    public static boolean isGhostMode() {
+        if (!prefs().getBoolean(GHOST, false)) {
+            return false;
+        }
+        final int[] plan = MogramLogic.parseSchedule(prefs().getString("mogram_ghost_plan", ""));
+        if (plan == null) {
+            return true;
+        }
+        final java.util.Calendar now = java.util.Calendar.getInstance();
+        return MogramLogic.inSchedule(plan[0], plan[1], now.get(java.util.Calendar.HOUR_OF_DAY) * 60 + now.get(java.util.Calendar.MINUTE));
+    }
+
+    public static String getGhostPlan() {
+        return prefs().getString("mogram_ghost_plan", "");
+    }
+
+    public static void setGhostPlan(String plan) {
+        prefs().edit().putString("mogram_ghost_plan", plan == null ? "" : plan).apply();
     }
 
     public static void setGhostMode(boolean value) {

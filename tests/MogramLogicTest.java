@@ -102,6 +102,20 @@ public class MogramLogicTest {
         eq("scam не покупатель", false, MogramScam.isBuyerBait("привет, как дела"));
         eq("scam тревога две", true, MogramScam.isAlarmText("Your account has been blocked. Pass verification: unlock your account"));
         eq("scam тревога одна", false, MogramScam.isAlarmText("пройдите верификацию в банке"));
+        // расписание призрака
+        eq("plan разбор", "1320-420", MogramLogic.parseSchedule("22:00-07:00")[0] + "-" + MogramLogic.parseSchedule("22:00-07:00")[1]);
+        eq("plan пробелы", true, MogramLogic.parseSchedule(" 9:05 - 18:30 ") != null);
+        eq("plan неверный час", null, MogramLogic.parseSchedule("25:00-07:00"));
+        eq("plan одинаковые", null, MogramLogic.parseSchedule("10:00-10:00"));
+        eq("plan без дефиса", null, MogramLogic.parseSchedule("22:00"));
+        eq("plan null", null, MogramLogic.parseSchedule(null));
+        eq("plan днём внутри", true, MogramLogic.inSchedule(540, 1080, 600));
+        eq("plan днём снаружи", false, MogramLogic.inSchedule(540, 1080, 1100));
+        eq("plan граница конца", false, MogramLogic.inSchedule(540, 1080, 1080));
+        eq("plan ночью вечер", true, MogramLogic.inSchedule(1320, 420, 1410));
+        eq("plan ночью утро", true, MogramLogic.inSchedule(1320, 420, 180));
+        eq("plan ночью днём", false, MogramLogic.inSchedule(1320, 420, 720));
+        eq("text ghostplan", ".ghostplan", MogramLogic.textCommand(".ghostplan 22:00-07:00")[0]);
         // textCommand
         eq("text note", ".note", MogramLogic.textCommand(".note купил юзернейм")[0]);
         eq("text note значение", "купил юзернейм", MogramLogic.textCommand(".note купил юзернейм")[1]);
