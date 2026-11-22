@@ -58,6 +58,11 @@ public class MogramScam {
         return false;
     }
 
+    // Похоже ли сообщение на мошенничество: покупатель юзернейма/подарка или сообщение о "блокировке" с просьбой верификации.
+    public static boolean looksLikeScam(String text) {
+        return isBuyerBait(text) || isAlarmText(text);
+    }
+
     // Почему ссылке не стоит доверять, либо null, если всё в порядке.
     public static String linkReason(String shown, String url) {
         if (url == null || url.isEmpty()) {

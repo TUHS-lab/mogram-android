@@ -94,6 +94,8 @@ public class MogramLogicTest {
         eq("scam обычный текст", null, MogramScam.linkReason("нажми сюда", "https://example.com"));
         eq("scam поддомен", null, MogramScam.linkReason("example.com", "https://login.example.com/"));
         eq("scam сервис в тексте", true, MogramScam.linkReason("Open Tonkeeper", "https://tonkeeper-login.xyz/") != null);
+        eq("scam looks покупатель", true, MogramScam.looksLikeScam("Do you still sell your @cooluser username?"));
+        eq("scam looks обычное", false, MogramScam.looksLikeScam("увидимся завтра"));
         eq("scam гарант", true, MogramScam.isGarantMention("пишите @super_garant_bot"));
         eq("scam нет гаранта", false, MogramScam.isGarantMention("привет как дела"));
         eq("scam покупатель", true, MogramScam.isBuyerBait("Do you still sell your @cooluser username?"));
