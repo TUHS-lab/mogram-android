@@ -628,6 +628,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     private int numberSectionRow;
     private int numberRow;
     public int birthdayRow;
+    public int idRow;
     private int setUsernameRow;
     private int bioRow;
     private int phoneSuggestionSectionRow;
@@ -10818,6 +10819,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         numberSectionRow = -1;
         numberRow = -1;
         birthdayRow = -1;
+        idRow = -1;
         setUsernameRow = -1;
         bioRow = -1;
         channelRow = -1;
@@ -11077,6 +11079,9 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 }
                 if (user != null && username != null) {
                     usernameRow = rowCount++;
+                }
+                if (user != null && !isBot) {
+                    idRow = rowCount++; // Mokagram: ID и дата регистрации
                 }
                 if (userInfo != null) {
                     if (userInfo.birthday != null) {
@@ -13626,7 +13631,11 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     TextDetailCell detailCell = (TextDetailCell) holder.itemView;
                     boolean containsQr = false;
                     boolean containsGift = false;
-                    if (position == birthdayRow) {
+                    boolean containsDate = false;
+                    if (position == idRow) {
+                        detailCell.setTextAndValue(String.valueOf(userId), "ID", true);
+                        containsDate = true;
+                    } else if (position == birthdayRow) {
                         TLRPC.UserFull userFull = getMessagesController().getUserFull(userId);
                         if (userFull != null && userFull.birthday != null) {
                             final boolean today = BirthdayController.isToday(userFull);
@@ -13816,6 +13825,11 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                             detailCell.setImage(drawable, LocaleController.getString(R.string.GiftPremium));
                             detailCell.setImageClickListener(ProfileActivity.this::onTextDetailCellImageClicked);
                         }
+                    } else if (containsDate) {
+                        Drawable drawable = ContextCompat.getDrawable(detailCell.getContext(), R.drawable.msg_calendar2);
+                        drawable.setColorFilter(new PorterDuffColorFilter(dontApplyPeerColor(getThemedColor(Theme.key_actionBarDefaultIcon), false), PorterDuff.Mode.MULTIPLY));
+                        detailCell.setImage(drawable, "Registration date");
+                        detailCell.setImageClickListener(ProfileActivity.this::onTextDetailCellImageClicked);
                     } else if (containsQr) {
                         Drawable drawable = ContextCompat.getDrawable(detailCell.getContext(), R.drawable.header_qr_24);
                         drawable.setColorFilter(new PorterDuffColorFilter(dontApplyPeerColor(getThemedColor(Theme.key_actionBarDefaultIcon), false), PorterDuff.Mode.MULTIPLY));
@@ -14221,8 +14235,11 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                             }
 
                             cell.setLinkTextRippleColor(Theme.multAlpha(getThemedColor(Theme.key_windowBackgroundWhiteGrayText4), 0.2f));
+                            // Mokagram: подпись галочки по центру
+                            cell.setTextGravity(bot_verification != null && botAppRow < 0 ? Gravity.CENTER_HORIZONTAL : (LocaleController.isRTL ? Gravity.RIGHT : Gravity.LEFT));
                             cell.setText(sb);
                         } else {
+                            cell.setTextGravity(LocaleController.isRTL ? Gravity.RIGHT : Gravity.LEFT);
                             cell.setFixedSize(14);
                             cell.setText(null);
                         }
@@ -14498,7 +14515,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             if (position == infoHeaderRow || position == membersHeaderRow || position == settingsSectionRow2 ||
                     position == numberSectionRow || position == helpHeaderRow || position == debugHeaderRow || position == botPermissionsHeader) {
                 return VIEW_TYPE_HEADER;
-            } else if (position == phoneRow || position == locationRow || position == numberRow || position == birthdayRow) {
+            } else if (position == phoneRow || position == locationRow || position == numberRow || position == birthdayRow || position == idRow) {
                 return VIEW_TYPE_TEXT_DETAIL;
             } else if (position == usernameRow || position == setUsernameRow) {
                 return VIEW_TYPE_TEXT_DETAIL_MULTILINE;
@@ -15613,6 +15630,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             args.putLong("chat_id", chatId);
             args.putLong("user_id", userId);
             presentFragment(new QrShareActivity(args));
+        } else if (parent.getTag() != null && ((int) parent.getTag()) == idRow) {
+            BulletinFactory.of(this).createSimpleBulletin(R.raw.info, org.telegram.messenger.MogramLogic.registrationText(userId)).show();
         } else if (parent.getTag() != null && ((int) parent.getTag()) == birthdayRow) {
             if (userId == getUserConfig().getClientUserId()) {
                 presentFragment(new PremiumPreviewFragment("my_profile_gift"));
@@ -15862,6 +15881,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             put(++pointer, bizHoursRow, sparseIntArray);
             put(++pointer, bizLocationRow, sparseIntArray);
             put(++pointer, birthdayRow, sparseIntArray);
+            put(++pointer, idRow, sparseIntArray);
             put(++pointer, channelRow, sparseIntArray);
             put(++pointer, botStarsBalanceRow, sparseIntArray);
             put(++pointer, botTonBalanceRow, sparseIntArray);

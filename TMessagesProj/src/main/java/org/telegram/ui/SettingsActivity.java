@@ -1286,6 +1286,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         private final TextView titleView;
         private final TextView subtitleView;
         private final TextView valueView;
+        private ImageView chevron; // Mogram: стрелка справа, как на десктопе
         private final boolean mini;
         private boolean hasBackground = true;
 
@@ -1327,7 +1328,11 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
             } else {
                 addView(iconLayout, LayoutHelper.createLinear(28, 28, Gravity.CENTER_VERTICAL | Gravity.LEFT, mini ? 9 : 18, 0, 0, 0));
                 addView(textLayout, LayoutHelper.createLinear(0, LayoutHelper.WRAP_CONTENT, 1, Gravity.CENTER_VERTICAL | Gravity.FILL_HORIZONTAL,  mini ? 12 : 18, 0, 20, 0));
-                addView(valueView, LayoutHelper.createLinear(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, Gravity.CENTER_VERTICAL, 0, 0, 20, 0));
+                addView(valueView, LayoutHelper.createLinear(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, Gravity.CENTER_VERTICAL, 0, 0, 8, 0));
+                chevron = new ImageView(context);
+                chevron.setImageResource(R.drawable.msg_arrowright);
+                chevron.setScaleType(ImageView.ScaleType.CENTER);
+                addView(chevron, LayoutHelper.createLinear(24, 24, Gravity.CENTER_VERTICAL, 0, 0, 12, 0));
             }
             updateColors();
         }
@@ -1337,6 +1342,9 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
             titleView.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlackText, resourcesProvider));
             subtitleView.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteGrayText, resourcesProvider));
             valueView.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlueText, resourcesProvider));
+            if (chevron != null) {
+                chevron.setColorFilter(new android.graphics.PorterDuffColorFilter(Theme.getColor(Theme.key_windowBackgroundWhiteGrayText, resourcesProvider), android.graphics.PorterDuff.Mode.SRC_IN));
+            }
             iconBackground.setDrawBorder(hasBackground && (resourcesProvider != null ? resourcesProvider.isDark() : Theme.isCurrentThemeDark()));
         }
         @Override
@@ -1354,6 +1362,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
             CharSequence subtitle,
             CharSequence value
         ) {
+            subtitle = null; // Mogram: строки без подписей, как на десктопе
             hasBackground = iconColorTop != 0 || iconColorBottom != 0;
             iconLayout.setVisibility(icon != 0 ? View.VISIBLE : View.GONE);
             titleView.setTranslationX(icon == 0 ? dp(2) : 0);
