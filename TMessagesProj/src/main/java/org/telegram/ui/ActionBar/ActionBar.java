@@ -1735,7 +1735,17 @@ public class ActionBar extends FrameLayout implements FactorAnimator.Target, The
                     }
                 }
                 int titleLeft = centerTitleAndGlass ? (getMeasuredWidth() - titleTextView[i].getMeasuredWidth()) / 2 : textLeft;
-                titleTextView[i].layout(titleLeft, additionalTop + textTop - titleTextView[i].getPaddingTop(), titleLeft + titleTextView[i].getMeasuredWidth(), additionalTop + textTop + titleTextView[i].getTextHeight() - titleTextView[i].getPaddingTop() + titleTextView[i].getPaddingBottom());
+                int mogramTitleX = titleLeft;
+                if (!AndroidUtilities.isTablet() && backButtonImageView != null && backButtonImageView.getVisibility() != GONE && (subtitleTextView == null || subtitleTextView.getVisibility() == GONE) && !(menu != null && menu.searchFieldVisible())) {
+                    // Mogram: заголовок по центру, как на iOS
+                    final int menuWidth = menu != null && menu.getVisibility() != GONE ? menu.getMeasuredWidth() : 0;
+                    final int textWidth = Math.min(titleTextView[i].getTextWidth(), titleTextView[i].getMeasuredWidth());
+                    final int centered = (getMeasuredWidth() - textWidth) / 2;
+                    if (centered >= titleLeft && centered + textWidth <= getMeasuredWidth() - menuWidth - dp(8)) {
+                        mogramTitleX = centered;
+                    }
+                }
+                titleTextView[i].layout(mogramTitleX, additionalTop + textTop - titleTextView[i].getPaddingTop(), mogramTitleX + titleTextView[i].getMeasuredWidth(), additionalTop + textTop + titleTextView[i].getTextHeight() - titleTextView[i].getPaddingTop() + titleTextView[i].getPaddingBottom());
             }
         }
         if (additionalSubTitleOverlayContainer != null) {

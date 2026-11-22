@@ -1353,7 +1353,10 @@ public class BottomSheet extends Dialog implements BaseFragment.AttachedSheet {
         touchSlop = vc.getScaledTouchSlop();
 
         Rect padding = new Rect();
-        shadowDrawable = new FilterTrackingDrawable(context.getResources().getDrawable(R.drawable.sheet_shadow_round).mutate());
+        final android.graphics.drawable.GradientDrawable mogramSheet = new android.graphics.drawable.GradientDrawable();
+        mogramSheet.setColor(0xffffffff);
+        mogramSheet.setCornerRadii(new float[]{dp(28), dp(28), dp(28), dp(28), 0, 0, 0, 0}); // Mogram: углы 28 как на десктопе
+        shadowDrawable = new FilterTrackingDrawable(mogramSheet);
         shadowDrawable.setColorFilter(themedBackgroundFilter = new PorterDuffColorFilter(internalBackgroundColor = getThemedColor(Theme.key_dialogBackground), PorterDuff.Mode.MULTIPLY));
         shadowDrawable.getPadding(padding);
         backgroundPaddingLeft = padding.left;

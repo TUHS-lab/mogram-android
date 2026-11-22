@@ -32168,10 +32168,11 @@ public class ChatActivity extends BaseFragment implements
 
             updateScrimSourceBitmap();
 
-            popupLayout.setBackground(scrimBlur3Factory.create(popupLayout, true)
-                .setColorProvider(BlurredBackgroundProviderImpl.messageMenuBackground(resourceProvider))
-                .setRadius(dp(12))
-                .setPadding(dp(8)));
+            // Mogram: меню сообщения как на десктопе: сплошной фон, скругление 22, без размытия
+            final android.graphics.drawable.GradientDrawable mogramMenuBg = new android.graphics.drawable.GradientDrawable();
+            mogramMenuBg.setColor(0xff2c2c2e);
+            mogramMenuBg.setCornerRadius(dp(22));
+            popupLayout.setBackground(new android.graphics.drawable.InsetDrawable(mogramMenuBg, dp(8)));
 
             boolean addGap = false;
 
