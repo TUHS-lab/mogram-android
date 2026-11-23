@@ -4770,7 +4770,7 @@ public class Theme {
         if (rad >= dp(12)) {
             return Math.max(rad, dp(28));
         }
-        return rad >= dp(6) ? dp(16) : rad;
+        return rad >= dp(6) ? dp(20) : rad; // Mogram: кнопки пилюлями
     }
 
     public static ShapeDrawable createRoundRectDrawable(int rad, int defaultColor) {
