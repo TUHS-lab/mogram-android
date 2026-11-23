@@ -197,7 +197,7 @@ public class TextDetailCell extends FrameLayout implements Theme.Colorable {
         textView.setText(text);
         valueTextView.setText(value);
         rightValueTextView.setVisibility(View.GONE);
-        needDivider = divider;
+        needDivider = false; // Mogram: строки одной карточкой, без разделителей
         setWillNotDraw(!needDivider);
     }
 
@@ -206,7 +206,7 @@ public class TextDetailCell extends FrameLayout implements Theme.Colorable {
         valueTextView.setText(value);
         rightValueTextView.setVisibility(View.VISIBLE);
         rightValueTextView.setText(value2);
-        needDivider = divider;
+        needDivider = false; // Mogram: строки одной карточкой, без разделителей
         setWillNotDraw(!needDivider);
     }
 
@@ -253,7 +253,7 @@ public class TextDetailCell extends FrameLayout implements Theme.Colorable {
     public void setTextWithEmojiAndValue(CharSequence text, CharSequence value, boolean divider) {
         textView.setText(Emoji.replaceEmoji(text, textView.getPaint().getFontMetricsInt(), false));
         valueTextView.setText(value);
-        needDivider = divider;
+        needDivider = false; // Mogram: строки одной карточкой, без разделителей
         setWillNotDraw(!divider);
     }
 
