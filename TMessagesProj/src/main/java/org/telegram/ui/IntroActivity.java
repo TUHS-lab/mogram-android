@@ -253,7 +253,7 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
         android.widget.ImageView mogramPlane = new android.widget.ImageView(context);
         mogramPlane.setImageResource(R.drawable.mogram_plane);
         mogramPlane.setScaleType(android.widget.ImageView.ScaleType.FIT_CENTER);
-        frameLayout2.addView(mogramPlane, LayoutHelper.createFrame(ICON_WIDTH_DP, ICON_HEIGHT_DP, Gravity.CENTER));
+        frameLayout2.addView(mogramPlane, LayoutHelper.createFrame(110, 82, Gravity.CENTER)); // Mogram: самолёт поменьше
         textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
             public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
