@@ -1014,7 +1014,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             float storiesAlpha = 1f;
             if (whiteActionBar) {
                 if (searchAnimationProgress == 1f) {
-                    actionBarSearchPaint.setColor(getThemedColor(Theme.key_windowBackgroundWhite));
+                    actionBarSearchPaint.setColor(getThemedColor(Theme.key_windowBackgroundGray));
                 } else if (searchAnimationProgress == 0) {
                     if (fragmentSearchField != null) {
                         fragmentSearchField.setTranslationY(scrollYOffset + getSearchFieldAdditionOffset());
@@ -1025,7 +1025,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                     drawBlurRect(canvas, 0, blurBounds, searchAnimationProgress == 1f ? actionBarSearchPaint : actionBarDefaultPaint, true);
                 }
                 if (searchAnimationProgress > 0 && searchAnimationProgress < 1f) {
-                    actionBarSearchPaint.setColor(getThemedColor(Theme.key_windowBackgroundWhite));
+                    actionBarSearchPaint.setColor(getThemedColor(Theme.key_windowBackgroundGray));
                     if (searchIsShowed || !searchWasFullyShowed) {
                     } else {
                         blurBounds.set(0, top, getMeasuredWidth(), top + actionBarHeight - dp(2 * searchAnimationProgress));
@@ -1037,7 +1037,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 }
             } else if (!inPreviewMode) {
                 if (progressToActionMode > 0) {
-                    actionBarSearchPaint.setColor(getThemedColor(Theme.key_windowBackgroundWhite));
+                    actionBarSearchPaint.setColor(getThemedColor(Theme.key_windowBackgroundGray));
                     blurBounds.set(0, Math.max(0, top), getMeasuredWidth(), top + actionBarHeight - dp(2 * searchAnimationProgress));
                     drawBlurRect(canvas, 0, blurBounds, actionBarSearchPaint, true);
                 } else {
@@ -1123,7 +1123,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 }
             }
             if (!hasMainTabs && communityId == 0) {
-                AndroidUtilities.drawNavigationBarProtection(canvas, this, getThemedColor(Theme.key_windowBackgroundWhite), navigationBarHeight);
+                AndroidUtilities.drawNavigationBarProtection(canvas, this, getThemedColor(Theme.key_windowBackgroundGray), navigationBarHeight);
             }
             wasDrawn = true;
         }
@@ -1984,7 +1984,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             }
 
             if (drawMovingViewsOverlayed()) {
-                paint.setColor(getThemedColor(Theme.key_windowBackgroundWhite));
+                paint.setColor(getThemedColor(Theme.key_windowBackgroundGray));
                 for (int i = 0; i < getChildCount(); i++) {
                     View view = getChildAt(i);
 
@@ -2431,7 +2431,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                         return 0;
                     }
                     movingView = (DialogCell) viewHolder.itemView;
-                    ThemeBind.backgroundColor(movingView, Theme.key_windowBackgroundWhite, DialogsActivity.this.getResourceProvider());
+                    ThemeBind.backgroundColor(movingView, Theme.key_windowBackgroundGray, DialogsActivity.this.getResourceProvider());
                     swipeFolderBack = false;
                     return makeMovementFlags(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0);
                 } else {
@@ -2701,7 +2701,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
     public DialogsActivity(Bundle args) {
         super(args);
 
-        iBlur3SourceColor = glassEngine.createThemedColorSource(() -> getThemedColor(Theme.key_windowBackgroundWhite));
+        iBlur3SourceColor = glassEngine.createThemedColorSource(() -> getThemedColor(Theme.key_windowBackgroundGray));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             scrollableViewNoiseSuppressor = new DownscaleScrollableNoiseSuppressor();
 
@@ -3419,7 +3419,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             } else {
                 actionBar.setTitle(getString(R.string.SelectChat));
             }
-            ThemeBind.backgroundColor(actionBar, Theme.key_windowBackgroundWhite, getResourceProvider());
+            ThemeBind.backgroundColor(actionBar, Theme.key_windowBackgroundGray, getResourceProvider());
         } else {
             if (searchString != null || folderId != 0 || communityId != 0) {
                 actionBar.setBackButtonDrawable(backDrawable = new BackDrawable(false));
@@ -4626,7 +4626,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         }
 
         topBubblesFadeView = new DialogsActivityTopBubblesFadeView(context);
-        topBubblesFadeView.setColor(Theme.getColor(Theme.key_windowBackgroundWhite));
+        topBubblesFadeView.setColor(Theme.getColor(Theme.key_windowBackgroundGray));
         contentView.addView(topBubblesFadeView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 100, Gravity.TOP));
 
         searchViewPagerIndex = contentView.getChildCount();
@@ -5043,7 +5043,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             writeButton.setCirclePadding(dp(7), dp(8));
             writeButton.newCounterPos = true;
             contentView.addView(writeButton, LayoutHelper.createFrame(110, 50, Gravity.RIGHT | Gravity.BOTTOM));
-            writeButton.setScrimViewBackgroundColor(getThemedColor(Theme.key_windowBackgroundWhite));
+            writeButton.setScrimViewBackgroundColor(getThemedColor(Theme.key_windowBackgroundGray));
             writeButton.setOnClickListener(v -> {
                 if (delegate == null || selectedDialogs.isEmpty()) {
                     return;
@@ -5086,7 +5086,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                     .setViewAdditionalOffsets(0, dp(8), 0, 0)
                     .setScrimViewBackground(Theme.createRoundRectDrawable(
                         dp(12), dp(12),
-                        getThemedColor(Theme.key_windowBackgroundWhite)
+                        getThemedColor(Theme.key_windowBackgroundGray)
                     ))
                     .translate(0, dp(8));
                 if (UserObject.isService(dialogId)) {
@@ -5267,7 +5267,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         }
 
         if (folderId != 0 || communityId != 0) {
-            viewPages[0].listView.setGlowColor(getThemedColor(Theme.key_windowBackgroundWhite));
+            viewPages[0].listView.setGlowColor(getThemedColor(Theme.key_windowBackgroundGray));
             ThemeBind.actionBarItemsColor(actionBar, Theme.key_actionBarDefaultArchivedIcon, getResourceProvider(), false);
             ThemeBind.actionBarItemsBackgroundColor(actionBar, Theme.key_actionBarDefaultArchivedSelector, getResourceProvider(), false);
             actionBar.setSearchTextColor(getThemedColor(Theme.key_actionBarDefaultArchivedSearch), false);
@@ -5285,7 +5285,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 }
             };
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                blurredView.setForeground(new ColorDrawable(ColorUtils.setAlphaComponent(getThemedColor(Theme.key_windowBackgroundWhite), 100)));
+                blurredView.setForeground(new ColorDrawable(ColorUtils.setAlphaComponent(getThemedColor(Theme.key_windowBackgroundGray), 100)));
             }
             blurredView.setFocusable(false);
             blurredView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
@@ -5296,7 +5296,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             contentView.addView(blurredView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT));
         }
 
-        actionBarDefaultPaint.setColor(getThemedColor(Theme.key_windowBackgroundWhite));
+        actionBarDefaultPaint.setColor(getThemedColor(Theme.key_windowBackgroundGray));
         /*
         if (inPreviewMode) {
             final TLRPC.User currentUser = getUserConfig().getCurrentUser();
@@ -5309,7 +5309,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             actionBar.addView(avatarContainer, 0, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, LayoutHelper.MATCH_PARENT, Gravity.TOP | Gravity.LEFT, 0, 0, 40, 0));
             floatingButton3.imageView.setVisibility(View.INVISIBLE);
             actionBar.setOccupyStatusBar(false);
-            ThemeBind.backgroundColor(actionBar, Theme.key_windowBackgroundWhite, getResourceProvider());
+            ThemeBind.backgroundColor(actionBar, Theme.key_windowBackgroundGray, getResourceProvider());
             if (fragmentContextViewWrapper != null) {
                 AndroidUtilities.removeFromParent(fragmentContextViewWrapper);
             }
@@ -5487,8 +5487,8 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 if (folderId != 0 || communityId != 0) {
                     actionBarDefaultPaint.setColor(
                             ColorUtils.blendARGB(
-                                    getThemedColor(Theme.key_windowBackgroundWhite),
-                                    getThemedColor(Theme.key_windowBackgroundWhite),
+                                    getThemedColor(Theme.key_windowBackgroundGray),
+                                    getThemedColor(Theme.key_windowBackgroundGray),
                                     progress
                             )
                     );
@@ -7477,7 +7477,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             setDialogsListFrozen(true);
             viewPages[0].listView.setVerticalScrollBarEnabled(false);
             if (searchViewPager != null) {
-                ThemeBind.backgroundColor(searchViewPager, Theme.key_windowBackgroundWhite, getResourceProvider());
+                ThemeBind.backgroundColor(searchViewPager, Theme.key_windowBackgroundGray, getResourceProvider());
             }
             searchAnimator = new AnimatorSet();
             ArrayList<Animator> animators = new ArrayList<>();
@@ -8887,7 +8887,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         int w = (int) (fragmentView.getMeasuredWidth() / 9.0f);
         int h = (int) (fragmentView.getMeasuredHeight() / 9.0f);
         Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        bitmap.eraseColor(getThemedColor(Theme.key_windowBackgroundWhite));
+        bitmap.eraseColor(getThemedColor(Theme.key_windowBackgroundGray));
         Canvas canvas = new Canvas(bitmap);
         canvas.scale(1.0f / 9.0f, 1.0f / 9.0f);
         fragmentView.draw(canvas);
@@ -8960,7 +8960,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             backDrawable.setRotation(0, true);
         }
         if (filterTabsView != null) {
-            filterTabsView.animateColorsTo(Theme.key_actionBarTabLine, Theme.key_actionBarTabActiveText, Theme.key_actionBarTabUnactiveText, Theme.key_actionBarTabSelector, Theme.key_windowBackgroundWhite);
+            filterTabsView.animateColorsTo(Theme.key_actionBarTabLine, Theme.key_actionBarTabActiveText, Theme.key_actionBarTabUnactiveText, Theme.key_actionBarTabSelector, Theme.key_windowBackgroundGray);
         }
         if (actionBarColorAnimator != null) {
             actionBarColorAnimator.cancel();
@@ -9955,7 +9955,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 createActionMode(null);
             }
             AndroidUtilities.hideKeyboard(fragmentView.findFocus());
-            actionBar.setActionModeOverrideColor(getThemedColor(Theme.key_windowBackgroundWhite));
+            actionBar.setActionModeOverrideColor(getThemedColor(Theme.key_windowBackgroundGray));
             actionBar.showActionMode();
             if (getPinnedCount() > 1) {
                 if (viewPages != null) {
@@ -11978,14 +11978,14 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
 
         if (folderId == 0) {
             if (searchViewPager != null) {
-                arrayList.add(new ThemeDescription(searchViewPager.searchListView, ThemeDescription.FLAG_LISTGLOWCOLOR, null, null, null, null, Theme.key_windowBackgroundWhite));
+                arrayList.add(new ThemeDescription(searchViewPager.searchListView, ThemeDescription.FLAG_LISTGLOWCOLOR, null, null, null, null, Theme.key_windowBackgroundGray));
             }
             arrayList.add(new ThemeDescription(actionBar, ThemeDescription.FLAG_AB_TITLECOLOR, null, null, new Drawable[]{Theme.dialogs_holidayDrawable}, null, !hasMainTabs ? Theme.key_actionBarDefaultTitle : Theme.key_telegram_color_dialogsLogo));
             arrayList.add(new ThemeDescription(actionBar, ThemeDescription.FLAG_AB_SEARCH, null, null, null, null, Theme.key_actionBarDefaultSearch));
             arrayList.add(new ThemeDescription(actionBar, ThemeDescription.FLAG_AB_SEARCHPLACEHOLDER, null, null, null, null, Theme.key_actionBarDefaultSearchPlaceholder));
         } else {
             if (searchViewPager != null) {
-                arrayList.add(new ThemeDescription(searchViewPager.searchListView, ThemeDescription.FLAG_LISTGLOWCOLOR, null, null, null, null, Theme.key_windowBackgroundWhite));
+                arrayList.add(new ThemeDescription(searchViewPager.searchListView, ThemeDescription.FLAG_LISTGLOWCOLOR, null, null, null, null, Theme.key_windowBackgroundGray));
             }
             arrayList.add(new ThemeDescription(actionBar, ThemeDescription.FLAG_AB_TITLECOLOR, null, null, new Drawable[]{Theme.dialogs_holidayDrawable}, null, !hasMainTabs ? Theme.key_actionBarDefaultArchivedTitle : Theme.key_telegram_color_dialogsLogo));
             arrayList.add(new ThemeDescription(actionBar, ThemeDescription.FLAG_AB_SEARCH, null, null, null, null, Theme.key_actionBarDefaultArchivedSearch));
@@ -12062,9 +12062,9 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         if (viewPages != null) {
             for (int a = 0; a < viewPages.length; a++) {
                 if (folderId == 0) {
-                    arrayList.add(new ThemeDescription(viewPages[a].listView, ThemeDescription.FLAG_LISTGLOWCOLOR, null, null, null, null, Theme.key_windowBackgroundWhite));
+                    arrayList.add(new ThemeDescription(viewPages[a].listView, ThemeDescription.FLAG_LISTGLOWCOLOR, null, null, null, null, Theme.key_windowBackgroundGray));
                 } else {
-                    arrayList.add(new ThemeDescription(viewPages[a].listView, ThemeDescription.FLAG_LISTGLOWCOLOR, null, null, null, null, Theme.key_windowBackgroundWhite));
+                    arrayList.add(new ThemeDescription(viewPages[a].listView, ThemeDescription.FLAG_LISTGLOWCOLOR, null, null, null, null, Theme.key_windowBackgroundGray));
                 }
 
 
@@ -12084,7 +12084,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 arrayList.add(new ThemeDescription(viewPages[a].progressView, ThemeDescription.FLAG_PROGRESSBAR, null, null, null, null, Theme.key_progressCircle));
 
                 ViewPager pager = viewPages[a].dialogsAdapter.getArchiveHintCellPager();
-                arrayList.add(new ThemeDescription(pager, ThemeDescription.FLAG_LISTGLOWCOLOR, null, null, null, null, Theme.key_windowBackgroundWhite));
+                arrayList.add(new ThemeDescription(pager, ThemeDescription.FLAG_LISTGLOWCOLOR, null, null, null, null, Theme.key_windowBackgroundGray));
             }
         }
 
@@ -12190,13 +12190,13 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         }
 
         if (dialogsHintCell != null) {
-            SimpleThemeDescription.add(arrayList, dialogsHintCell::updateColors, Theme.key_windowBackgroundWhite, Theme.key_windowBackgroundWhiteBlackText, Theme.key_windowBackgroundWhiteGrayText);
+            SimpleThemeDescription.add(arrayList, dialogsHintCell::updateColors, Theme.key_windowBackgroundGray, Theme.key_windowBackgroundWhiteBlackText, Theme.key_windowBackgroundWhiteGrayText);
         }
         if (authHintCell != null) {
-            SimpleThemeDescription.add(arrayList, authHintCell::updateColors, Theme.key_windowBackgroundWhite, Theme.key_windowBackgroundWhiteBlackText, Theme.key_windowBackgroundWhiteGrayText, Theme.key_windowBackgroundWhiteValueText, Theme.key_text_RedBold);
+            SimpleThemeDescription.add(arrayList, authHintCell::updateColors, Theme.key_windowBackgroundGray, Theme.key_windowBackgroundWhiteBlackText, Theme.key_windowBackgroundWhiteGrayText, Theme.key_windowBackgroundWhiteValueText, Theme.key_text_RedBold);
         }
         if (activeGiftAuctionsHintCell != null) {
-            SimpleThemeDescription.add(arrayList, activeGiftAuctionsHintCell::updateColors, Theme.key_windowBackgroundWhite, Theme.key_windowBackgroundWhiteBlackText, Theme.key_windowBackgroundWhiteGrayText, Theme.key_windowBackgroundWhiteValueText, Theme.key_text_RedBold);
+            SimpleThemeDescription.add(arrayList, activeGiftAuctionsHintCell::updateColors, Theme.key_windowBackgroundGray, Theme.key_windowBackgroundWhiteBlackText, Theme.key_windowBackgroundWhiteGrayText, Theme.key_windowBackgroundWhiteValueText, Theme.key_text_RedBold);
         }
 
         return arrayList;
@@ -12376,7 +12376,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         if (!searching && rightSlidingDialogContainer != null && rightSlidingDialogContainer.getFragment() != null) {
             return rightSlidingDialogContainer.getFragment().isLightStatusBar();
         }
-        int color = getThemedColor(Theme.key_windowBackgroundWhite);
+        int color = getThemedColor(Theme.key_windowBackgroundGray);
         return ColorUtils.calculateLuminance(color) > 0.7f;
     }
 
@@ -12665,14 +12665,14 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                         - (communityId != 0 ? h : 0)
                         + (topPanelLayout != null ? (int) topPanelLayout.getAnimatedHeightWithPadding(dp(7)) : 0);
 
-                    gradientDrawable.setColor(Theme.multAlpha(getThemedColor(Theme.key_windowBackgroundWhite), 0.7f));
+                    gradientDrawable.setColor(Theme.multAlpha(getThemedColor(Theme.key_windowBackgroundGray), 0.7f));
                     gradientDrawable.setInsets(0, t, 0, 0);
                     gradientDrawable.setBounds(0, 0, getMeasuredWidth(), t + h);
                     gradientDrawable.draw(canvas);
                 }
 
                 if (navigationBarHeight > dp(32)) {
-                    gradientDrawable2.setColor(Theme.multAlpha(getThemedColor(Theme.key_windowBackgroundWhite), 0.9f));
+                    gradientDrawable2.setColor(Theme.multAlpha(getThemedColor(Theme.key_windowBackgroundGray), 0.9f));
                     gradientDrawable2.setBounds(0, getMeasuredHeight() - navigationBarHeight, getMeasuredWidth(), getMeasuredHeight());
                     gradientDrawable2.draw(canvas);
                 }
@@ -14085,7 +14085,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             }
         }
 
-        final ShapeDrawable bg = Theme.createRoundRectDrawable(dp(24), getThemedColor(Theme.key_windowBackgroundWhite));
+        final ShapeDrawable bg = Theme.createRoundRectDrawable(dp(24), getThemedColor(Theme.key_windowBackgroundGray));
         bg.getPaint().setShadowLayer(dp(6), 0, dp(1), Theme.multAlpha(0xFF000000, 0.15f));
         o.setViewAdditionalOffsets(-dp(4), -dp(4), -dp(4), -dp(4));
         o.setScrimViewBackground(bg);
@@ -14101,7 +14101,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
     public void onThemeColorsChanged() {
         try {
             super.onThemeColorsChanged();
-            actionBarDefaultPaint.setColor(getThemedColor(Theme.key_windowBackgroundWhite));
+            actionBarDefaultPaint.setColor(getThemedColor(Theme.key_windowBackgroundGray));
             cellDelegateThemeColors();
             updateExtraThemeColors();
         } catch (Exception e) {
@@ -14128,7 +14128,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                     actionBar.setSearchTextColor(getThemedColor(Theme.key_actionBarDefaultArchivedSearchPlaceholder), true);
                 }
                 if (actionBar.isActionModeShowed()) {
-                    actionBar.setActionModeOverrideColor(getThemedColor(Theme.key_windowBackgroundWhite));
+                    actionBar.setActionModeOverrideColor(getThemedColor(Theme.key_windowBackgroundGray));
                 }
                 // items colors are lerped by the search progress: re-apply them over the plain key bindings
                 updateSearchActionBarItemsColors();
@@ -14136,15 +14136,15 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             if (viewPages != null) {
                 for (int a = 0; a < viewPages.length; a++) {
                     if (viewPages[a] != null && viewPages[a].listView != null) {
-                        viewPages[a].listView.setGlowColor(getThemedColor(Theme.key_windowBackgroundWhite));
+                        viewPages[a].listView.setGlowColor(getThemedColor(Theme.key_windowBackgroundGray));
                     }
                 }
             }
             if (searchViewPager != null && searchViewPager.searchListView != null) {
-                searchViewPager.searchListView.setGlowColor(getThemedColor(Theme.key_windowBackgroundWhite));
+                searchViewPager.searchListView.setGlowColor(getThemedColor(Theme.key_windowBackgroundGray));
             }
             if (writeButton != null) {
-                writeButton.setScrimViewBackgroundColor(getThemedColor(Theme.key_windowBackgroundWhite));
+                writeButton.setScrimViewBackgroundColor(getThemedColor(Theme.key_windowBackgroundGray));
             }
             if (storyHint != null) {
                 storyHint.setBgColor(getThemedColor(Theme.key_undo_background));
@@ -14243,7 +14243,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                     }
                     if (blurredView != null) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            final int blurredColor = ColorUtils.setAlphaComponent(getThemedColor(Theme.key_windowBackgroundWhite), 100);
+                            final int blurredColor = ColorUtils.setAlphaComponent(getThemedColor(Theme.key_windowBackgroundGray), 100);
                             if (blurredView.getForeground() instanceof ColorDrawable) {
                                 if (((ColorDrawable) blurredView.getForeground()).getColor() != blurredColor) {
                                     ((ColorDrawable) blurredView.getForeground()).setColor(blurredColor);
@@ -14260,12 +14260,12 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                         floatingButtonStories.updateColors();
                     }
 
-                    iBlur3SourceColor.setColor(getThemedColor(Theme.key_windowBackgroundWhite));
+                    iBlur3SourceColor.setColor(getThemedColor(Theme.key_windowBackgroundGray));
                     if (topPanelLayout != null) {
                         topPanelLayout.updateColors();
                     }
                     if (topBubblesFadeView != null) {
-                        topBubblesFadeView.setColor(Theme.getColor(Theme.key_windowBackgroundWhite));
+                        topBubblesFadeView.setColor(Theme.getColor(Theme.key_windowBackgroundGray));
                     }
                     if (fragmentContextView != null) {
                         fragmentContextView.updateColors();
