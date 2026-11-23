@@ -1805,7 +1805,7 @@ public class Theme {
                 //override default themes
                 if (isHome(themeAccent) && name.equals("Dark Blue") || name.equals("Night")) {
                     // Mokagram: как на десктопе: чат чёрный без узора, исходящие сплошной синий
-                    themeAccent.myMessagesAccentColor = 0xff2a64c8;
+                    themeAccent.myMessagesAccentColor = 0xff282828;
                     themeAccent.myMessagesGradientAccentColor1 = 0;
                     themeAccent.myMessagesGradientAccentColor2 = 0;
                     themeAccent.myMessagesGradientAccentColor3 = 0;

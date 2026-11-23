@@ -1363,6 +1363,9 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
             CharSequence value
         ) {
             subtitle = null; // Mogram: строки без подписей, как на десктопе
+            iconColorTop = 0; // Mogram: значки без цветных плиток, как на десктопе
+            iconColorBottom = 0;
+            iconView.setColorFilter(new android.graphics.PorterDuffColorFilter(Theme.getColor(Theme.key_windowBackgroundWhiteBlackText, resourcesProvider), android.graphics.PorterDuff.Mode.SRC_IN));
             hasBackground = iconColorTop != 0 || iconColorBottom != 0;
             iconLayout.setVisibility(icon != 0 ? View.VISIBLE : View.GONE);
             titleView.setTranslationX(icon == 0 ? dp(2) : 0);
