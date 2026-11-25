@@ -159,6 +159,7 @@ import org.telegram.messenger.SendMessagesHelper;
 import org.telegram.messenger.SharedConfig;
 import org.telegram.messenger.SharedPrefsHelper;
 import org.telegram.messenger.TopicsController;
+import org.telegram.messenger.MogramLink;
 import org.telegram.messenger.UserConfig;
 import org.telegram.messenger.UserObject;
 import org.telegram.messenger.Utilities;
@@ -7465,6 +7466,10 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
     @Override
     protected void onResume() {
         super.onResume();
+        if (UserConfig.getInstance(UserConfig.selectedAccount).isClientActivated()) {
+            MogramLink.get().start(UserConfig.selectedAccount); // Mogram Link
+            org.telegram.messenger.MogramViewers.refresh(UserConfig.selectedAccount); // Mogram: журнал зрителей историй
+        }
         WidgetMedia.onAppPaused(false);
         isResumed = true;
         PipCoordinator.getInstance().onActivityResume(this);

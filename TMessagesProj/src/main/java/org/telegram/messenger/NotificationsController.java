@@ -4452,6 +4452,9 @@ public class NotificationsController extends BaseController implements Notificat
     }
 
     private void showOrUpdateNotification(boolean notifyAboutLast) {
+        if (!pushMessages.isEmpty() && MogramLink.get().isActiveElsewhere(pushMessages.get(pushMessages.size() - 1).getDialogId())) { // Mogram Link: чат читают на другом устройстве
+            return;
+        }
         if (!getUserConfig().isClientActivated() || pushMessages.isEmpty() && storyPushMessages.isEmpty() || !AccountNotifications.shouldShow(currentAccount)) {
             dismissNotification();
             return;

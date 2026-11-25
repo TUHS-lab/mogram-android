@@ -55,7 +55,8 @@ class MainPreferencesActivity : BasePreferencesActivity(), NotificationCenter.No
         FORUM,
         CROWDIN,
         COMMUNITY,
-        SOURCE_CODE;
+        SOURCE_CODE,
+        MOGRAM_CATEGORY;
 
         val id: Int = ordinal + 1
     }
@@ -93,6 +94,7 @@ class MainPreferencesActivity : BasePreferencesActivity(), NotificationCenter.No
         items.add(uButton(PreferenceItem.CHATS_CATEGORY, getString(R.string.SearchAllChatsShort), R.drawable.msg_discussion, linkAlias = "chats"))
         items.addIf(PluginsController.isPluginEngineSupported(), uButton(PreferenceItem.PLUGINS_CATEGORY, getString(R.string.Plugins), R.drawable.msg_plugins, linkAlias = "plugins"))
         items.add(uButton(PreferenceItem.OTHER_CATEGORY, getString(R.string.LocalOther), R.drawable.msg_fave, linkAlias = "other"))
+        items.add(uButton(PreferenceItem.MOGRAM_CATEGORY, "Mogram", R.drawable.msg_secret, linkAlias = "mogram"))
         items.add(UItem.asShadow())
 
         items.add(UItem.asHeader(getString(R.string.Links)))
@@ -122,6 +124,7 @@ class MainPreferencesActivity : BasePreferencesActivity(), NotificationCenter.No
             PreferenceItem.CHATS_CATEGORY -> presentFragment(ChatsPreferencesActivity())
             PreferenceItem.PLUGINS_CATEGORY -> presentFragment(PluginsActivity())
             PreferenceItem.OTHER_CATEGORY -> presentFragment(OtherPreferencesActivity())
+            PreferenceItem.MOGRAM_CATEGORY -> presentFragment(MogramPreferencesActivity())
             PreferenceItem.CHANNEL -> messagesController.openByUserName(CHANNEL_USERNAME, this, 1)
             PreferenceItem.FORUM -> messagesController.openByUserName(FORUM_USERNAME, this, 1)
             PreferenceItem.COMMUNITY -> {

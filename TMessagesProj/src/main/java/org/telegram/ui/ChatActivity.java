@@ -229,6 +229,7 @@ import org.telegram.messenger.MediaController;
 import org.telegram.messenger.MediaDataController;
 import org.telegram.messenger.SendMessageChatArguments;
 import org.telegram.messenger.MessageObject;
+import org.telegram.messenger.MogramLink;
 import org.telegram.messenger.MogramScam;
 import org.telegram.messenger.MogramSettings;
 import org.telegram.messenger.MessagePreviewParams;
@@ -32461,6 +32462,7 @@ public class ChatActivity extends BaseFragment implements
     @Override
     public void onResume() {
         super.onResume();
+        MogramLink.get().setActiveDialog(dialog_id); // Mogram Link: я сейчас в этом чате
         ChatScreenshotExportBridge.onChatResumed(this);
         if (quickAttachOnResume != null) {
             Runnable action = quickAttachOnResume;
@@ -32689,6 +32691,7 @@ public class ChatActivity extends BaseFragment implements
     public void onPause() {
         if (quickTilesMenu != null) quickTilesMenu.dismiss(false);
         super.onPause();
+        MogramLink.get().setActiveDialog(0);
         ChatScreenshotExportBridge.onChatPaused(this);
         scrolling = false;
         if (scrimPopupWindow != null) {

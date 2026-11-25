@@ -283,6 +283,7 @@ public class MogramSettings {
         final String updated = MogramLogic.idListToggle(prefs().getString("mogram_local_pins", ""), dialogId);
         prefs().edit().putString("mogram_local_pins", updated).apply();
         localPins = null;
+        MogramLink.get().onSharedChanged();
         return MogramLogic.idListContains(updated, dialogId);
     }
 
@@ -321,6 +322,7 @@ public class MogramSettings {
             editor.putString("mogram_note_" + userId, note);
         }
         editor.apply();
+        MogramLink.get().onSharedChanged();
     }
 
     public static void setTag(long userId, String tag) {
@@ -331,6 +333,7 @@ public class MogramSettings {
             editor.putString("mogram_tag_" + userId, tag);
         }
         editor.apply();
+        MogramLink.get().onSharedChanged();
     }
 
     // Текст под спойлерами виден сразу (только в сообщениях, у себя при вводе спойлер остаётся).
@@ -409,5 +412,66 @@ public class MogramSettings {
 
     public static String maskPhone(String phone) {
         return MogramLogic.maskPhone(phone);
+    }
+
+    // Общие данные для Mogram Link: заметки, теги и локальные закрепы (формат одинаков на ПК и телефоне).
+    public static org.json.JSONObject exportShared() throws org.json.JSONException {
+        final org.json.JSONObject notes = new org.json.JSONObject();
+        final org.json.JSONObject tags = new org.json.JSONObject();
+        for (java.util.Map.Entry<String, ?> entry : prefs().getAll().entrySet()) {
+            final String k = entry.getKey();
+            if (k.startsWith("mogram_note_") && entry.getValue() instanceof String) {
+                notes.put(k.substring("mogram_note_".length()), entry.getValue());
+            } else if (k.startsWith("mogram_tag_") && entry.getValue() instanceof String) {
+                tags.put(k.substring("mogram_tag_".length()), entry.getValue());
+            }
+        }
+        final org.json.JSONArray pins = new org.json.JSONArray();
+        for (String part : prefs().getString("mogram_local_pins", "").split(",")) {
+            if (!part.trim().isEmpty()) {
+                pins.put(part.trim());
+            }
+        }
+        final org.json.JSONObject result = new org.json.JSONObject();
+        result.put("notes", notes);
+        result.put("tags", tags);
+        result.put("pins", pins);
+        return result;
+    }
+
+    public static void importShared(org.json.JSONObject json) {
+        final SharedPreferences.Editor editor = prefs().edit();
+        for (String k : new ArrayList<>(prefs().getAll().keySet())) {
+            if (k.startsWith("mogram_note_") || k.startsWith("mogram_tag_")) {
+                editor.remove(k);
+            }
+        }
+        final org.json.JSONObject notes = json.optJSONObject("notes");
+        final org.json.JSONObject tags = json.optJSONObject("tags");
+        if (notes != null) {
+            for (java.util.Iterator<String> it = notes.keys(); it.hasNext(); ) {
+                final String k = it.next();
+                editor.putString("mogram_note_" + k, notes.optString(k));
+            }
+        }
+        if (tags != null) {
+            for (java.util.Iterator<String> it = tags.keys(); it.hasNext(); ) {
+                final String k = it.next();
+                editor.putString("mogram_tag_" + k, tags.optString(k));
+            }
+        }
+        final org.json.JSONArray pins = json.optJSONArray("pins");
+        final StringBuilder list = new StringBuilder();
+        if (pins != null) {
+            for (int i = 0; i < pins.length(); i++) {
+                if (list.length() > 0) {
+                    list.append(',');
+                }
+                list.append(pins.optString(i));
+            }
+        }
+        editor.putString("mogram_local_pins", list.toString());
+        editor.apply();
+        localPins = null;
     }
 }
