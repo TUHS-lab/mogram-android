@@ -1806,7 +1806,15 @@ public class Theme {
                     themeAccent.myMessagesGradientAccentColor1 = 0xff4272DF;
                     themeAccent.myMessagesGradientAccentColor2 = 0xff8146D7;
                     themeAccent.myMessagesGradientAccentColor3 = 0xff9F3EAA;
-                    if (name.equals("Night")) {
+                    final int[] mogramBg = org.telegram.messenger.MogramBackground.colors(org.telegram.messenger.MogramBackground.preset()); // Mogram: градиент фона чата
+                    if (mogramBg != null) {
+                        themeAccent.patternIntensity = 0;
+                        themeAccent.patternSlug = "";
+                        themeAccent.backgroundOverrideColor = mogramBg[0];
+                        themeAccent.backgroundGradientOverrideColor1 = mogramBg[1];
+                        themeAccent.backgroundGradientOverrideColor2 = mogramBg[2];
+                        themeAccent.backgroundGradientOverrideColor3 = mogramBg[3];
+                    } else if (name.equals("Night")) {
                         themeAccent.patternIntensity = -0.57f;
                         themeAccent.backgroundOverrideColor = 0xff6c7fa6;
                         themeAccent.backgroundGradientOverrideColor1 = 0xff2e344b;

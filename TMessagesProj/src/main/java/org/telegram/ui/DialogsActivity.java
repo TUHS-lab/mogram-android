@@ -140,6 +140,7 @@ import org.telegram.messenger.MediaDataController;
 import org.telegram.messenger.MessageObject;
 import org.telegram.messenger.VideoEditedInfo;
 import org.telegram.messenger.MessagesController;
+import org.telegram.messenger.MogramSettings;
 import org.telegram.messenger.MessagesStorage;
 import org.telegram.messenger.NotificationCenter;
 import org.telegram.messenger.NotificationsController;
@@ -13038,10 +13039,9 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         } else if (isArchive()) {
             newVisibility = !getStoriesController().getHiddenList().isEmpty();
         } else {
-            newVisibility = !onlySelfStories && getStoriesController().hasStories();
-            onlySelfStories = getStoriesController().hasOnlySelfStories();
+            newVisibility = !MogramSettings.hideStories() && !onlySelfStories && getStoriesController().hasStories(); // Mogram
+            onlySelfStories = !MogramSettings.hideStories() && getStoriesController().hasOnlySelfStories(); // Mogram
         }
-
         hasOnlySlefStories = onlySelfStories;
 
         boolean oldStoriesCellVisibility = dialogStoriesCellVisible;

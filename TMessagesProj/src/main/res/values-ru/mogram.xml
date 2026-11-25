@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="MogramGhost">Режим призрака</string>
+    <string name="MogramGhostInfo">Сообщения не отмечаются прочитанными, вы всегда не в сети, а набор текста не виден. Счётчики непрочитанных могут вернуться после синхронизации.</string>
+    <string name="MogramStreamer">Режим стримера</string>
+    <string name="MogramStreamerInfo">Скрывает ваш номер телефона во всём приложении, удобно для записи экрана и трансляций.</string>
+    <string name="MogramKeep">Сохранять удалённые сообщения</string>
+    <string name="MogramKeepInfo">Если собеседник удалил сообщение у всех, оно остаётся в вашем чате. Работает для сообщений, пришедших, пока вы в приложении.</string>
+    <string name="MogramDeleted">удалено</string>
+    <string name="MogramQuick">Быстрые команды</string>
+    <string name="MogramQuickInfo">По одной команде в строке, например /hi = Привет! Если отправить ровно /hi, он заменится текстом.</string>
+    <string name="MogramMusic">Музыка</string>
+    <string name="MogramDecoy">Ложный пароль</string>
+    <string name="MogramDecoyInfo">Второй код. Если кто-то введёт его вместо настоящего, приложение тихо выйдет из всех аккаунтов на этом устройстве. Код должен отличаться от настоящего.</string>
+    <string name="MogramDecoyHint">Ложный пароль</string>
+    <string name="MogramDecoyNeedPasscode">Сначала включите код-пароль (Конфиденциальность → Код-пароль)</string>
+    <string name="MogramDecoySame">Ложный пароль должен отличаться от настоящего</string>
+    <string name="MogramDecoyRemove">Удалить</string>
+    <string name="MogramOn">Вкл.</string>
+    <string name="MogramOff">Выкл.</string>
+    <string name="MogramLock">Блокировать сразу</string>
+    <string name="MogramLockInfo">Приложение блокируется, как только вы из него вышли. Нужен код-пароль.</string>
+    <string name="MogramCommands">Команды в чате</string>
+    <string name="MogramCommandsInfo">Пишите команду вместо сообщения: .id покажет номера чата и сообщения, .mute и .unmute управляют уведомлениями. В ответ на сообщение: .pin, .unpin и .del (своё сообщение).</string>
+    <string name="MogramPlugins">Плагины</string>
+    <string name="MogramGhostRead">Скрывать прочтение</string>
+    <string name="MogramGhostTyping">Скрывать «печатает»</string>
+    <string name="MogramGhostStories">Скрывать просмотры историй</string>
+    <string name="MogramGhostOnline">Скрывать «в сети»</string>
+    <string name="MogramRevealSpoilers">Показывать текст под спойлером сразу</string>
+    <string name="MogramScamGuard">Предупреждать о подозрительных ссылках</string>
+    <string name="MogramScamTitle">Подозрительная ссылка</string>
+    <string name="MogramScamOpen">Всё равно открыть</string>
+    <string name="MogramHideStories">Скрыть полосу историй</string>
+    <string name="MogramHideBlocked">Скрывать сообщения заблокированных в группах</string>
+    <string name="MogramScamWarning">Возможный скам. Не переводите деньги и не открывайте ссылки.</string>
+    <string name="MogramProfileId">Показывать ID и дату регистрации в профилях</string>
+    <string name="MogramRoundFocus">Размывать экран при просмотре кружка</string>
+    <string name="MogramRoundFocusInfo">Пока играет кружок, остальной чат размыт. Прокрутка или пауза убирают размытие. Нужен Android 12 или новее.</string>
+</resources>

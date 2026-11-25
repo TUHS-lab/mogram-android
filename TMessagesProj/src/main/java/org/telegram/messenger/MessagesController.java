@@ -1473,6 +1473,11 @@ public class MessagesController extends BaseController implements NotificationCe
                 return 0;
             }
         }
+        final boolean localPin1 = MogramSettings.isLocalPin(dialog1.id); // Mogram: локальные закрепы
+        final boolean localPin2 = MogramSettings.isLocalPin(dialog2.id);
+        if (localPin1 != localPin2) {
+            return localPin1 ? -1 : 1;
+        }
         MediaDataController mediaDataController = getMediaDataController();
         long date1 = DialogObject.getLastMessageOrDraftDate(dialog1, mediaDataController.getDraft(dialog1.id, 0));
         long date2 = DialogObject.getLastMessageOrDraftDate(dialog2, mediaDataController.getDraft(dialog2.id, 0));
@@ -10664,7 +10669,7 @@ public class MessagesController extends BaseController implements NotificationCe
                         }
 
                         TL_account.updateStatus req = new TL_account.updateStatus();
-                        req.offline = false;
+                        req.offline = MogramSettings.isGhostMode(); // Mogram: в режиме призрака всегда не в сети
                         statusRequest = getConnectionsManager().sendRequest(req, (response, error) -> {
                             if (error == null) {
                                 lastStatusUpdateTime = System.currentTimeMillis();
@@ -11533,6 +11538,9 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     public boolean sendTyping(long dialogId, long threadMsgId, int action, String emojicon, int classGuid) {
+        if (MogramSettings.isGhostMode()) { // Mogram: не показываем "печатает"
+            return false;
+        }
         if (action < 0 || action >= sendingTypings.length || dialogId == 0) {
             return false;
         }
@@ -14781,6 +14789,9 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     private void completeReadTask(ReadTask task) {
+        if (MogramSettings.isGhostMode()) { // Mogram: не отправляем отметку о прочтении
+            return;
+        }
         if (task.replyId != 0 && task.monoForumPeerId == 0) {
             TLRPC.TL_messages_readDiscussion req = new TLRPC.TL_messages_readDiscussion();
             req.msg_id = (int) task.replyId;
@@ -19125,7 +19136,11 @@ public class MessagesController extends BaseController implements NotificationCe
                     arrayList = new ArrayList<>();
                     deletedMessages.put(0, arrayList);
                 }
-                arrayList.addAll(update.messages);
+                if (!MogramSettings.keepDeleted()) { // Mogram: удалённые собеседником остаются у нас
+                    arrayList.addAll(update.messages);
+                } else {
+                    MogramSettings.markDeleted(0, new ArrayList<>(update.messages));
+                }
             } else if (baseUpdate instanceof TL_update.TL_updateDeleteQuickReplyMessages) {
                 TL_update.TL_updateDeleteQuickReplyMessages update = (TL_update.TL_updateDeleteQuickReplyMessages) baseUpdate;
                 if (deletedQuickReplyMessages == null) {
@@ -19655,7 +19670,11 @@ public class MessagesController extends BaseController implements NotificationCe
                     arrayList = new ArrayList<>();
                     deletedMessages.put(dialogId, arrayList);
                 }
-                arrayList.addAll(update.messages);
+                if (!MogramSettings.keepDeleted()) { // Mogram
+                    arrayList.addAll(update.messages);
+                } else {
+                    MogramSettings.markDeleted(dialogId, new ArrayList<>(update.messages));
+                }
             } else if (baseUpdate instanceof TL_update.TL_updateChannel) {
                 if (BuildVars.LOGS_ENABLED) {
                     TL_update.TL_updateChannel update = (TL_update.TL_updateChannel) baseUpdate;

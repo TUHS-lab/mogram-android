@@ -46,6 +46,7 @@ import org.telegram.messenger.FileLog;
 import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.MessagesController;
 import org.telegram.messenger.NotificationCenter;
+import org.telegram.messenger.MogramSettings;
 import org.telegram.messenger.R;
 import org.telegram.messenger.SharedConfig;
 import org.telegram.tgnet.ConnectionsManager;
@@ -138,6 +139,32 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
     private int newChatsHeaderRow;
     @Keep
     private int newChatsRow;
+    private int ghostRow; // Mogram
+    private int ghostDetailRow; // Mogram
+    private int streamerRow; // Mogram
+    private int streamerDetailRow; // Mogram
+    private int keepRow; // Mogram
+    private int keepDetailRow; // Mogram
+    private int quickRow; // Mogram
+    private int decoyRow; // Mogram
+    private int lockRow; // Mogram
+    private int commandsRow; // Mogram
+    private int roundFocusRow; // Mogram
+    private int profileIdRow; // Mogram
+    private int revealSpoilersRow; // Mogram
+    private int scamGuardRow; // Mogram
+    private int hideStoriesRow; // Mogram
+    private int hideBlockedRow; // Mogram
+    private int ghostReadRow; // Mogram
+    private int ghostTypingRow; // Mogram
+    private int ghostStoriesRow; // Mogram
+    private int ghostOnlineRow; // Mogram
+    private int roundFocusDetailRow; // Mogram
+    private int commandsDetailRow; // Mogram
+    private int lockDetailRow; // Mogram
+    private int mogramMusicRow; // Mogram
+    private int pluginsRow; // Mogram
+    private int quickDetailRow; // Mogram
     private int newChatsSectionRow;
     private int advancedSectionRow;
     @Keep
@@ -167,6 +194,86 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
     private int secretWebpageRow;
     private int secretDetailRow;
     private int rowCount;
+
+    // Mogram: ложный пароль
+    private void showDecoyDialog() {
+        final android.content.Context context = getParentActivity();
+        if (context == null) {
+            return;
+        }
+        if (SharedConfig.passcodeHash == null || SharedConfig.passcodeHash.length() == 0) {
+            android.widget.Toast.makeText(context, getString("MogramDecoyNeedPasscode", R.string.MogramDecoyNeedPasscode), android.widget.Toast.LENGTH_LONG).show();
+            return;
+        }
+        final android.widget.EditText input = new android.widget.EditText(context);
+        input.setHint(getString("MogramDecoyHint", R.string.MogramDecoyHint));
+        input.setSingleLine(true);
+        input.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        input.setTextColor(Theme.getColor(Theme.key_dialogTextBlack));
+        input.setHintTextColor(Theme.getColor(Theme.key_dialogTextHint));
+        android.widget.FrameLayout container = new android.widget.FrameLayout(context);
+        container.setPadding(AndroidUtilities.dp(24), AndroidUtilities.dp(8), AndroidUtilities.dp(24), 0);
+        container.addView(input, new android.widget.FrameLayout.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(getString("MogramDecoy", R.string.MogramDecoy));
+        builder.setMessage(getString("MogramDecoyInfo", R.string.MogramDecoyInfo));
+        builder.setView(container);
+        builder.setPositiveButton(getString("Save", R.string.Save), (dialog, which) -> {
+            String code = input.getText().toString();
+            if (code.isEmpty()) {
+                return;
+            }
+            if (SharedConfig.checkPasscode(code)) {
+                android.widget.Toast.makeText(context, getString("MogramDecoySame", R.string.MogramDecoySame), android.widget.Toast.LENGTH_LONG).show();
+                return;
+            }
+            MogramSettings.setDecoy(code);
+            if (listAdapter != null) {
+                listAdapter.notifyDataSetChanged();
+            }
+        });
+        if (MogramSettings.hasDecoy()) {
+            builder.setNeutralButton(getString("MogramDecoyRemove", R.string.MogramDecoyRemove), (dialog, which) -> {
+                MogramSettings.setDecoy(null);
+                if (listAdapter != null) {
+                    listAdapter.notifyDataSetChanged();
+                }
+            });
+        }
+        builder.setNegativeButton(getString("Cancel", R.string.Cancel), null);
+        showDialog(builder.create());
+    }
+
+    // Mogram: окно со списком быстрых команд
+    private void showQuickCommandsDialog() {
+        android.content.Context context = getParentActivity();
+        if (context == null) {
+            return;
+        }
+        final android.widget.EditText input = new android.widget.EditText(context);
+        input.setText(MogramSettings.getQuickCommandsText());
+        input.setHint("/hi = Hello!");
+        input.setMinLines(4);
+        input.setGravity(android.view.Gravity.TOP | android.view.Gravity.START);
+        input.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        input.setTextColor(Theme.getColor(Theme.key_dialogTextBlack));
+        input.setHintTextColor(Theme.getColor(Theme.key_dialogTextHint));
+        android.widget.FrameLayout container = new android.widget.FrameLayout(context);
+        container.setPadding(AndroidUtilities.dp(24), AndroidUtilities.dp(8), AndroidUtilities.dp(24), 0);
+        container.addView(input, new android.widget.FrameLayout.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(getString("MogramQuick", R.string.MogramQuick));
+        builder.setMessage(getString("MogramQuickInfo", R.string.MogramQuickInfo));
+        builder.setView(container);
+        builder.setPositiveButton(getString("Save", R.string.Save), (dialog, which) -> {
+            MogramSettings.setQuickCommandsText(input.getText().toString());
+            if (listAdapter != null) {
+                listAdapter.notifyDataSetChanged();
+            }
+        });
+        builder.setNegativeButton(getString("Cancel", R.string.Cancel), null);
+        showDialog(builder.create());
+    }
 
     private final ArrayList<BotBiometry.Bot> biometryBots = new ArrayList<>();
 
@@ -587,6 +694,80 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                 } else {
                     cell.setChecked(newSuggest = true);
                 }
+            } else if (position == ghostReadRow) { // Mogram
+                final TextCheckCell cell = (TextCheckCell) view;
+                MogramSettings.setGhostHides("read", !MogramSettings.ghostHides("read"));
+                cell.setChecked(MogramSettings.ghostHides("read"));
+            } else if (position == ghostTypingRow) { // Mogram
+                final TextCheckCell cell = (TextCheckCell) view;
+                MogramSettings.setGhostHides("typing", !MogramSettings.ghostHides("typing"));
+                cell.setChecked(MogramSettings.ghostHides("typing"));
+            } else if (position == ghostStoriesRow) { // Mogram
+                final TextCheckCell cell = (TextCheckCell) view;
+                MogramSettings.setGhostHides("stories", !MogramSettings.ghostHides("stories"));
+                cell.setChecked(MogramSettings.ghostHides("stories"));
+            } else if (position == ghostOnlineRow) { // Mogram
+                final TextCheckCell cell = (TextCheckCell) view;
+                MogramSettings.setGhostHides("online", !MogramSettings.ghostHides("online"));
+                cell.setChecked(MogramSettings.ghostHides("online"));
+            } else if (position == hideBlockedRow) { // Mogram
+                final TextCheckCell cell = (TextCheckCell) view;
+                MogramSettings.setHideBlocked(!MogramSettings.hideBlocked());
+                cell.setChecked(MogramSettings.hideBlocked());
+            } else if (position == hideStoriesRow) { // Mogram
+                final TextCheckCell cell = (TextCheckCell) view;
+                MogramSettings.setHideStories(!MogramSettings.hideStories());
+                cell.setChecked(MogramSettings.hideStories());
+            } else if (position == scamGuardRow) { // Mogram
+                final TextCheckCell cell = (TextCheckCell) view;
+                MogramSettings.setScamGuard(!MogramSettings.scamGuard());
+                cell.setChecked(MogramSettings.scamGuard());
+            } else if (position == revealSpoilersRow) { // Mogram
+                final TextCheckCell cell = (TextCheckCell) view;
+                MogramSettings.setRevealSpoilers(!MogramSettings.revealSpoilers());
+                cell.setChecked(MogramSettings.revealSpoilers());
+            } else if (position == profileIdRow) { // Mogram
+                final TextCheckCell cell = (TextCheckCell) view;
+                MogramSettings.setShowProfileId(!MogramSettings.showProfileId());
+                cell.setChecked(MogramSettings.showProfileId());
+            } else if (position == roundFocusRow) { // Mogram
+                final TextCheckCell cell = (TextCheckCell) view;
+                MogramSettings.setRoundFocus(!MogramSettings.roundFocus());
+                cell.setChecked(MogramSettings.roundFocus());
+            } else if (position == commandsRow) { // Mogram
+                final TextCheckCell cell = (TextCheckCell) view;
+                MogramSettings.setCommandsEnabled(!MogramSettings.commandsEnabled());
+                cell.setChecked(MogramSettings.commandsEnabled());
+            } else if (position == lockRow) { // Mogram: блокировка сразу при выходе из приложения
+                if (SharedConfig.passcodeHash == null || SharedConfig.passcodeHash.length() == 0) {
+                    android.widget.Toast.makeText(getParentActivity(), getString("MogramDecoyNeedPasscode", R.string.MogramDecoyNeedPasscode), android.widget.Toast.LENGTH_LONG).show();
+                } else {
+                    boolean instant = SharedConfig.autoLockIn > 0 && SharedConfig.autoLockIn <= 5;
+                    SharedConfig.autoLockIn = instant ? 60 : 1;
+                    SharedConfig.saveConfig();
+                    ((TextCheckCell) view).setChecked(!instant);
+                }
+            } else if (position == decoyRow) { // Mogram
+                showDecoyDialog();
+            } else if (position == pluginsRow) { // Mogram
+                presentFragment(new MogramPluginsActivity());
+            } else if (position == mogramMusicRow) { // Mogram
+                presentFragment(new MogramMusicActivity());
+            } else if (position == quickRow) { // Mogram
+                showQuickCommandsDialog();
+            } else if (position == keepRow) { // Mogram
+                final TextCheckCell cell = (TextCheckCell) view;
+                MogramSettings.setKeepDeleted(!MogramSettings.keepDeleted());
+                cell.setChecked(MogramSettings.keepDeleted());
+            } else if (position == streamerRow) { // Mogram
+                final TextCheckCell cell = (TextCheckCell) view;
+                MogramSettings.setStreamerMode(!MogramSettings.isStreamerMode());
+                cell.setChecked(MogramSettings.isStreamerMode());
+                NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.mainUserInfoChanged);
+            } else if (position == ghostRow) { // Mogram
+                final TextCheckCell cell = (TextCheckCell) view;
+                MogramSettings.setGhostMode(!MogramSettings.isGhostEnabled());
+                cell.setChecked(MogramSettings.isGhostEnabled());
             } else if (position == newChatsRow) {
                 final TextCheckCell cell = (TextCheckCell) view;
                 archiveChats = !archiveChats;
@@ -796,6 +977,32 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
             newChatsRow = -1;
             newChatsSectionRow = -1;
         }
+        ghostRow = rowCount++; // Mogram
+        ghostReadRow = rowCount++; // Mogram
+        ghostTypingRow = rowCount++; // Mogram
+        ghostStoriesRow = rowCount++; // Mogram
+        ghostOnlineRow = rowCount++; // Mogram
+        ghostDetailRow = rowCount++; // Mogram
+        streamerRow = rowCount++; // Mogram
+        streamerDetailRow = rowCount++; // Mogram
+        keepRow = rowCount++; // Mogram
+        keepDetailRow = rowCount++; // Mogram
+        pluginsRow = rowCount++; // Mogram
+        mogramMusicRow = rowCount++; // Mogram
+        decoyRow = rowCount++; // Mogram
+        roundFocusRow = rowCount++; // Mogram
+        profileIdRow = rowCount++; // Mogram
+        revealSpoilersRow = rowCount++; // Mogram
+        scamGuardRow = rowCount++; // Mogram
+        hideStoriesRow = rowCount++; // Mogram
+        hideBlockedRow = rowCount++; // Mogram
+        roundFocusDetailRow = rowCount++; // Mogram
+        commandsRow = rowCount++; // Mogram
+        commandsDetailRow = rowCount++; // Mogram
+        lockRow = rowCount++; // Mogram
+        lockDetailRow = rowCount++; // Mogram
+        quickRow = rowCount++; // Mogram
+        quickDetailRow = rowCount++; // Mogram
         advancedSectionRow = rowCount++;
         deleteAccountRow = rowCount++;
         deleteAccountDetailRow = rowCount++;
@@ -1069,6 +1276,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                     position == noncontactsRow ||
                     position == deleteAccountRow && !getContactsController().getLoadingDeleteInfo() ||
                     position == newChatsRow && !getContactsController().getLoadingGlobalSettings() ||
+                    position == ghostRow || position == streamerRow || position == keepRow || position == lockRow || position == commandsRow || position == roundFocusRow || position == profileIdRow || position == revealSpoilersRow || position == scamGuardRow || position == hideStoriesRow || position == hideBlockedRow || position == ghostReadRow || position == ghostTypingRow || position == ghostStoriesRow || position == ghostOnlineRow || position == quickRow || position == mogramMusicRow || position == pluginsRow || position == decoyRow ||
                     position == emailLoginRow || position == paymentsClearRow || position == secretMapRow ||
                     position == contactsSyncRow || position == passportRow || position == contactsDeleteRow ||
                     position == contactsSuggestRow || position == autoDeleteMesages || position == botsBiometryRow;
@@ -1267,7 +1475,21 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                 case 1:
                     TextInfoPrivacyCell privacyCell = (TextInfoPrivacyCell) holder.itemView;
                     boolean last = position == getItemCount() - 1;
-                    if (position == deleteAccountDetailRow) {
+                    if (position == roundFocusDetailRow) { // Mogram
+                        privacyCell.setText(getString("MogramRoundFocusInfo", R.string.MogramRoundFocusInfo));
+                    } else if (position == commandsDetailRow) { // Mogram
+                        privacyCell.setText(getString("MogramCommandsInfo", R.string.MogramCommandsInfo));
+                    } else if (position == lockDetailRow) { // Mogram
+                        privacyCell.setText(getString("MogramLockInfo", R.string.MogramLockInfo));
+                    } else if (position == quickDetailRow) { // Mogram
+                        privacyCell.setText(getString("MogramQuickInfo", R.string.MogramQuickInfo));
+                    } else if (position == keepDetailRow) { // Mogram
+                        privacyCell.setText(getString("MogramKeepInfo", R.string.MogramKeepInfo));
+                    } else if (position == streamerDetailRow) { // Mogram
+                        privacyCell.setText(getString("MogramStreamerInfo", R.string.MogramStreamerInfo));
+                    } else if (position == ghostDetailRow) { // Mogram
+                        privacyCell.setText(getString("MogramGhostInfo", R.string.MogramGhostInfo));
+                    } else if (position == deleteAccountDetailRow) {
                         privacyCell.setText(getString("DeleteAccountHelp", R.string.DeleteAccountHelp));
                     } else if (position == groupsDetailRow) {
                         privacyCell.setText(getString("GroupsAndChannelsHelp", R.string.GroupsAndChannelsHelp));
@@ -1316,6 +1538,36 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                         textCheckCell.setTextAndCheck(getString("SyncContacts", R.string.SyncContacts), newSync, true);
                     } else if (position == contactsSuggestRow) {
                         textCheckCell.setTextAndCheck(getString("SuggestContacts", R.string.SuggestContacts), newSuggest, false);
+                    } else if (position == ghostReadRow) { // Mogram
+                        textCheckCell.setTextAndCheck(getString("MogramGhostRead", R.string.MogramGhostRead), MogramSettings.ghostHides("read"), false);
+                    } else if (position == ghostTypingRow) { // Mogram
+                        textCheckCell.setTextAndCheck(getString("MogramGhostTyping", R.string.MogramGhostTyping), MogramSettings.ghostHides("typing"), false);
+                    } else if (position == ghostStoriesRow) { // Mogram
+                        textCheckCell.setTextAndCheck(getString("MogramGhostStories", R.string.MogramGhostStories), MogramSettings.ghostHides("stories"), false);
+                    } else if (position == ghostOnlineRow) { // Mogram
+                        textCheckCell.setTextAndCheck(getString("MogramGhostOnline", R.string.MogramGhostOnline), MogramSettings.ghostHides("online"), false);
+                    } else if (position == hideBlockedRow) { // Mogram
+                        textCheckCell.setTextAndCheck(getString("MogramHideBlocked", R.string.MogramHideBlocked), MogramSettings.hideBlocked(), false);
+                    } else if (position == hideStoriesRow) { // Mogram
+                        textCheckCell.setTextAndCheck(getString("MogramHideStories", R.string.MogramHideStories), MogramSettings.hideStories(), false);
+                    } else if (position == scamGuardRow) { // Mogram
+                        textCheckCell.setTextAndCheck(getString("MogramScamGuard", R.string.MogramScamGuard), MogramSettings.scamGuard(), false);
+                    } else if (position == revealSpoilersRow) { // Mogram
+                        textCheckCell.setTextAndCheck(getString("MogramRevealSpoilers", R.string.MogramRevealSpoilers), MogramSettings.revealSpoilers(), false);
+                    } else if (position == profileIdRow) { // Mogram
+                        textCheckCell.setTextAndCheck(getString("MogramProfileId", R.string.MogramProfileId), MogramSettings.showProfileId(), false);
+                    } else if (position == roundFocusRow) { // Mogram
+                        textCheckCell.setTextAndCheck(getString("MogramRoundFocus", R.string.MogramRoundFocus), MogramSettings.roundFocus(), false);
+                    } else if (position == commandsRow) { // Mogram
+                        textCheckCell.setTextAndCheck(getString("MogramCommands", R.string.MogramCommands), MogramSettings.commandsEnabled(), false);
+                    } else if (position == lockRow) { // Mogram
+                        textCheckCell.setTextAndCheck(getString("MogramLock", R.string.MogramLock), SharedConfig.autoLockIn > 0 && SharedConfig.autoLockIn <= 5, false);
+                    } else if (position == keepRow) { // Mogram
+                        textCheckCell.setTextAndCheck(getString("MogramKeep", R.string.MogramKeep), MogramSettings.keepDeleted(), false);
+                    } else if (position == streamerRow) { // Mogram
+                        textCheckCell.setTextAndCheck(getString("MogramStreamer", R.string.MogramStreamer), MogramSettings.isStreamerMode(), false);
+                    } else if (position == ghostRow) { // Mogram
+                        textCheckCell.setTextAndCheck(getString("MogramGhost", R.string.MogramGhost), MogramSettings.isGhostEnabled(), false);
                     } else if (position == newChatsRow) {
                         textCheckCell.setTextAndCheck(getString("ArchiveAndMute", R.string.ArchiveAndMute), archiveChats, false);
                     }
@@ -1328,7 +1580,15 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                     loadingLen = 16;
                     value = null;
                     textCell2.setPrioritizeTitleOverValue(false);
-                    if (position == autoDeleteMesages) {
+                    if (position == pluginsRow) { // Mogram
+                        textCell2.setTextAndValueAndIcon(getString("MogramPlugins", R.string.MogramPlugins), ".plugin", true, R.drawable.msg2_autodelete, true);
+                    } else if (position == decoyRow) { // Mogram
+                        textCell2.setTextAndValueAndIcon(getString("MogramDecoy", R.string.MogramDecoy), getString(MogramSettings.hasDecoy() ? R.string.MogramOn : R.string.MogramOff), true, R.drawable.msg2_autodelete, true);
+                    } else if (position == mogramMusicRow) { // Mogram
+                        textCell2.setTextAndValueAndIcon(getString("MogramMusic", R.string.MogramMusic), "SoundCloud", true, R.drawable.msg2_autodelete, true);
+                    } else if (position == quickRow) { // Mogram
+                        textCell2.setTextAndValueAndIcon(getString("MogramQuick", R.string.MogramQuick), String.valueOf(MogramSettings.quickCommandsCount()), true, R.drawable.msg2_autodelete, true);
+                    } else if (position == autoDeleteMesages) {
                         int ttl = getUserConfig().getGlobalTTl();
                         if (ttl == -1) {
                             showLoading = true;
@@ -1427,15 +1687,15 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                     position == deleteAccountRow || position == webSessionsRow || position == groupsRow || position == paymentsClearRow ||
                     position == secretMapRow || position == contactsDeleteRow || position == botsBiometryRow) {
                 return 0;
-            } else if (position == privacyShadowRow || position == deleteAccountDetailRow || position == groupsDetailRow || position == sessionsDetailRow || position == secretDetailRow || position == botsDetailRow || position == contactsDetailRow || position == newChatsSectionRow) {
+            } else if (position == privacyShadowRow || position == ghostDetailRow || position == streamerDetailRow || position == keepDetailRow || position == quickDetailRow || position == lockDetailRow || position == commandsDetailRow || position == roundFocusDetailRow || position == deleteAccountDetailRow || position == groupsDetailRow || position == sessionsDetailRow || position == secretDetailRow || position == botsDetailRow || position == contactsDetailRow || position == newChatsSectionRow) {
                 return 1;
             } else if (position == securitySectionRow || position == advancedSectionRow || position == privacySectionRow || position == secretSectionRow || position == botsSectionRow || position == contactsSectionRow || position == newChatsHeaderRow) {
                 return 2;
-            } else if (position == secretWebpageRow || position == contactsSyncRow || position == contactsSuggestRow || position == newChatsRow) {
+            } else if (position == secretWebpageRow || position == contactsSyncRow || position == contactsSuggestRow || position == newChatsRow || position == ghostRow || position == streamerRow || position == keepRow || position == lockRow || position == commandsRow || position == roundFocusRow || position == profileIdRow || position == revealSpoilersRow || position == scamGuardRow || position == hideStoriesRow || position == hideBlockedRow || position == ghostReadRow || position == ghostTypingRow || position == ghostStoriesRow || position == ghostOnlineRow) {
                 return 3;
             } else if (position == botsAndWebsitesShadowRow) {
                 return 4;
-            } else if (position == autoDeleteMesages || position == sessionsRow || position == emailLoginRow || position == passwordRow || position == passkeysRow || position == passcodeRow || position == blockedRow) {
+            } else if (position == pluginsRow || position == decoyRow || position == mogramMusicRow || position == quickRow || position == autoDeleteMesages || position == sessionsRow || position == emailLoginRow || position == passwordRow || position == passkeysRow || position == passcodeRow || position == blockedRow) {
                 return 5;
             }
             return 0;

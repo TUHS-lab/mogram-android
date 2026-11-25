@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="MogramGhost">Ghost mode</string>
+    <string name="MogramGhostInfo">Messages are not marked as read, you always appear offline and your typing is not shown. Unread counters may reappear after the app syncs.</string>
+    <string name="MogramStreamer">Streamer mode</string>
+    <string name="MogramStreamerInfo">Hides your own phone number everywhere in the app, handy for screen recording and streams.</string>
+    <string name="MogramKeep">Keep deleted messages</string>
+    <string name="MogramKeepInfo">If the other person deletes a message for everyone, it stays in your chat. Works for messages that arrive while the app is signed in.</string>
+    <string name="MogramDeleted">deleted</string>
+    <string name="MogramQuick">Quick commands</string>
+    <string name="MogramQuickInfo">One command per line, like /hi = Hello! When you send exactly /hi, it is replaced by the text.</string>
+    <string name="MogramMusic">Music</string>
+    <string name="MogramDecoy">Decoy passcode</string>
+    <string name="MogramDecoyInfo">A second passcode. When someone enters it instead of the real one, the app quietly signs out of all accounts on this device. Use a different code from your real passcode.</string>
+    <string name="MogramDecoyHint">Decoy passcode</string>
+    <string name="MogramDecoyNeedPasscode">Set a passcode first (Privacy and Security → Passcode Lock)</string>
+    <string name="MogramDecoySame">The decoy passcode must differ from the real one</string>
+    <string name="MogramDecoyRemove">Remove</string>
+    <string name="MogramOn">On</string>
+    <string name="MogramOff">Off</string>
+    <string name="MogramLock">Lock right away</string>
+    <string name="MogramLockInfo">Locks the app as soon as you leave it. Needs a passcode.</string>
+    <string name="MogramCommands">Chat commands</string>
+    <string name="MogramCommandsInfo">Type a command instead of a message: .id shows chat and message ids, .mute and .unmute control notifications. In reply to a message: .pin, .unpin, and .del (your own message).</string>
+    <string name="MogramPlugins">Plugins</string>
+    <string name="MogramGhostRead">Hide read receipts</string>
+    <string name="MogramGhostTyping">Hide typing status</string>
+    <string name="MogramGhostStories">Hide story views</string>
+    <string name="MogramGhostOnline">Hide online status</string>
+    <string name="MogramRevealSpoilers">Show spoiler text right away</string>
+    <string name="MogramScamGuard">Warn about suspicious links</string>
+    <string name="MogramScamTitle">Suspicious link</string>
+    <string name="MogramScamOpen">Open anyway</string>
+    <string name="MogramHideStories">Hide the stories bar</string>
+    <string name="MogramHideBlocked">Hide messages of blocked people in groups</string>
+    <string name="MogramScamWarning">Possible scam. Do not send money or open links.</string>
+    <string name="MogramProfileId">Show ID and registration date in profiles</string>
+    <string name="MogramRoundFocus">Blur the screen during round videos</string>
+    <string name="MogramRoundFocusInfo">While a round video plays, the rest of the chat is blurred. Scrolling or pausing removes the blur. Needs Android 12 or newer.</string>
+</resources>

@@ -8427,7 +8427,8 @@ public class MessageObject {
                 entity instanceof TLRPC.TL_messageEntityCustomEmoji ||
                 entity instanceof TLRPC.TL_messageEntityBlockquote ||
                 entity instanceof TLRPC.TL_messageEntityPre ||
-                entity instanceof TLRPC.TL_messageEntityDiffReplace
+                entity instanceof TLRPC.TL_messageEntityDiffReplace ||
+                (entity instanceof TLRPC.TL_messageEntitySpoiler && MogramSettings.revealSpoilers()) // Mogram: спойлеры видны
             ) {
                 continue;
             }
@@ -9042,6 +9043,9 @@ public class MessageObject {
         }
         if (type != TYPE_TEXT && type != TYPE_EMOJIS && type != TYPE_STORY_MENTION || messageOwner.peer_id == null || TextUtils.isEmpty(messageText) && !isBotPendingDraft) {
             return;
+        }
+        if (!isOutOwner() && MogramSettings.scamGuard() && messageText.toString().indexOf('\u2063') < 0 && MogramScam.looksLikeScam(messageText.toString())) { // Mogram: пометка скама
+            messageText = TextUtils.concat(messageText, "\u2063\n\u26A0 " + LocaleController.getString(R.string.MogramScamWarning));
         }
         boolean hasUrls = applyEntities();
         boolean noforwards = messageOwner != null && messageOwner.noforwards;

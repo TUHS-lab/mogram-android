@@ -143,6 +143,7 @@ import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.MediaController;
 import org.telegram.messenger.MediaDataController;
 import org.telegram.messenger.MessageObject;
+import org.telegram.messenger.MogramSettings;
 import org.telegram.messenger.MessagesController;
 import org.telegram.messenger.NotificationCenter;
 import org.telegram.messenger.R;
@@ -12847,8 +12848,16 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
 
         setMeasuredDimension(
             isWidthAdaptive() ? getBoundsRight() - getBoundsLeft() : MeasureSpec.getSize(widthMeasureSpec),
-            resultHeight
+            mogramBlockedHidden() ? 0 : resultHeight // Mogram: сообщения заблокированных скрыты
         );
+    }
+
+    private boolean mogramBlockedHidden() {
+        if (currentMessageObject == null || !MogramSettings.hideBlocked() || currentMessageObject.isOutOwner() || currentMessageObject.getDialogId() >= 0) {
+            return false;
+        }
+        final long from = currentMessageObject.getFromChatId();
+        return from > 0 && MessagesController.getInstance(currentAccount).blockePeers.indexOfKey(from) >= 0;
     }
 
     private int additionalPaddingHeight;
@@ -16708,6 +16717,11 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
             currentTimeString = new SpannableStringBuilder(TextUtils.concat("⭐️", AndroidUtilities.formatWholeNumber((int) starsPrice, 0), "  ", currentTimeString));
             currentTimeString = StarsIntroActivity.replaceStars(currentTimeString, 0.8f, null, 0, dp(-.33f), 0.94f);
         }
+        final boolean mogramDeleted = MogramSettings.isMarkedDeleted(currentMessageObject.getDialogId(), currentMessageObject.getId());
+        if (mogramDeleted) { // Mogram: пометка "удалено" и полупрозрачность
+            currentTimeString = TextUtils.concat(getString(R.string.MogramDeleted), ", ", currentTimeString);
+        }
+        setAlpha(mogramDeleted ? 0.6f : 1f);
         if (currentMessageObject.messageOwner != null && currentMessageObject.messageOwner.schedule_repeat_period != 0) {
             final int period = currentMessageObject.messageOwner.schedule_repeat_period;
             final CharSequence repeatString;

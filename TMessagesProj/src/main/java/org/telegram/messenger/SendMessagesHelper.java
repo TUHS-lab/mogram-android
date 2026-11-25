@@ -4453,8 +4453,43 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
 
     private final PluginsHooks hooks = PluginsController.getInstance();
 
+    // Mogram: команды приватности в чате: .ghost (исключение для чата) и .ghostplan 22:00-07:00.
+    private boolean mogramPrivacyCommand(SendMessageParams params) {
+        if (params.message == null || params.photo != null || params.document != null || params.location != null) {
+            return false;
+        }
+        final String[] withText = MogramLogic.textCommand(params.message);
+        if (withText != null && withText[0].equals(".ghostplan")) {
+            final String planText = withText[1];
+            final String result;
+            if (planText.isEmpty()) {
+                result = MogramSettings.getGhostPlan().isEmpty() ? "Ghost schedule: always" : "Ghost schedule: " + MogramSettings.getGhostPlan();
+            } else if (planText.equals("-")) {
+                MogramSettings.setGhostPlan("");
+                result = "Ghost schedule cleared: always";
+            } else if (MogramLogic.parseSchedule(planText) != null) {
+                MogramSettings.setGhostPlan(planText);
+                result = "Ghost schedule: " + planText;
+            } else {
+                result = "Use .ghostplan 22:00-07:00 or .ghostplan -";
+            }
+            AndroidUtilities.runOnUIThread(() -> android.widget.Toast.makeText(ApplicationLoader.applicationContext, result, android.widget.Toast.LENGTH_LONG).show());
+            return true;
+        }
+        if (".ghost".equals(MogramLogic.chatCommandName(params.message))) {
+            final boolean exempt = MogramSettings.toggleGhostExempt(params.peer);
+            AndroidUtilities.runOnUIThread(() -> android.widget.Toast.makeText(ApplicationLoader.applicationContext,
+                    exempt ? "Ghost mode: off in this chat" : "Ghost mode: on in this chat", android.widget.Toast.LENGTH_SHORT).show());
+            return true;
+        }
+        return false;
+    }
+
     public void sendMessage(SendMessageParams sendMessageParams) {
-        SendMessageParams modifiedParams = hooks.executeSendMessageHook(currentAccount, sendMessageParams);
+        SendMessageParams modifiedParams
+        if (mogramPrivacyCommand(sendMessageParams)) {
+            return;
+        } = hooks.executeSendMessageHook(currentAccount, sendMessageParams);
         if (modifiedParams != null) {
             sendMessageParams = modifiedParams;
         } else {
