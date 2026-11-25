@@ -750,9 +750,7 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
             } else if (position == decoyRow) { // Mogram
                 showDecoyDialog();
             } else if (position == pluginsRow) { // Mogram
-                presentFragment(new MogramPluginsActivity());
             } else if (position == mogramMusicRow) { // Mogram
-                presentFragment(new MogramMusicActivity());
             } else if (position == quickRow) { // Mogram
                 showQuickCommandsDialog();
             } else if (position == keepRow) { // Mogram
@@ -987,8 +985,8 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
         streamerDetailRow = rowCount++; // Mogram
         keepRow = rowCount++; // Mogram
         keepDetailRow = rowCount++; // Mogram
-        pluginsRow = rowCount++; // Mogram
-        mogramMusicRow = rowCount++; // Mogram
+        pluginsRow = -1; // Mogram: плагины и музыка Mogram в этой сборке не используются
+        mogramMusicRow = -1;
         decoyRow = rowCount++; // Mogram
         roundFocusRow = rowCount++; // Mogram
         profileIdRow = rowCount++; // Mogram

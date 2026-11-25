@@ -16719,7 +16719,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
         }
         final boolean mogramDeleted = MogramSettings.isMarkedDeleted(currentMessageObject.getDialogId(), currentMessageObject.getId());
         if (mogramDeleted) { // Mogram: пометка "удалено" и полупрозрачность
-            currentTimeString = TextUtils.concat(getString(R.string.MogramDeleted), ", ", currentTimeString);
+            currentTimeString = new SpannableStringBuilder(TextUtils.concat(getString(R.string.MogramDeleted), ", ", currentTimeString));
         }
         setAlpha(mogramDeleted ? 0.6f : 1f);
         if (currentMessageObject.messageOwner != null && currentMessageObject.messageOwner.schedule_repeat_period != 0) {
