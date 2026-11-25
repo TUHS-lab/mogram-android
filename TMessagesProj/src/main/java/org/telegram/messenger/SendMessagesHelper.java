@@ -4486,10 +4486,10 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
     }
 
     public void sendMessage(SendMessageParams sendMessageParams) {
-        SendMessageParams modifiedParams
-        if (mogramPrivacyCommand(sendMessageParams)) {
+        if (mogramPrivacyCommand(sendMessageParams)) { // Mogram
             return;
-        } = hooks.executeSendMessageHook(currentAccount, sendMessageParams);
+        }
+        SendMessageParams modifiedParams = hooks.executeSendMessageHook(currentAccount, sendMessageParams);
         if (modifiedParams != null) {
             sendMessageParams = modifiedParams;
         } else {
