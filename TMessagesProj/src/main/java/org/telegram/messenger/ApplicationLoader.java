@@ -498,11 +498,16 @@ public class ApplicationLoader extends Application implements Provider {
 
     private void initFirebase() {
         AndroidUtilities.runOnUIThread(() -> {
-            firebaseAnalytics = FirebaseAnalytics.getInstance(this);
-            firebaseCrashlytics = FirebaseCrashlytics.getInstance();
-            firebaseCrashlytics.setCustomKey("app_flavor", BuildVars.IS_LITE_VERSION ? "lite" : "full");
-            firebaseAnalytics.setAnalyticsCollectionEnabled(ExteraConfig.getUseGoogleAnalytics());
-            firebaseCrashlytics.setCrashlyticsCollectionEnabled(ExteraConfig.getUseGoogleCrashlytics());
+            try { // Mogram: своего проекта Firebase нет, сбор отключён
+                firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+                firebaseCrashlytics = FirebaseCrashlytics.getInstance();
+                firebaseCrashlytics.setCustomKey("app_flavor", BuildVars.IS_LITE_VERSION ? "lite" : "full");
+                firebaseAnalytics.setAnalyticsCollectionEnabled(false);
+                firebaseCrashlytics.setCrashlyticsCollectionEnabled(false);
+            } catch (Throwable ignore) {
+                firebaseAnalytics = null;
+                firebaseCrashlytics = null;
+            }
         });
     }
 
