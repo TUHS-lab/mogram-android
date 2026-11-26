@@ -1829,6 +1829,27 @@ public class Theme {
             MonetAccentHelper.appendAccentOptions(this);
         }
 
+        // Mogram: серый акцент тёмных тем по умолчанию, цветные акценты остаются на выбор
+        private void addMogramAccent() {
+            final ThemeAccent home = themeAccentsMap.get(0);
+            final ThemeAccent gray = new ThemeAccent();
+            gray.id = MOGRAM_ACCENT_ID;
+            gray.isDefault = true;
+            gray.parentTheme = this;
+            gray.accentColor = 0xff8e8e93;
+            gray.myMessagesAccentColor = home.myMessagesAccentColor;
+            gray.backgroundOverrideColor = home.backgroundOverrideColor;
+            gray.backgroundGradientOverrideColor1 = home.backgroundGradientOverrideColor1;
+            gray.backgroundGradientOverrideColor2 = home.backgroundGradientOverrideColor2;
+            gray.backgroundGradientOverrideColor3 = home.backgroundGradientOverrideColor3;
+            gray.backgroundRotation = home.backgroundRotation;
+            gray.patternSlug = home.patternSlug;
+            gray.patternIntensity = home.patternIntensity;
+            themeAccentsMap.put(gray.id, gray);
+            themeAccents.add(gray);
+            defaultAccentCount++;
+        }
+
         @UiThread
         private void loadThemeDocument() {
             loaded = false;
@@ -2244,6 +2265,7 @@ public class Theme {
     };
 
     public static int DEFALT_THEME_ACCENT_ID = 99;
+    private static final int MOGRAM_ACCENT_ID = 98;
     public static int selectedAutoNightType;
     public static boolean autoNightScheduleByLocation;
     public static float autoNightBrighnessThreshold;
@@ -4043,6 +4065,7 @@ public class Theme {
                 new int[]    {                           225,                            45,                           225,                           135,                            45,                           225,                            45,                             0,                             0,                             0,                             0,                             0,                             0,                             0,                             0,                             0,                             0,                             0},
                 new int[]    {                            40,                            40,                            31,                            50,                            25,                            34,                            35,                            35,                            38,                            29,                            24,                            34,                            34,                            31,                            29,                            37,                            21,                            38}
                 );
+        themeInfo.addMogramAccent();
         sortAccents(themeInfo);
         themes.add(themeInfo);
         themesDict.put("Dark Blue", currentNightTheme = themeInfo);
@@ -4115,6 +4138,7 @@ public class Theme {
                 new int[]    {                            45,                           135,                             0,                           180,                             0,                             0,                             0,                             0,                             0,                             0,                             0,                             0,                             0,                             0},
                 new int[]    {                            34,                            47,                            52,                            48,                            54,                            50,                            37,                            56,                            48,                            49,                            40,                            64,                            38,                            48}
                 );
+        themeInfo.addMogramAccent();
         sortAccents(themeInfo);
         themes.add(themeInfo);
         themesDict.put("Night", themeInfo);
@@ -4250,7 +4274,7 @@ public class Theme {
             for (ThemeInfo info : themesDict.values()) {
                 if (info.assetName != null && info.accentBaseColor != 0) {
                     String accents = themeConfig.getString("accents_" + info.assetName, null);
-                    info.currentAccentId = themeConfig.getInt("accent_current_" + info.assetName, info.firstAccentIsDefault ? DEFALT_THEME_ACCENT_ID : 0);
+                    info.currentAccentId = themeConfig.getInt("accent_current_" + info.assetName, mogramFirstAccent(info));
                     ArrayList<ThemeAccent> newAccents = new ArrayList<>();
                     if (!TextUtils.isEmpty(accents)) {
                         try {
@@ -4384,7 +4408,7 @@ public class Theme {
                         sortAccents(info);
                     }
                     if (info.themeAccentsMap != null && info.themeAccentsMap.get(info.currentAccentId) == null) {
-                        info.currentAccentId = info.firstAccentIsDefault ? DEFALT_THEME_ACCENT_ID : 0;
+                        info.currentAccentId = mogramFirstAccent(info);
                     }
                     info.loadWallpapers(themeConfig);
                     ThemeAccent accent = info.getAccent(false);
@@ -4467,6 +4491,13 @@ public class Theme {
         }
         applyTheme(applyingTheme, false, false, switchToTheme == 2);
         AndroidUtilities.runOnUIThread(Theme::checkAutoNightThemeConditions);
+    }
+
+    private static int mogramFirstAccent(ThemeInfo info) {
+        if (info.firstAccentIsDefault) {
+            return DEFALT_THEME_ACCENT_ID;
+        }
+        return info.themeAccentsMap.get(MOGRAM_ACCENT_ID) != null ? MOGRAM_ACCENT_ID : 0;
     }
 
     private static void sortAccents(ThemeInfo info) {
