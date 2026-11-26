@@ -1382,7 +1382,7 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
 
         fadeView.setAlpha(alpha);
         fadeView.setTranslationY(isProfile * dp(48));
-        fadeView.setVisibility(alpha > 0 ? View.VISIBLE : View.GONE);
+        fadeView.setVisibility(View.GONE); // Mogram: без затемнения над панелью
     }
 
     private void checkUi_tabsPosition() {
