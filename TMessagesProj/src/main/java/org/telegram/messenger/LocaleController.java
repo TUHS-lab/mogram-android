@@ -1612,10 +1612,19 @@ public class LocaleController {
         if (value == null) {
             return "LOC_ERR:" + key;
         }
-        if (res == R.string.AppUpdate || "AppUpdate".equals(key)) {
-            value = value.replaceAll("Telegram", "Mogram"); // Mogram
+        return mogramBrand(value);
+    }
+
+    // Mogram: «Telegram» в интерфейсе заменяется на «Mogram», кроме Telegram Premium, звёзд Telegram,
+    // ссылок и @упоминаний.
+    private static final java.util.regex.Pattern MOGRAM_BRAND = java.util.regex.Pattern.compile(
+            "(?<![/@.\\w-])(?<!Stars )(?<!Звёзды )(?<!Звезды )(?<!Stars of )Telegram(?![\\w.]*\\.[a-z]{2,})(?!\\s+(?:Premium|Stars|Star\\b|Звёзд|Звезд))(?!\\w)");
+
+    public static String mogramBrand(String value) {
+        if (value == null || !value.contains("Telegram")) {
+            return value;
         }
-        return value;
+        return MOGRAM_BRAND.matcher(value).replaceAll("Mogram");
     }
 
     private static boolean isAppNameResource(String key, int res) {

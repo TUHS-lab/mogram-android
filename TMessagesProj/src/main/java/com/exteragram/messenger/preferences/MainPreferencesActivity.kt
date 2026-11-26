@@ -111,7 +111,8 @@ class MainPreferencesActivity : BasePreferencesActivity(), NotificationCenter.No
         )
         items.add(uButton(PreferenceItem.CROWDIN, getString(R.string.Crowdin), R.drawable.msg_translate, "Crowdin", linkAlias = "crowdin"))
         items.add(uButton(PreferenceItem.SOURCE_CODE, getString(R.string.SourceCode), R.drawable.msg_delete, "GitHub", showDivider = false, linkAlias = "sourceCode"))
-        items.add(UItem.asShadow())
+        // Mogram: упоминание основы обязательно по ADDITIONAL_TERMS.md
+        items.add(UItem.asShadow("Mogram is an unofficial fork based on exteraGram (github.com/exteraSquad/exteraGram) and Telegram."))
     }
 
     override fun onClick(item: UItem, view: View, position: Int, x: Float, y: Float) {

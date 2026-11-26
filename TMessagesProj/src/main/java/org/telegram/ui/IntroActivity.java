@@ -608,7 +608,11 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
             container.addView(frameLayout, 0);
 
             headerTextView.setText(titles[position]);
-            messageTextView.setText(AndroidUtilities.replaceTags(messages[position].replace("Telegram", "Mogram"))); // Mogram
+            final boolean mogramRu = "ru".equals(LocaleController.getInstance().getCurrentLocale().getLanguage());
+            final String mogramText = position == 0 // Mogram: на первой странице говорим, что это форк
+                    ? (mogramRu ? "Неофициальный **форк** Telegram.\nСерый, приватный, с дополнительными функциями." : "An unofficial **fork** of Telegram.\nGray, private, with extra features.")
+                    : LocaleController.mogramBrand(messages[position]);
+            messageTextView.setText(AndroidUtilities.replaceTags(mogramText));
 
             return frameLayout;
         }
