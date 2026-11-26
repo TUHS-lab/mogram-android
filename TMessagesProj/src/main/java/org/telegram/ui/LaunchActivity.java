@@ -7468,6 +7468,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
         super.onResume();
         if (UserConfig.getInstance(UserConfig.selectedAccount).isClientActivated()) {
             MogramLink.get().start(UserConfig.selectedAccount); // Mogram Link
+            MogramLink.get().onResume();
             org.telegram.messenger.MogramViewers.refresh(UserConfig.selectedAccount); // Mogram: журнал зрителей историй
         }
         WidgetMedia.onAppPaused(false);

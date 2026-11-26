@@ -52,6 +52,7 @@ public class MogramLink implements NotificationCenter.NotificationCenterDelegate
     private String keyFor = "";
     private final SecureRandom random = new SecureRandom();
     private ClipboardManager clipboard;
+    private final ClipboardManager.OnPrimaryClipChangedListener clipListener = this::onLocalClip;
     private String lastClipHash = "";
     private long stateVersion;
     private int ownStateMessageId;
@@ -106,7 +107,15 @@ public class MogramLink implements NotificationCenter.NotificationCenterDelegate
         AndroidUtilities.runOnUIThread(() -> {
             clipboard = (ClipboardManager) ApplicationLoader.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE);
             if (clipboard != null) {
-                clipboard.addPrimaryClipChangedListener(this::onLocalClip);
+                try {
+                    final ClipData data = clipboard.getPrimaryClip();
+                    if (data != null && data.getItemCount() > 0 && data.getItemAt(0).getText() != null) {
+                        lastClipHash = Integer.toString(data.getItemAt(0).getText().toString().hashCode());
+                    }
+                } catch (Throwable ignore) {
+                }
+                clipboard.removePrimaryClipChangedListener(clipListener);
+                clipboard.addPrimaryClipChangedListener(clipListener);
             }
             findOrCreateChannel();
         });
@@ -117,28 +126,64 @@ public class MogramLink implements NotificationCenter.NotificationCenterDelegate
             return;
         }
         started = false;
+        creating = false;
+        if (clipboard != null) {
+            clipboard.removePrimaryClipChangedListener(clipListener);
+        }
         NotificationCenter.getInstance(account).removeObserver(this, NotificationCenter.didReceiveNewMessages);
         NotificationCenter.getInstance(account).removeObserver(this, NotificationCenter.chatDidCreated);
         NotificationCenter.getInstance(account).removeObserver(this, NotificationCenter.messagePlayingDidStart);
         channelId = 0;
     }
 
+    private boolean isLinkChannel(TLRPC.Chat chat) {
+        return chat != null && chat.creator && !chat.megagroup && CHANNEL_TITLE.equals(chat.title);
+    }
+
+    // Ищем канал среди диалогов и через поиск; если каналов несколько, все устройства берут самый старый.
     private void findOrCreateChannel() {
-        final MessagesController controller = MessagesController.getInstance(account);
-        for (TLRPC.Dialog dialog : controller.getAllDialogs()) {
-            if (!DialogObject.isChatDialog(dialog.id)) {
-                continue;
-            }
-            final TLRPC.Chat chat = controller.getChat(-dialog.id);
-            if (chat != null && chat.creator && !chat.megagroup && CHANNEL_TITLE.equals(chat.title)) {
-                channelId = chat.id;
-                onChannelReady();
+        final int current = account;
+        final TLRPC.TL_contacts_search req = new TLRPC.TL_contacts_search();
+        req.q = CHANNEL_TITLE;
+        req.limit = 20;
+        ConnectionsManager.getInstance(current).sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
+            if (!started || current != account || channelId != 0) {
                 return;
             }
-        }
-        if (!creating) {
-            creating = true;
-            controller.createChat(CHANNEL_TITLE, new ArrayList<>(), "mgl1", ChatObject.CHAT_TYPE_CHANNEL, false, null, null, 0, null);
+            final MessagesController controller = MessagesController.getInstance(current);
+            long best = 0;
+            if (response instanceof TLRPC.TL_contacts_found) {
+                final TLRPC.TL_contacts_found found = (TLRPC.TL_contacts_found) response;
+                controller.putUsers(found.users, false);
+                controller.putChats(found.chats, false);
+                for (TLRPC.Chat chat : found.chats) {
+                    if (isLinkChannel(chat) && (best == 0 || chat.id < best)) {
+                        best = chat.id;
+                    }
+                }
+            }
+            for (TLRPC.Dialog dialog : controller.getAllDialogs()) {
+                if (DialogObject.isChatDialog(dialog.id)) {
+                    final TLRPC.Chat chat = controller.getChat(-dialog.id);
+                    if (isLinkChannel(chat) && (best == 0 || chat.id < best)) {
+                        best = chat.id;
+                    }
+                }
+            }
+            if (best != 0) {
+                channelId = best;
+                onChannelReady();
+            } else if (error == null && !creating) {
+                creating = true;
+                controller.createChat(CHANNEL_TITLE, new ArrayList<>(), "mgl1", ChatObject.CHAT_TYPE_CHANNEL, false, null, null, 0, null);
+            }
+        }));
+    }
+
+    // Приложение снова на экране: забираем то, что скопировали, пока оно было свёрнуто.
+    public void onResume() {
+        if (started && channelId != 0) {
+            AndroidUtilities.runOnUIThread(this::onLocalClip, 600);
         }
     }
 
@@ -304,8 +349,10 @@ public class MogramLink implements NotificationCenter.NotificationCenterDelegate
                     remoteTitle = json.optString("title");
                     remoteArtist = json.optString("artist");
                     remoteSoundcloudId = json.optLong("sc");
-                    if (fresh && listener != null) {
-                        listener.onNowPlaying(device, remoteTitle, remoteArtist, remoteSoundcloudId);
+                    if (fresh && remoteTitle != null && !remoteTitle.isEmpty()) {
+                        final String text = (remoteArtist == null || remoteArtist.isEmpty()) ? remoteTitle : remoteArtist + " - " + remoteTitle;
+                        AndroidUtilities.runOnUIThread(() -> android.widget.Toast.makeText(ApplicationLoader.applicationContext,
+                                "♫ ПК: " + text, android.widget.Toast.LENGTH_LONG).show());
                     }
                 }
                 break;
