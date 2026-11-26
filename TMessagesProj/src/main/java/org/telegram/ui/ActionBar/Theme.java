@@ -4836,7 +4836,16 @@ public class Theme {
         return new BaseCell.RippleDrawableSafe(colorStateList, defaultDrawable, pressedDrawable);
     }
 
+    // Mokagram: единое скругление как в mokaGram desktop (md3): кнопки и поля не меньше 16dp
+    public static int mokaRound(int rad) {
+        if (rad >= dp(12)) {
+            return Math.max(rad, dp(28));
+        }
+        return rad >= dp(6) ? dp(20) : rad;
+    }
+
     public static ShapeDrawable createRoundRectDrawable(int rad, int defaultColor) {
+        rad = mokaRound(rad);
         ShapeDrawable defaultDrawable = new ShapeDrawable(new RoundRectShape(new float[]{rad, rad, rad, rad, rad, rad, rad, rad}, null, null));
         defaultDrawable.getPaint().setColor(defaultColor);
         return defaultDrawable;
@@ -4859,12 +4868,14 @@ public class Theme {
     }
 
     public static ShapeDrawable createRoundRectDrawable(int topLeftRed, int topRightRad, int bottomRightRad, int bottomLeftRad, int defaultColor) {
+        topLeftRed = mokaRound(topLeftRed); topRightRad = mokaRound(topRightRad); bottomRightRad = mokaRound(bottomRightRad); bottomLeftRad = mokaRound(bottomLeftRad);
         ShapeDrawable defaultDrawable = new ShapeDrawable(new RoundRectShape(new float[]{topLeftRed, topLeftRed, topRightRad, topRightRad, bottomRightRad, bottomRightRad, bottomLeftRad, bottomLeftRad}, null, null));
         defaultDrawable.getPaint().setColor(defaultColor);
         return defaultDrawable;
     }
 
     public static ShapeDrawable createRoundRectDrawable(int topRad, int bottomRad, int defaultColor) {
+        topRad = mokaRound(topRad); bottomRad = mokaRound(bottomRad);
         ShapeDrawable defaultDrawable = new ShapeDrawable(new RoundRectShape(new float[]{topRad, topRad, topRad, topRad, bottomRad, bottomRad, bottomRad, bottomRad}, null, null));
         defaultDrawable.getPaint().setColor(defaultColor);
         return defaultDrawable;
@@ -4924,6 +4935,7 @@ public class Theme {
     }
 
     public static Drawable createSimpleSelectorRoundRectDrawable(int leftTop, int rightTop, int rightBottom, int leftBottom, int defaultColor, int pressedColor, int maskColor) {
+        leftTop = mokaRound(leftTop); rightTop = mokaRound(rightTop); rightBottom = mokaRound(rightBottom); leftBottom = mokaRound(leftBottom);
         return createSimpleSelectorRoundRectDrawable(new float[]{
                 leftTop, leftTop,
                 rightTop, rightTop,

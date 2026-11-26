@@ -90,6 +90,9 @@
     <uses-sdk tools:overrideLibrary="com.google.mlkit.vision.segmentation.subject, com.google.mlkit.genai.prompt, com.google.mlkit.genai.common, androidx.camera.extensions, androidx.camera.lifecycle, androidx.camera.core"/>
 
     <queries>
+        <!-- Mogram: проверить, установлен ли exteraGram, для переноса настроек -->
+        <package android:name="com.exteragram.messenger" />
+        <package android:name="com.exteragram.messenger.beta" />
         <package android:name="com.google.android.apps.maps"/>
         <intent>
             <action android:name="android.intent.action.VIEW"/>

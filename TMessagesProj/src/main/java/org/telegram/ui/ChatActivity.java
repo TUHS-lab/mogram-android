@@ -32459,10 +32459,25 @@ public class ChatActivity extends BaseFragment implements
         return bulletinDelegate != null ? bulletinDelegate.getBottomOffset(0) : 0;
     }
 
+    // Mogram: плавно переливающийся градиент фона. Шаг раз в 6 секунд и только пока чат на экране;
+    // между шагами ничего не рисуется, а в режиме энергосбережения Telegram сам отключает движение.
+    private final Runnable mogramBackgroundStep = new Runnable() {
+        @Override
+        public void run() {
+            if (contentView != null && org.telegram.messenger.MogramBackground.preset() != org.telegram.messenger.MogramBackground.PRESET_OFF
+                    && contentView.getBackgroundImage() instanceof org.telegram.ui.Components.MotionBackgroundDrawable) {
+                ((org.telegram.ui.Components.MotionBackgroundDrawable) contentView.getBackgroundImage()).switchToNextPosition();
+            }
+            AndroidUtilities.runOnUIThread(this, 6000);
+        }
+    };
+
     @Override
     public void onResume() {
         super.onResume();
         MogramLink.get().setActiveDialog(dialog_id); // Mogram Link: я сейчас в этом чате
+        AndroidUtilities.cancelRunOnUIThread(mogramBackgroundStep);
+        AndroidUtilities.runOnUIThread(mogramBackgroundStep, 1000);
         ChatScreenshotExportBridge.onChatResumed(this);
         if (quickAttachOnResume != null) {
             Runnable action = quickAttachOnResume;
@@ -32692,6 +32707,7 @@ public class ChatActivity extends BaseFragment implements
         if (quickTilesMenu != null) quickTilesMenu.dismiss(false);
         super.onPause();
         MogramLink.get().setActiveDialog(0);
+        AndroidUtilities.cancelRunOnUIThread(mogramBackgroundStep);
         ChatScreenshotExportBridge.onChatPaused(this);
         scrolling = false;
         if (scrimPopupWindow != null) {

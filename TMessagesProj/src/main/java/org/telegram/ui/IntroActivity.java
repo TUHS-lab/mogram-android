@@ -608,7 +608,7 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
             container.addView(frameLayout, 0);
 
             headerTextView.setText(titles[position]);
-            messageTextView.setText(AndroidUtilities.replaceTags(messages[position]));
+            messageTextView.setText(AndroidUtilities.replaceTags(messages[position].replace("Telegram", "Mogram"))); // Mogram
 
             return frameLayout;
         }
@@ -967,6 +967,9 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
     }
 
     private void updateColors(boolean fromTheme) {
+        if (getParentActivity() != null) { // Mogram: панель навигации того же цвета, что и экран
+            AndroidUtilities.setNavigationBarColor(getParentActivity().getWindow(), Theme.getColor(Theme.key_windowBackgroundWhite));
+        }
         startMessagingButtonBackground.setColors(new int[]{getThemedColor(Theme.key_featuredStickers_addButton), getThemedColor(Theme.key_featuredStickers_addButton2)});
         fragmentView.setBackgroundColor(Theme.getColor(Theme.key_windowBackgroundWhite));
         switchLanguageTextView.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlueText4));

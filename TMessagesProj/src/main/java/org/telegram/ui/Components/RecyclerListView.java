@@ -3706,6 +3706,9 @@ public class RecyclerListView extends RecyclerView implements IBlur3Capture {
         this.isViewTypeSection = isViewTypeSection;
         this.sectionPadding = padding;
         this.sectionTopPadding = topPadding;
+        if (roundRadius > 0) {
+            roundRadius = Math.max(roundRadius, dp(22)); // Mogram: карточки 22 как на десктопе
+        }
         this.sectionRadius = roundRadius;
         this.sectionRadiusTop = new float[] {
             roundRadius, roundRadius,

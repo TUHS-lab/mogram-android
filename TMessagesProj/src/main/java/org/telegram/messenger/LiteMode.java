@@ -216,6 +216,9 @@ public class LiteMode {
     }
 
     public static boolean isEnabled(int flag) {
+        if (flag == FLAG_LIQUID_GLASS) {
+            return false; // Mogram: без стекла, плоские поверхности
+        }
         if (flag == FLAG_CHAT_FORUM_TWOCOLUMN && AndroidUtilities.isTablet()) {
             // always enabled for tablets
             return true;
